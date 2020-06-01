@@ -14,6 +14,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1chUvjoupIBh1ZT9dRQnbeZYsET" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -90,22 +93,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590981486610" />
-    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1590987828234">
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1590987858890">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590987828234" />
-    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1590987828234">
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590987858890" />
+    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1590987858890">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590987828234" />
-    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1590987828234">
+    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1590987858890" />
+    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1590987858890">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590987828234" />
-    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1590987828234">
+    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1590987858890" />
+    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1590987858890">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590987828234" />
+    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1590987858890" />
     <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1590987727180">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -122,6 +125,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1590987727179" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1590987909585">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590987909585" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
