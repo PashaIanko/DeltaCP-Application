@@ -7,6 +7,7 @@ class ApplicationManager(QtWidgets.QMainWindow):
     ApplicationModules = \
         [
         ConnectionModule()
+        #SignalGenerationModule()
         ]
 
     def __init__(self):

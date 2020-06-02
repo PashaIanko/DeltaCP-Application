@@ -52,7 +52,11 @@ class DeltaCPClient(ModbusClient):
 
     def Connect(self):
         if(self.Client is not None):
-            self.if_connected = self.Client.connect()
+            try:
+                self.if_connected = self.Client.connect()
+            except ValueError:
+                print('value error')
+                self.if_connected = False
             return self.if_connected
 
     def WriteOutputFreqRegister(self, FreqStr):
