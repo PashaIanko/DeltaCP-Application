@@ -1,13 +1,13 @@
 from PyQt5 import QtWidgets
 from Graphics import Ui_MainWindow
 from ConnectionPackage.ConnectionModule import ConnectionModule
-
+from SignalGenerationPackage.SignalGenerationModule import SignalGenerationModule
 class ApplicationManager(QtWidgets.QMainWindow):
 
     ApplicationModules = \
         [
-        ConnectionModule()
-        #SignalGenerationModule()
+        ConnectionModule(),
+        SignalGenerationModule()
         ]
 
     def __init__(self):

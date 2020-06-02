@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53d00615-df91-41df-931b-9202dc5c6319" name="Default Changelist" comment="init">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plotting/Plot.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CallBackOperators/SignalTypeOperator.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SignalGenerationPackage/SignalGenerationModule.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ApplicationManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/ApplicationManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CallBackOperators/ConnectionOperator.py" beforeDir="false" afterPath="$PROJECT_DIR$/CallBackOperators/ConnectionOperator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DeltaCPClient.py" beforeDir="false" afterPath="$PROJECT_DIR$/DeltaCPClient.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +108,9 @@
       <workItem from="1590998307967" duration="1064000" />
       <workItem from="1590999383570" duration="1023000" />
       <workItem from="1591000416273" duration="4000" />
-      <workItem from="1591071187939" duration="242000" />
+      <workItem from="1591071187939" duration="1731000" />
+      <workItem from="1591072956909" duration="192000" />
+      <workItem from="1591093913441" duration="302000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1590987935176</created>
@@ -159,26 +159,34 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="403" y="11" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590987968677" />
-    <state x="549" y="170" key="FileChooserDialogImpl" timestamp="1590981486610">
+    <state x="94" y="100" width="552" height="630" maximized="true" key="DiffContextDialog" timestamp="1591071776928">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590981486610" />
-    <state width="723" height="206" key="GridCell.Tab.0.bottom" timestamp="1591071254713">
+    <state x="94" y="100" width="552" height="630" maximized="true" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1591071776928" />
+    <state x="549" y="170" key="FileChooserDialogImpl" timestamp="1591073000727">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="723" height="206" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591071254713" />
-    <state width="723" height="206" key="GridCell.Tab.0.center" timestamp="1591071254713">
+    <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591073000727" />
+    <state x="638" y="311" key="Github.ShareDialog" timestamp="1591094200534">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="723" height="206" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591071254713" />
-    <state width="723" height="206" key="GridCell.Tab.0.left" timestamp="1591071254712">
+    <state x="638" y="311" key="Github.ShareDialog/0.0.1536.824@0.0.1536.824" timestamp="1591094200534" />
+    <state width="1493" height="206" key="GridCell.Tab.0.bottom" timestamp="1591094216627">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="723" height="206" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591071254712" />
-    <state width="723" height="206" key="GridCell.Tab.0.right" timestamp="1591071254713">
+    <state width="1493" height="206" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
+    <state width="1493" height="206" key="GridCell.Tab.0.center" timestamp="1591094216627">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="723" height="206" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591071254713" />
+    <state width="1493" height="206" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
+    <state width="1493" height="206" key="GridCell.Tab.0.left" timestamp="1591094216627">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="206" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
+    <state width="1493" height="206" key="GridCell.Tab.0.right" timestamp="1591094216627">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="206" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
     <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1590990561323">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -199,10 +207,18 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590987909585" />
-    <state x="477" y="240" key="com.intellij.ide.util.TipDialog" timestamp="1591071191036">
+    <state x="94" y="100" width="381" height="630" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1591071776928">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="477" y="240" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591071191036" />
+    <state x="94" y="100" width="381" height="630" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1591071776928" />
+    <state x="94" y="100" width="552" height="630" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1591071718975">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="94" y="100" width="552" height="630" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1591071718975" />
+    <state x="477" y="240" key="com.intellij.ide.util.TipDialog" timestamp="1591072958255">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="477" y="240" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591072958255" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -260,6 +276,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Project$Plot.coverage" NAME="Plot Coverage Results" MODIFIED="1590999323163" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Plotting" />
-    <SUITE FILE_PATH="coverage/Project$main.coverage" NAME="main Coverage Results" MODIFIED="1591071205160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Project$main.coverage" NAME="main Coverage Results" MODIFIED="1591093924406" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
