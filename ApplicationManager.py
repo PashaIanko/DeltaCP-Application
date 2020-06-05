@@ -2,15 +2,19 @@ from PyQt5 import QtWidgets
 from Graphics import Ui_MainWindow
 from ConnectionPackage.ConnectionModule import ConnectionModule
 from SignalGenerationPackage.SignalGenerationModule import SignalGenerationModule
+from Singleton import Singleton
+
+
 class ApplicationManager(QtWidgets.QMainWindow):
 
-    ApplicationModules = \
-        [
-        ConnectionModule(),
-        SignalGenerationModule()
-        ]
-
     def __init__(self):
+
+        self.ApplicationModules = \
+            [
+                ConnectionModule(),
+                SignalGenerationModule()
+            ]
+
         super(ApplicationManager, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
