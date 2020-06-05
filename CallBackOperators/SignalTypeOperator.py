@@ -1,7 +1,7 @@
 from CallBackOperator import CallBackOperator
 from PyQt5 import QtWidgets
 
-class Test(QtWidgets.QWidget):
+class Test(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
@@ -26,17 +26,23 @@ class Test(QtWidgets.QWidget):
 
 class SignalTypeOperator(CallBackOperator):
     def __init__(self):
-        self.window = None
+        self.UserInterface = None
+        self.MainWindow = None
 
-    def ConnectCallBack(self, window):
-        window.SignalTypecomboBox.currentIndexChanged.connect(self.SetSignalType)
-        self.window = window
+    def SetMainWindow(self, MainWindow):
+        self.MainWindow = MainWindow
+
+    def ConnectCallBack(self, UserInterface):
+        UserInterface.SignalTypecomboBox.currentIndexChanged.connect(self.SetSignalType)
+        self.UserInterface = UserInterface
 
     def SetSignalType(self):
         print('in callback')
-        self.dialog = QtWidgets.QDialog()
-        self.dialog.setModal(True)
-        self.dialog.exec()
+        #self.dialog = QtWidgets.QDialog(self.MainWindow)
+        #self.dialog.show()
+        self.Test = Test()
+        #self.dialog.setModal(True)
+        #self.dialog.exec()
 
         #MainWindow.count = MainWindow.count + 1
         #sub =QtWidgets.QMdiSubWindow()

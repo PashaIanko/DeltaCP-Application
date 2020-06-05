@@ -14,12 +14,12 @@ class ConnectionModule(ApplicationModule):
     def __init__(self):
         self.window = None
 
-    def Run(self, window):
-        self.window = window
+    def Run(self, MainWindow):
+        self.UserInterface = MainWindow.ui
         self.ConnectAllCallBacks()
 
 
     def ConnectAllCallBacks(self):
         for conn in self.callback_operators:
-            conn.ConnectCallBack(self.window)
+            conn.ConnectCallBack(self.UserInterface)
 

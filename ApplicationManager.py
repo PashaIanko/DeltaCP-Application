@@ -22,4 +22,4 @@ class ApplicationManager(QtWidgets.QMainWindow):
 
     def RunAllModules(self):
         for module in self.ApplicationModules:
-            module.Run(self.ui)
+            module.Run(self)
