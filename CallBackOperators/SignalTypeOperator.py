@@ -1,13 +1,14 @@
 from CallBackOperator import CallBackOperator
+from SignalGenerationPackage.SinusSignalController import SinusSignalController
 from PyQt5 import QtWidgets
 
-class Test(QtWidgets.QMainWindow):
+class Test():#(SignalController):
 
     def __init__(self):
-        super().__init__()
-        self.InitAloitus()
+        #super().__init__()
+        self.InitSignalUI()
 
-    def InitAloitus(self):
+    def InitSignalUI(self):
         self.button = QtWidgets.QPushButton("Ok", self)
         self.button.move(200, 200)
         self.button.clicked.connect(self.continue2)
@@ -18,11 +19,11 @@ class Test(QtWidgets.QMainWindow):
     def continue2(self):
         print('callback')
 
-
 class SignalTypeOperator(CallBackOperator):
     def __init__(self):
         self.UserInterface = None
         self.MainWindow = None
+        self.SignalController = None
 
     def SetMainWindow(self, MainWindow):
         self.MainWindow = MainWindow
@@ -33,7 +34,10 @@ class SignalTypeOperator(CallBackOperator):
 
     def SetSignalType(self):
         print('in callback')
-        self.Test = Test()
+        arg = self.UserInterface.SignalTypecomboBox.currentText()
+        if(arg == 'sin'):
+            self.SignalController = Test()  # SinusSignalController()
+
 
 
 
