@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets
 from SignalGenerationPackage.SignalController import SignalController
 
-class SinusSignalController():#(SignalController):
+class SinusSignalController(SignalController): #(QtWidgets.QMainWindow):#(SignalController):
 
     def __init__(self):
         super().__init__()
@@ -13,6 +13,7 @@ class SinusSignalController():#(SignalController):
         self.button.clicked.connect(self.continue2)
         self.setGeometry(600, 200, 500, 300)
         self.show()
+
 
 
     def continue2(self):

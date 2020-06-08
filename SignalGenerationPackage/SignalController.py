@@ -1,10 +1,8 @@
 from abc import ABC, ABCMeta, abstractmethod
 from PyQt5 import QtWidgets
 
-class DerivedMeta(type(QtWidgets.QMainWindow), ABCMeta):
-    pass
 
-class SignalController(DerivedMeta):
+class SignalController(QtWidgets.QMainWindow):
 
     '''
     In MVC pattern - this is the core that aggregates Model and View
