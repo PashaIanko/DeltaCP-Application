@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53d00615-df91-41df-931b-9202dc5c6319" name="Default Changelist" comment="init">
-      <change afterPath="$PROJECT_DIR$/CallBackOperators/SignalTypeOperator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SignalGenerationPackage/SignalGenerationModule.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApplicationManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/ApplicationManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CallBackOperators/SignalTypeOperator.py" beforeDir="false" afterPath="$PROJECT_DIR$/CallBackOperators/SignalTypeOperator.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +62,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="SignalTypeOperator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Project" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CallBackOperators" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CallBackOperators/SignalTypeOperator.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -89,6 +109,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.SignalTypeOperator" />
         <item itemvalue="Python.Plot" />
       </list>
     </recent_temporary>
@@ -110,7 +131,10 @@
       <workItem from="1591000416273" duration="4000" />
       <workItem from="1591071187939" duration="1731000" />
       <workItem from="1591072956909" duration="192000" />
-      <workItem from="1591093913441" duration="302000" />
+      <workItem from="1591093913441" duration="458000" />
+      <workItem from="1591094899206" duration="10000" />
+      <workItem from="1591325361312" duration="8093000" />
+      <workItem from="1591341728604" duration="184000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1590987935176</created>
@@ -119,7 +143,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590987935176</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added Inheritance from MainWindow. Enabled multiple windows for signal generation">
+      <created>1591331459658</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1591331459658</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,7 +171,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />
-    <option name="LAST_COMMIT_MESSAGE" value="init" />
+    <MESSAGE value="Added Inheritance from MainWindow. Enabled multiple windows for signal generation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Inheritance from MainWindow. Enabled multiple windows for signal generation" />
   </component>
   <component name="WindowStateProjectService">
     <state x="152" y="225" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1591071425511">
@@ -155,58 +187,58 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="162" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1590980680656" />
-    <state x="403" y="11" key="CommitChangelistDialog2" timestamp="1590987968677">
+    <state x="403" y="11" key="CommitChangelistDialog2" timestamp="1591331459267">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="403" y="11" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1590987968677" />
+    <state x="403" y="11" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1591331459267" />
     <state x="94" y="100" width="552" height="630" maximized="true" key="DiffContextDialog" timestamp="1591071776928">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="94" y="100" width="552" height="630" maximized="true" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1591071776928" />
-    <state x="549" y="170" key="FileChooserDialogImpl" timestamp="1591073000727">
+    <state x="549" y="170" key="FileChooserDialogImpl" timestamp="1591341911658">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591073000727" />
+    <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591341911658" />
     <state x="638" y="311" key="Github.ShareDialog" timestamp="1591094200534">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="638" y="311" key="Github.ShareDialog/0.0.1536.824@0.0.1536.824" timestamp="1591094200534" />
-    <state width="1493" height="206" key="GridCell.Tab.0.bottom" timestamp="1591094216627">
+    <state width="1493" height="261" key="GridCell.Tab.0.bottom" timestamp="1591333818998">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="206" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
-    <state width="1493" height="206" key="GridCell.Tab.0.center" timestamp="1591094216627">
+    <state width="1493" height="261" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591333818998" />
+    <state width="1493" height="261" key="GridCell.Tab.0.center" timestamp="1591333818997">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="206" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
-    <state width="1493" height="206" key="GridCell.Tab.0.left" timestamp="1591094216627">
+    <state width="1493" height="261" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591333818997" />
+    <state width="1493" height="261" key="GridCell.Tab.0.left" timestamp="1591333818997">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="206" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
-    <state width="1493" height="206" key="GridCell.Tab.0.right" timestamp="1591094216627">
+    <state width="1493" height="261" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591333818997" />
+    <state width="1493" height="261" key="GridCell.Tab.0.right" timestamp="1591333818997">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="206" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591094216627" />
-    <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1590990561323">
+    <state width="1493" height="261" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591333818997" />
+    <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1591333818998">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1590990561323" />
-    <state width="1493" height="261" key="GridCell.Tab.1.center" timestamp="1590990561322">
+    <state width="1493" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591333818998" />
+    <state width="1493" height="261" key="GridCell.Tab.1.center" timestamp="1591333818998">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1590990561322" />
-    <state width="1493" height="261" key="GridCell.Tab.1.left" timestamp="1590990561322">
+    <state width="1493" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1591333818998" />
+    <state width="1493" height="261" key="GridCell.Tab.1.left" timestamp="1591333818998">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1590990561322" />
-    <state width="1493" height="261" key="GridCell.Tab.1.right" timestamp="1590990561322">
+    <state width="1493" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1591333818998" />
+    <state width="1493" height="261" key="GridCell.Tab.1.right" timestamp="1591333818998">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1590990561322" />
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1590987909585">
+    <state width="1493" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1591333818998" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2" timestamp="1591331513974">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590987909585" />
+    <state x="361" y="148" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1591331513974" />
     <state x="94" y="100" width="381" height="630" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1591071776928">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -215,19 +247,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="94" y="100" width="552" height="630" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1591071718975" />
-    <state x="477" y="240" key="com.intellij.ide.util.TipDialog" timestamp="1591072958255">
+    <state x="477" y="240" key="com.intellij.ide.util.TipDialog" timestamp="1591341902961">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="477" y="240" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591072958255" />
+    <state x="477" y="240" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591341902961" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/CallBackOperators/ConnectionOperator.py</url>
-          <line>18</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DeltaCPClient.py</url>
           <line>35</line>
@@ -249,19 +276,24 @@
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/CallBackOperators/ConnectionOperator.py</url>
-          <line>31</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/CallBackOperators/ConnectionOperator.py</url>
-          <line>21</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DeltaCPClient.py</url>
           <line>59</line>
           <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/CallBackOperators/SignalTypeOperator.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/SignalGenerationPackage/SignalGenerationModule.py</url>
+          <line>25</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/CallBackOperators/SignalTypeOperator.py</url>
+          <line>34</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -271,11 +303,13 @@
         <watch expression="Protocol" language="Python" />
         <watch expression="self.DeltaCPClient" language="Python" />
         <watch expression="self.Client" language="Python" />
+        <watch expression="conn" language="Python" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Project$Plot.coverage" NAME="Plot Coverage Results" MODIFIED="1590999323163" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Plotting" />
-    <SUITE FILE_PATH="coverage/Project$main.coverage" NAME="main Coverage Results" MODIFIED="1591093924406" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Project$SignalTypeOperator.coverage" NAME="SignalTypeOperator Coverage Results" MODIFIED="1591326141798" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CallBackOperators" />
+    <SUITE FILE_PATH="coverage/Project$main.coverage" NAME="main Coverage Results" MODIFIED="1591333802690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
