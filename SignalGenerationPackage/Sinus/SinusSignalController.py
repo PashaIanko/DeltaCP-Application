@@ -9,9 +9,14 @@ class SinusSignalController(SignalController):
         super().__init__()
         self.InitSignalUI()
 
+
     # overriden method - here you define personal Graphical Interface (Ui) and show the window
     def InitSignalUI(self):
         self.ui = Ui_SinWindow()
         self.ui.setupUi(self.MainWindow)
         self.MainWindow.show()
 
+        self.ui.TestpushButton1.clicked.connect(self.TestCallback)
+
+    def TestCallback(self):
+        print('in callbackk')
