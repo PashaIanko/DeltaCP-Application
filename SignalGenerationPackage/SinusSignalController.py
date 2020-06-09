@@ -76,15 +76,17 @@ class Ui_SinWindow(object):
         self.labelAmplitude.setText(_translate("MainWindow", "Amplitude"))
 
 
-class SinusSignalController():#(QtWidgets.QMainWindow):#(SignalController):
+class SinusSignalController(SignalController):
 
     def __init__(self):
         super().__init__()
-        self.MainWindow = QtWidgets.QMainWindow()
+        self.InitSignalUI()
+
+    # overriden method - here you define personal Graphical Interface (Ui) and show the window
+    def InitSignalUI(self):
         self.ui = Ui_SinWindow()
         self.ui.setupUi(self.MainWindow)
         self.MainWindow.show()
-
 
     def continue2(self):
         print('callback')

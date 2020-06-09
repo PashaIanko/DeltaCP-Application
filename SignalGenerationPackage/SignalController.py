@@ -1,17 +1,17 @@
-from abc import ABC, ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod
 from PyQt5 import QtWidgets
 
-
-class SignalController():#(QtWidgets.QMainWindow):
+class SignalController(metaclass=ABCMeta):
 
     '''
     In MVC pattern - this is the core that aggregates Model and View
     '''
 
     def __init__(self):
-        self.callback_operators = []
-        self.signal = None  # Model
+        self.CallbackOperators = []
+        self.Signal = None  # Model
         self.SignalObserver = None  # View
+        self.MainWindow = QtWidgets.QMainWindow()  # new window with graphical interface
 
     @abstractmethod
     def InitSignalUI(self):
