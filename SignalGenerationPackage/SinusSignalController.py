@@ -2,13 +2,7 @@ from PyQt5 import QtWidgets
 from SignalGenerationPackage.SignalController import SignalController
 from PyQt5 import QtCore, QtGui
 
-class SinusSignalController(SignalController):
-
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-        self.show()
-
+class Ui_SinWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -81,6 +75,15 @@ class SinusSignalController(SignalController):
         self.labelFrequency.setText(_translate("MainWindow", "Frequency (w)"))
         self.labelAmplitude.setText(_translate("MainWindow", "Amplitude"))
 
+
+class SinusSignalController():#(QtWidgets.QMainWindow):#(SignalController):
+
+    def __init__(self):
+        super().__init__()
+        self.MainWindow = QtWidgets.QMainWindow()
+        self.ui = Ui_SinWindow()
+        self.ui.setupUi(self.MainWindow)
+        self.MainWindow.show()
 
 
     def continue2(self):

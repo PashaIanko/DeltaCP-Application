@@ -7,10 +7,7 @@ from SignalGenerationPackage.SinusSignalController import SinusSignalController
 class SignalTypeOperator(CallBackOperator):
     def __init__(self):
         self.UserInterface = None
-        self.MainWindow = None
 
-    def SetMainWindow(self, MainWindow):
-        self.MainWindow = MainWindow
 
     def ConnectCallBack(self, UserInterface):
         UserInterface.SignalTypecomboBox.currentIndexChanged.connect(self.SetSignalType)
@@ -18,4 +15,4 @@ class SignalTypeOperator(CallBackOperator):
 
     def SetSignalType(self):
         print('in callback')
-        self.Test = SinusSignalController()
+        self.SignalController = SinusSignalController()

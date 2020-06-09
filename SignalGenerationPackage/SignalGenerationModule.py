@@ -22,7 +22,4 @@ class SignalGenerationModule(ApplicationModule):
     def ConnectAllCallBacks(self):
         for conn in self.callback_operators:
             conn.ConnectCallBack(self.UserInterface)
-            if(type(conn) is SignalTypeOperator):
-                conn.SetMainWindow(self.MainWindow)
-                # we need this because pop-up windows with signal parameters must inherit from QMainWindow class
 
