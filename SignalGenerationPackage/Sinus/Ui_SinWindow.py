@@ -1,6 +1,5 @@
+from PyQt5 import QtCore
 from PyQt5 import QtWidgets
-from SignalGenerationPackage.SignalController import SignalController
-from PyQt5 import QtCore, QtGui
 
 class Ui_SinWindow(object):
     def setupUi(self, MainWindow):
@@ -74,19 +73,3 @@ class Ui_SinWindow(object):
         self.labelVerticalOffset.setText(_translate("MainWindow", "Vertical offset"))
         self.labelFrequency.setText(_translate("MainWindow", "Frequency (w)"))
         self.labelAmplitude.setText(_translate("MainWindow", "Amplitude"))
-
-
-class SinusSignalController(SignalController):
-
-    def __init__(self):
-        super().__init__()
-        self.InitSignalUI()
-
-    # overriden method - here you define personal Graphical Interface (Ui) and show the window
-    def InitSignalUI(self):
-        self.ui = Ui_SinWindow()
-        self.ui.setupUi(self.MainWindow)
-        self.MainWindow.show()
-
-    def continue2(self):
-        print('callback')

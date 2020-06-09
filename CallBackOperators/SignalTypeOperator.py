@@ -1,7 +1,6 @@
 
 from CallBackOperator import CallBackOperator
-from PyQt5 import QtWidgets
-from SignalGenerationPackage.SinusSignalController import SinusSignalController
+from SignalGenerationPackage.Sinus.SinusSignalController import SinusSignalController
 
 
 class SignalTypeOperator(CallBackOperator):
