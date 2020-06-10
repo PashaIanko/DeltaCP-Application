@@ -9,11 +9,8 @@ class SinusSignal(Signal):
     def InitSignalData(self):
         self.SignalData = SinusData()
 
-    def Plot(self):
-        print('plotting changes')
-
     def Func(self):
-        pass
+        pass  # return A * sin(w * t + phi)
 
 
     @property
@@ -25,5 +22,22 @@ class SinusSignal(Signal):
         self.SignalData.Amplitude = value
         self.NotifyObservers()
 
+    @property
+    def omega(self):
+        return self.SignalData.Omega
+
+    @omega.setter
+    def omega(self, value):
+        self.SignalData.Omega = value
+        self.NotifyObservers()
+
+    @property
+    def phase(self):
+        return self.SignalData.Phase
+
+    @phase.setter
+    def phase(self, value):
+        self.SignalData.Phase = value
+        self.NotifyObservers()
 
 

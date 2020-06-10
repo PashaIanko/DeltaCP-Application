@@ -3,10 +3,8 @@ from SignalGenerationPackage.SignalObserver import SignalObserver
 class SinusObserver(SignalObserver):
 
     def __init__(self, Controller, Model):
-        super().__init__()
-        self.Controller = Controller
-        self.Model = Model
-        self.Model.AddObserver(self)
+        super().__init__(Controller, Model)
+
 
     # overriden method
     def UpdateModel(self):
