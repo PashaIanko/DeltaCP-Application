@@ -18,3 +18,7 @@ class SignalController(metaclass=ABCMeta):
     def InitSignalUI(self):
         pass
 
+    @abstractmethod
+    def ConnectCallBacks(self):
+        pass
+

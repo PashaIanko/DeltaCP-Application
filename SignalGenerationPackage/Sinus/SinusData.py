@@ -8,3 +8,13 @@ class SinusData(SignalData):
         self.Omega = 0
         self.Amplitude = 0
         self.Phase = 0
+
+    @property
+    def omega(self):
+        return self.Omega
+
+
+
+    @property
+    def phase(self):
+        return self.Phase

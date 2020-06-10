@@ -5,5 +5,5 @@ class SignalObserver(metaclass=ABCMeta):
     Абстрактный суперкласс для всех наблюдателей.
     """
     @abstractmethod
-    def ModelChanged(self):
+    def UpdateModel(self):
         pass
