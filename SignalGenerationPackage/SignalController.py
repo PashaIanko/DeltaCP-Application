@@ -12,6 +12,7 @@ class SignalController(metaclass=ABCMeta):
         self.Signal = None  # Model
         self.SignalObserver = None  # View
         self.MainWindow = QtWidgets.QMainWindow()  # new window with graphical interface
+        self.InitSignalUI()
 
     @abstractmethod
     def InitSignalUI(self):

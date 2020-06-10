@@ -7,7 +7,6 @@ class SinusSignal(Signal):
         super().__init__()
 
     def InitSignalData(self):
-        pass  # self.SignalData = SinusSignalData()
         self.SignalData = SinusData()
 
 

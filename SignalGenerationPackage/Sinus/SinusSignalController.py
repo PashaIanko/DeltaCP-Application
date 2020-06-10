@@ -1,5 +1,6 @@
 from SignalGenerationPackage.Sinus.Ui_SinWindow import Ui_SinWindow
 from SignalGenerationPackage.SignalController import SignalController
+from SignalGenerationPackage.Sinus.SinusSignal import SinusSignal
 
 
 
@@ -7,7 +8,10 @@ class SinusSignalController(SignalController):
 
     def __init__(self):
         super().__init__()
-        self.InitSignalUI()
+
+        # creating MVC model
+        self.Signal = SinusSignal()
+
 
 
     # overriden method - here you define personal Graphical Interface (Ui) and show the window
