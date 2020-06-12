@@ -1,5 +1,6 @@
 
 from CallBackOperator import CallBackOperator
+from PyQt5.QtGui import QDoubleValidator
 import sys
 
 class SinusCallBackOperator(CallBackOperator):
@@ -11,8 +12,14 @@ class SinusCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.TestpushButton1.clicked.connect(self.SetAmplitude)
+        # window.TestpushButton1.clicked.connect(self.SetAmplitude)
 
-    def SetAmplitude(self):
-        print('in callbackk')
-        self.Model.amplitude = 1
+        window.lineEditAmplitude.setValidator(QDoubleValidator(0.99,99.99,2))
+        window.lineEditAmplitude.textChanged.connect(self.SetAmplitude)
+
+
+    def SetAmplitude(self, text):
+        print(f'in callbackk {text} {type(text)}')
+        if(type(text) is str):
+            text.replace(',', '.')
+            self.Model.amplitude = float(text)

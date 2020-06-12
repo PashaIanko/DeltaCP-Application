@@ -18,7 +18,7 @@ class Signal(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def Func(self):
+    def Func(self, x):
         pass
 
     def AddObserver(self, Observer):

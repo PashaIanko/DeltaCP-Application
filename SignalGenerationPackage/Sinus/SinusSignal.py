@@ -1,5 +1,6 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.Sinus.SinusData import SinusData
+import numpy as np
 
 class SinusSignal(Signal):
 
@@ -9,9 +10,12 @@ class SinusSignal(Signal):
     def InitSignalData(self):
         self.SignalData = SinusData()
 
-    def Func(self):
-        pass  # return A * sin(w * t + phi)
+    def Func(self, x):
+        return self.SignalData.Amplitude * np.sin(self.SignalData.Omega * x + self.SignalData.Phase)
 
+    def RecalcData(self):
+        self.SignalData.x = np.linspace(self.SignalData.x_from, self.SignalData.x_to, self.SignalData.points_numb)
+        self.SignalData.y = [self.Func(x) for x in self.SignalData.x]
 
     @property
     def amplitude(self):
@@ -20,6 +24,7 @@ class SinusSignal(Signal):
     @amplitude.setter
     def amplitude(self, value):
         self.SignalData.Amplitude = value
+        self.RecalcData()
         self.NotifyObservers()
 
     @property
@@ -29,6 +34,7 @@ class SinusSignal(Signal):
     @omega.setter
     def omega(self, value):
         self.SignalData.Omega = value
+        self.RecalcData()
         self.NotifyObservers()
 
     @property
@@ -38,6 +44,15 @@ class SinusSignal(Signal):
     @phase.setter
     def phase(self, value):
         self.SignalData.Phase = value
+        self.RecalcData()
         self.NotifyObservers()
+
+    @property
+    def x(self):
+        return self.SignalData.x
+
+    @property
+    def y(self):
+        return self.SignalData.y
 
 

@@ -9,3 +9,4 @@ class SignalData(metaclass=ABCMeta):
         self.y = []
         self.x_from = 0
         self.x_to = 0
+        self.points_numb = 0
