@@ -13,5 +13,5 @@ class SignalTypeOperator(CallBackOperator):
         self.UserInterface = UserInterface
 
     def SetSignalType(self):
-        print('in callback')
+        #print('in callback')
         self.SignalController = SinusSignalController()

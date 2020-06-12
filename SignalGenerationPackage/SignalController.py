@@ -19,10 +19,27 @@ class SignalController(metaclass=ABCMeta):
 
         self.UserInterface.setupUi(self.MainWindow)
         self.MainWindow.show()
+        self.InitModel()
+        self.InitView()
+        self.InitCallBackOperators()
         self.ConnectCallBacks()
 
     @abstractmethod
     def InitSignalUI(self):
+        pass
+
+    @abstractmethod
+    def InitModel(self):
+        # creating MVC model
+        pass
+
+    @abstractmethod
+    def InitView(self):
+        # creating MVC view
+        pass
+
+    @abstractmethod
+    def InitCallBackOperators(self):
         pass
 
     @abstractmethod
