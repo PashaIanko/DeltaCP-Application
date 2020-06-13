@@ -20,6 +20,9 @@ class SinusCallBackOperator(CallBackOperator):
 
     def SetAmplitude(self, text):
         print(f'in callbackk {text} {type(text)}')
-        if(type(text) is str):
-            text.replace(',', '.')
-            self.Model.amplitude = float(text)
+        try:
+            if(type(text) is str):
+                text = text.replace(',', '.')
+                self.Model.amplitude = float(text)
+        except:
+            print(sys.exc_info())
