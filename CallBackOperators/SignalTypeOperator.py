@@ -14,4 +14,5 @@ class SignalTypeOperator(CallBackOperator):
 
     def SetSignalType(self):
         #print('in callback')
+        # TODO: construct different controllers, depending on the Signal Type ComboBox
         self.SignalController = SinusSignalController()
