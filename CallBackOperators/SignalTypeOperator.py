@@ -16,3 +16,4 @@ class SignalTypeOperator(CallBackOperator):
     def StartSignalGeneration(self):
         if self.UserInterface.SignalTypecomboBox.currentText() == 'sin':
             self.SignalController = SinusSignalController()
+        # TODO: для меандра и пользовательского сигнала здесь контроллеры добавить
