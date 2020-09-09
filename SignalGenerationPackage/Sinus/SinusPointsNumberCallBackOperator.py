@@ -18,10 +18,9 @@ class SinusPointsNumberCallBackOperator(CallBackOperator):
 
 
     def SetPointsNumber(self, text):
-        print(f'in callbackk {text} {type(text)}')
         try:
             if(type(text) is str):
                 text = text.replace(',', '.')
-                self.Model.PointsNumber = float(text)
+                self.Model.PointsNumber = int(text)
         except:
             print(sys.exc_info())

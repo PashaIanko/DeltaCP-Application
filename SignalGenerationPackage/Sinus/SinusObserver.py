@@ -7,15 +7,30 @@ class SinusObserver(SignalObserver):
 
     def __init__(self, Controller, Model):
         super().__init__(Controller, Model)
+
+        # plt.ion()
         self.Figure = plt.figure()
+        self.Graph = self.Figure.add_subplot(111)
+        #self.Plot, = self.Graph.plot(self.Model.x, self.Model.y, marker = '.')
+        #self.Figure.show()
+
 
 
     # overriden method
     def UpdateModel(self):
-        print(f'sinus model changed! Show Updates, amplt = {self.Model.amplitude},'
-              f'time from = {self.Model.X_from}')
-        print(self.Model.__repr__)
-        print(self.Model.x, self.Model.y)
+        self.Model.__repr__()
+        #  self.Graph.clear()
+        #  self.Graph.plot(self.Model.x, self.Model.y, marker = '.')
+        #  self.Plot.set_ydata(self.Model.y)
+        #  self.Plot.set_xdata(self.Model.x)
+        #  self.Figure.canvas.draw()
+        self.Graph.clear()
+        self.Graph.plot(self.Model.x, self.Model.y)
+        plt.show()
+
+
+
+
 
 
 

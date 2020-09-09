@@ -18,7 +18,6 @@ class SinusAmplitudeCallBackOperator(CallBackOperator):
 
 
     def SetAmplitude(self, text):
-        print(f'in callbackk {text} {type(text)}')
         try:
             if(type(text) is str):
                 text = text.replace(',', '.')

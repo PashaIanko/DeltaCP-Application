@@ -5,8 +5,9 @@ import numpy as np
 class SinusSignal(Signal):
 
     def __repr__(self):
-        print(f'ampl = {self.amplitude}, phase = {self.phase}, N = {self.PointsNumber},'
-              f'X_from = {self.X_from}, X_to = {self.X_to}')
+        print(f'ampl = {self.amplitude}, phase = {self.phase}, N = {self.PointsNumber}, '
+              f'X_from = {self.X_from}, X_to = {self.X_to}, '
+              f'omega = {self.omega}, x = {self.x}, y = {self.y}')
 
 
 
@@ -88,7 +89,7 @@ class SinusSignal(Signal):
 
     @PointsNumber.setter
     def PointsNumber(self, value):
-        self.PointsNumber = value
+        self.SignalData.PointsNumber = value
         self.RecalcData()
         self.NotifyObservers()
 
