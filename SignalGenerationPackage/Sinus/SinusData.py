@@ -8,5 +8,8 @@ class SinusData(SignalData):
         self.Omega = 0
         self.Amplitude = 0
         self.Phase = 0
+        self.X_from = 0
+        self.X_to = 0
+        self.PointsNumber = 0
 
 

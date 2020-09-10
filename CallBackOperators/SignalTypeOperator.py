@@ -8,10 +8,12 @@ class SignalTypeOperator(CallBackOperator):
         self.UserInterface = None
 
 
+
     def ConnectCallBack(self, UserInterface):
-        UserInterface.SignalTypecomboBox.currentIndexChanged.connect(self.SetSignalType)
+        UserInterface.SignalTypecomboBox.currentIndexChanged.connect(self.StartSignalGeneration)
         self.UserInterface = UserInterface
 
-    def SetSignalType(self):
-        #print('in callback')
-        self.SignalController = SinusSignalController()
+    def StartSignalGeneration(self):
+        if self.UserInterface.SignalTypecomboBox.currentText() == 'sin':
+            self.SignalController = SinusSignalController()
+        # TODO: для меандра и пользовательского сигнала здесь контроллеры добавить
