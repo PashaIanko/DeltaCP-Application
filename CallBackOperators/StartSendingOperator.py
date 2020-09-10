@@ -1,4 +1,5 @@
 from CallBackOperator import CallBackOperator
+from SignalGenerationPackage.SignalData import SignalData
 
 class StartSendingOperator(CallBackOperator):
 
@@ -12,5 +13,6 @@ class StartSendingOperator(CallBackOperator):
 
 
     def StartSendingSignal(self):
-        print(f'in callback')
-        # Получить x и y модели, Сигнала
+        # print(SignalData.x, SignalData.y)
+        Signal = SignalData.x
+        Time = SignalData.y
