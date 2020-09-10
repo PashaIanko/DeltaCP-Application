@@ -2,8 +2,10 @@ from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.Sinus.SinusData import SinusData
 import numpy as np
 
+
 class SinusSignal(Signal):
 
+    # Model in MVC pattern
     def __repr__(self):
         print(f'ampl = {self.amplitude}, phase = {self.phase}, N = {self.PointsNumber}, '
               f'X_from = {self.X_from}, X_to = {self.X_to}, '
