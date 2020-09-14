@@ -25,7 +25,7 @@ class SinusSignal(Signal):
         return self.SignalData.Amplitude * np.sin(self.SignalData.Omega * x + self.SignalData.Phase)
 
     def RecalcData(self):
-        SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber) # Пересчёт ГЛОБАЛЬНЫХ Переменных
+        SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber, endpoint=True) # Пересчёт ГЛОБАЛЬНЫХ Переменных
         SignalData.y = [self.Func(x) for x in SignalData.x] # TODO: X_From, X_To запихать в родителя
         # self.SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber)
         # self.SignalData.y = [self.Func(x) for x in self.SignalData.x]

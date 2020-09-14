@@ -13,6 +13,6 @@ class StartSendingOperator(CallBackOperator):
 
 
     def StartSendingSignal(self):
-        # print(SignalData.x, SignalData.y)
-        Signal = SignalData.x
-        Time = SignalData.y
+        print(SignalData.x, SignalData.y)
+        Signal = SignalData.x.copy()
+        Time = SignalData.y.copy()
