@@ -19,10 +19,10 @@ class SignalController(metaclass=ABCMeta):
 
         self.UserInterface.setupUi(self.MainWindow)
         self.MainWindow.show()
-        self.InitModel()
-        self.InitView()
-        self.InitCallBackOperators()
-        self.ConnectCallBacks()
+        self.InitModel()  # overriden
+        self.InitView()  # overriden
+        self.InitCallBackOperators()  # overriden
+        self.ConnectCallBacks()  # overriden
 
     @abstractmethod
     def InitSignalUI(self):

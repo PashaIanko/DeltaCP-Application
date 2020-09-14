@@ -2,7 +2,12 @@ from SignalGenerationPackage.Sinus.Ui_SinWindow import Ui_SinWindow
 from SignalGenerationPackage.SignalController import SignalController
 from SignalGenerationPackage.Sinus.SinusSignal import SinusSignal
 from SignalGenerationPackage.Sinus.SinusObserver import SinusObserver
-from SignalGenerationPackage.Sinus.SinusCallBackOperator import SinusCallBackOperator
+from SignalGenerationPackage.Sinus.SinusAmplitudeCallBackOperator import SinusAmplitudeCallBackOperator
+from SignalGenerationPackage.Sinus.SinusTimeFromCallBackOperator import SinusTimeFromCallBackOperator
+from SignalGenerationPackage.Sinus.SinusTimeToCallBackOperator import SinusTimeToCallBackOperator
+from SignalGenerationPackage.Sinus.SinusPointsNumberCallBackOperator import SinusPointsNumberCallBackOperator
+from SignalGenerationPackage.Sinus.SinusPhaseCallBackOperator import SinusPhaseCallBackOperator
+from SignalGenerationPackage.Sinus.SinusOmegaCallBackOperator import SinusOmegaCallBackOperator
 import sys
 
 class SinusSignalController(SignalController):
@@ -27,7 +32,12 @@ class SinusSignalController(SignalController):
     def InitCallBackOperators(self):
         self.CallbackOperators = \
             [
-                SinusCallBackOperator(self.Model)
+                SinusAmplitudeCallBackOperator(self.Model),
+                SinusTimeFromCallBackOperator(self.Model),
+                SinusTimeToCallBackOperator(self.Model),
+                SinusPointsNumberCallBackOperator(self.Model),
+                SinusPhaseCallBackOperator(self.Model),
+                SinusOmegaCallBackOperator(self.Model)
             ]
 
     # overriden

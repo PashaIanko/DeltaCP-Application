@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 from Graphics import Ui_MainWindow
 from ConnectionPackage.ConnectionModule import ConnectionModule
 from SignalGenerationPackage.SignalGenerationModule import SignalGenerationModule
+from SignalSendingPackage.SignalSendingModule import SignalSendingModule
 from Singleton import Singleton
 
 
@@ -12,7 +13,8 @@ class ApplicationManager(QtWidgets.QMainWindow):
         self.ApplicationModules = \
             [
                 ConnectionModule(),
-                SignalGenerationModule()
+                SignalGenerationModule(),
+                SignalSendingModule()
             ]
 
         super(ApplicationManager, self).__init__()
