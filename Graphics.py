@@ -111,28 +111,22 @@ class Ui_MainWindow(object):
         self.HztextEdit.setAutoFillBackground(False)
         self.HztextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.HztextEdit.setObjectName("HztextEdit")
-        self.TestpushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
-        self.TestpushButton.setGeometry(QtCore.QRect(10, 170, 93, 28))
-        self.TestpushButton.setObjectName("TestpushButton")
-        self.FreqMintextEdit = QtWidgets.QTextEdit(self.OutputFrequencySettingTab)
-        self.FreqMintextEdit.setEnabled(False)
-        self.FreqMintextEdit.setGeometry(QtCore.QRect(390, 40, 41, 41))
-        self.FreqMintextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.FreqMintextEdit.setObjectName("FreqMintextEdit")
-        self.FreqMaxtextEdit = QtWidgets.QTextEdit(self.OutputFrequencySettingTab)
-        self.FreqMaxtextEdit.setEnabled(False)
-        self.FreqMaxtextEdit.setGeometry(QtCore.QRect(660, 40, 41, 41))
-        self.FreqMaxtextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.FreqMaxtextEdit.setObjectName("FreqMaxtextEdit")
-        self.SetFreqpushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
-        self.SetFreqpushButton.setGeometry(QtCore.QRect(210, 120, 93, 28))
-        self.SetFreqpushButton.setObjectName("SetFreqpushButton")
-        self.RunpushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
-        self.RunpushButton.setGeometry(QtCore.QRect(10, 120, 93, 28))
-        self.RunpushButton.setObjectName("RunpushButton")
-        self.StoppushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
-        self.StoppushButton.setGeometry(QtCore.QRect(110, 120, 93, 28))
-        self.StoppushButton.setObjectName("StoppushButton")
+        self.FrequencyMintextEdit = QtWidgets.QTextEdit(self.OutputFrequencySettingTab)
+        self.FrequencyMintextEdit.setEnabled(True)
+        self.FrequencyMintextEdit.setGeometry(QtCore.QRect(380, 40, 41, 41))
+        self.FrequencyMintextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.FrequencyMintextEdit.setObjectName("FrequencyMintextEdit")
+        self.FrequencyMaxtextEdit = QtWidgets.QTextEdit(self.OutputFrequencySettingTab)
+        self.FrequencyMaxtextEdit.setEnabled(True)
+        self.FrequencyMaxtextEdit.setGeometry(QtCore.QRect(660, 40, 41, 41))
+        self.FrequencyMaxtextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.FrequencyMaxtextEdit.setObjectName("FrequencyMaxtextEdit")
+        self.SetFrequencypushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
+        self.SetFrequencypushButton.setGeometry(QtCore.QRect(20, 110, 93, 28))
+        self.SetFrequencypushButton.setObjectName("SetFrequencypushButton")
+        self.StopFrequencypushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
+        self.StopFrequencypushButton.setGeometry(QtCore.QRect(130, 110, 93, 28))
+        self.StopFrequencypushButton.setObjectName("StopFrequencypushButton")
         self.layoutWidget2 = QtWidgets.QWidget(self.OutputFrequencySettingTab)
         self.layoutWidget2.setGeometry(QtCore.QRect(10, 40, 267, 41))
         self.layoutWidget2.setObjectName("layoutWidget2")
@@ -142,18 +136,16 @@ class Ui_MainWindow(object):
         self.label_3 = QtWidgets.QLabel(self.layoutWidget2)
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_3.addWidget(self.label_3)
-        self.FrequencySetlineEdit = QtWidgets.QLineEdit(self.layoutWidget2)
-        self.FrequencySetlineEdit.setObjectName("FrequencySetlineEdit")
-        self.horizontalLayout_3.addWidget(self.FrequencySetlineEdit)
+        self.OutputFrequencylineEdit = QtWidgets.QLineEdit(self.layoutWidget2)
+        self.OutputFrequencylineEdit.setObjectName("OutputFrequencylineEdit")
+        self.horizontalLayout_3.addWidget(self.OutputFrequencylineEdit)
         self.layoutWidget.raise_()
         self.HztextEdit.raise_()
-        self.TestpushButton.raise_()
-        self.FreqMintextEdit.raise_()
+        self.FrequencyMintextEdit.raise_()
         self.FrequencySetSlider.raise_()
-        self.FreqMaxtextEdit.raise_()
-        self.SetFreqpushButton.raise_()
-        self.RunpushButton.raise_()
-        self.StoppushButton.raise_()
+        self.FrequencyMaxtextEdit.raise_()
+        self.SetFrequencypushButton.raise_()
+        self.StopFrequencypushButton.raise_()
         self.aaa.addTab(self.OutputFrequencySettingTab, "")
         self.FrequencySignalSetting = QtWidgets.QWidget()
         self.FrequencySignalSetting.setObjectName("FrequencySignalSetting")
@@ -174,22 +166,22 @@ class Ui_MainWindow(object):
         self.pushButtonStartSignalSending = QtWidgets.QPushButton(self.SignalSendingTab)
         self.pushButtonStartSignalSending.setGeometry(QtCore.QRect(40, 60, 131, 41))
         self.pushButtonStartSignalSending.setObjectName("pushButtonStartSignalSending")
-        self.widget = QtWidgets.QWidget(self.SignalSendingTab)
-        self.widget.setGeometry(QtCore.QRect(40, 110, 202, 65))
-        self.widget.setObjectName("widget")
-        self.gridLayout_2 = QtWidgets.QGridLayout(self.widget)
+        self.layoutWidget3 = QtWidgets.QWidget(self.SignalSendingTab)
+        self.layoutWidget3.setGeometry(QtCore.QRect(40, 110, 202, 65))
+        self.layoutWidget3.setObjectName("layoutWidget3")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.layoutWidget3)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.pushButtonPauseSignalSending = QtWidgets.QPushButton(self.widget)
+        self.pushButtonPauseSignalSending = QtWidgets.QPushButton(self.layoutWidget3)
         self.pushButtonPauseSignalSending.setObjectName("pushButtonPauseSignalSending")
         self.gridLayout_2.addWidget(self.pushButtonPauseSignalSending, 0, 0, 1, 1)
-        self.pushButtonResumeSignalSending = QtWidgets.QPushButton(self.widget)
+        self.pushButtonResumeSignalSending = QtWidgets.QPushButton(self.layoutWidget3)
         self.pushButtonResumeSignalSending.setObjectName("pushButtonResumeSignalSending")
         self.gridLayout_2.addWidget(self.pushButtonResumeSignalSending, 0, 1, 1, 2)
-        self.pushButtonStopSignalSending = QtWidgets.QPushButton(self.widget)
+        self.pushButtonStopSignalSending = QtWidgets.QPushButton(self.layoutWidget3)
         self.pushButtonStopSignalSending.setObjectName("pushButtonStopSignalSending")
         self.gridLayout_2.addWidget(self.pushButtonStopSignalSending, 1, 0, 1, 2)
-        self.pushButtonRetrySignalSending = QtWidgets.QPushButton(self.widget)
+        self.pushButtonRetrySignalSending = QtWidgets.QPushButton(self.layoutWidget3)
         self.pushButtonRetrySignalSending.setObjectName("pushButtonRetrySignalSending")
         self.gridLayout_2.addWidget(self.pushButtonRetrySignalSending, 1, 2, 1, 1)
         self.aaa.addTab(self.SignalSendingTab, "")
@@ -213,7 +205,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuNew.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.aaa.setCurrentIndex(3)
+        self.aaa.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -254,24 +246,22 @@ class Ui_MainWindow(object):
                                            "p, li { white-space: pre-wrap; }\n"
                                            "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">Hz</span></p></body></html>"))
-        self.TestpushButton.setText(_translate("MainWindow", "TestButton"))
-        self.FreqMintextEdit.setHtml(_translate("MainWindow",
-                                                "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                "p, li { white-space: pre-wrap; }\n"
-                                                "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-                                                "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
-        self.FreqMaxtextEdit.setHtml(_translate("MainWindow",
-                                                "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                "p, li { white-space: pre-wrap; }\n"
-                                                "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-                                                "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">100</span></p></body></html>"))
-        self.SetFreqpushButton.setText(_translate("MainWindow", "Set frequency"))
-        self.RunpushButton.setText(_translate("MainWindow", "Run"))
-        self.StoppushButton.setText(_translate("MainWindow", "Stop"))
+        self.FrequencyMintextEdit.setHtml(_translate("MainWindow",
+                                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                                     "p, li { white-space: pre-wrap; }\n"
+                                                     "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
+                                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.FrequencyMaxtextEdit.setHtml(_translate("MainWindow",
+                                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                                     "p, li { white-space: pre-wrap; }\n"
+                                                     "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
+                                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">100</span></p></body></html>"))
+        self.SetFrequencypushButton.setText(_translate("MainWindow", "Set frequency"))
+        self.StopFrequencypushButton.setText(_translate("MainWindow", "Stop"))
         self.label_3.setText(_translate("MainWindow", "Output frequency:"))
-        self.FrequencySetlineEdit.setText(_translate("MainWindow", "0"))
+        self.OutputFrequencylineEdit.setText(_translate("MainWindow", "0"))
         self.aaa.setTabText(self.aaa.indexOf(self.OutputFrequencySettingTab),
                             _translate("MainWindow", "Output Frequency Setting"))
         self.SignalTypecomboBox.setItemText(1, _translate("MainWindow", "sin"))
