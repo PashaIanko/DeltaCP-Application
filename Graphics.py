@@ -111,16 +111,6 @@ class Ui_MainWindow(object):
         self.HztextEdit.setAutoFillBackground(False)
         self.HztextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.HztextEdit.setObjectName("HztextEdit")
-        self.FrequencyMintextEdit = QtWidgets.QTextEdit(self.OutputFrequencySettingTab)
-        self.FrequencyMintextEdit.setEnabled(True)
-        self.FrequencyMintextEdit.setGeometry(QtCore.QRect(380, 40, 41, 41))
-        self.FrequencyMintextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.FrequencyMintextEdit.setObjectName("FrequencyMintextEdit")
-        self.FrequencyMaxtextEdit = QtWidgets.QTextEdit(self.OutputFrequencySettingTab)
-        self.FrequencyMaxtextEdit.setEnabled(True)
-        self.FrequencyMaxtextEdit.setGeometry(QtCore.QRect(660, 40, 41, 41))
-        self.FrequencyMaxtextEdit.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.FrequencyMaxtextEdit.setObjectName("FrequencyMaxtextEdit")
         self.SetFrequencypushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
         self.SetFrequencypushButton.setGeometry(QtCore.QRect(20, 110, 93, 28))
         self.SetFrequencypushButton.setObjectName("SetFrequencypushButton")
@@ -139,13 +129,19 @@ class Ui_MainWindow(object):
         self.OutputFrequencylineEdit = QtWidgets.QLineEdit(self.layoutWidget2)
         self.OutputFrequencylineEdit.setObjectName("OutputFrequencylineEdit")
         self.horizontalLayout_3.addWidget(self.OutputFrequencylineEdit)
+        self.FrequencyMinlineEdit = QtWidgets.QLineEdit(self.OutputFrequencySettingTab)
+        self.FrequencyMinlineEdit.setGeometry(QtCore.QRect(360, 50, 51, 22))
+        self.FrequencyMinlineEdit.setObjectName("FrequencyMinlineEdit")
+        self.FrequencyMaxlineEdit = QtWidgets.QLineEdit(self.OutputFrequencySettingTab)
+        self.FrequencyMaxlineEdit.setGeometry(QtCore.QRect(660, 50, 51, 22))
+        self.FrequencyMaxlineEdit.setObjectName("FrequencyMaxlineEdit")
         self.layoutWidget.raise_()
         self.HztextEdit.raise_()
-        self.FrequencyMintextEdit.raise_()
         self.FrequencySetSlider.raise_()
-        self.FrequencyMaxtextEdit.raise_()
         self.SetFrequencypushButton.raise_()
         self.StopFrequencypushButton.raise_()
+        self.FrequencyMinlineEdit.raise_()
+        self.FrequencyMaxlineEdit.raise_()
         self.aaa.addTab(self.OutputFrequencySettingTab, "")
         self.FrequencySignalSetting = QtWidgets.QWidget()
         self.FrequencySignalSetting.setObjectName("FrequencySignalSetting")
@@ -205,7 +201,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuNew.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.aaa.setCurrentIndex(0)
+        self.aaa.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -246,22 +242,12 @@ class Ui_MainWindow(object):
                                            "p, li { white-space: pre-wrap; }\n"
                                            "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">Hz</span></p></body></html>"))
-        self.FrequencyMintextEdit.setHtml(_translate("MainWindow",
-                                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                     "p, li { white-space: pre-wrap; }\n"
-                                                     "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-                                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
-        self.FrequencyMaxtextEdit.setHtml(_translate("MainWindow",
-                                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                                     "p, li { white-space: pre-wrap; }\n"
-                                                     "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-                                                     "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">100</span></p></body></html>"))
         self.SetFrequencypushButton.setText(_translate("MainWindow", "Set frequency"))
         self.StopFrequencypushButton.setText(_translate("MainWindow", "Stop"))
         self.label_3.setText(_translate("MainWindow", "Output frequency:"))
         self.OutputFrequencylineEdit.setText(_translate("MainWindow", "0"))
+        self.FrequencyMinlineEdit.setText(_translate("MainWindow", "0"))
+        self.FrequencyMaxlineEdit.setText(_translate("MainWindow", "100"))
         self.aaa.setTabText(self.aaa.indexOf(self.OutputFrequencySettingTab),
                             _translate("MainWindow", "Output Frequency Setting"))
         self.SignalTypecomboBox.setItemText(1, _translate("MainWindow", "sin"))
@@ -280,5 +266,4 @@ class Ui_MainWindow(object):
         self.menuConnection_Parameters.setTitle(_translate("MainWindow", "Connection Parameters"))
         self.menuOutput_Frequency_Settings.setTitle(_translate("MainWindow", "Output Frequency Settings"))
         self.menuNew.setTitle(_translate("MainWindow", "New"))
-
 
