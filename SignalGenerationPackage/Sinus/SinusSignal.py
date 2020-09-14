@@ -1,9 +1,12 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.Sinus.SinusData import SinusData
+from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
+
 
 class SinusSignal(Signal):
 
+    # Model in MVC pattern
     def __repr__(self):
         print(f'ampl = {self.amplitude}, phase = {self.phase}, N = {self.PointsNumber}, '
               f'X_from = {self.X_from}, X_to = {self.X_to}, '
@@ -22,8 +25,10 @@ class SinusSignal(Signal):
         return self.SignalData.Amplitude * np.sin(self.SignalData.Omega * x + self.SignalData.Phase)
 
     def RecalcData(self):
-        self.SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber)
-        self.SignalData.y = [self.Func(x) for x in self.SignalData.x]
+        SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber, endpoint=True) # Пересчёт ГЛОБАЛЬНЫХ Переменных
+        SignalData.y = [self.Func(x) for x in SignalData.x] # TODO: X_From, X_To запихать в родителя
+        # self.SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber)
+        # self.SignalData.y = [self.Func(x) for x in self.SignalData.x]
 
     @property
     def amplitude(self):
@@ -57,11 +62,11 @@ class SinusSignal(Signal):
 
     @property
     def x(self):
-        return self.SignalData.x
+        return SignalData.x #self.SignalData.x # Возвращаются глобальные перем (class attributes) - x и y
 
     @property
     def y(self):
-        return self.SignalData.y
+        return SignalData.y # self.SignalData.y # Возвращаются глобальные перем (class attributes) - x и y
 
     @property
     def X_from(self):

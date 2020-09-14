@@ -13,3 +13,4 @@ class SinusData(SignalData):
         self.PointsNumber = 0
 
 
+

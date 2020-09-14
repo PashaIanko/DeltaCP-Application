@@ -1,11 +1,12 @@
 from ApplicationModule import ApplicationModule
+from CallBackOperators.StartSendingOperator import StartSendingOperator
 
 
 class SignalSendingModule(ApplicationModule):
 
     callback_operators = \
         [
-
+            StartSendingOperator()
         ]
 
     def __init__(self):
