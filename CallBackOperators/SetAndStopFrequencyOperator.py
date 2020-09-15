@@ -12,7 +12,13 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
 
     def SetFrequency(self):
-        print(f'setting frequency = ')
+        lineEditText = self.window.OutputFrequencylineEdit.text()
+
+        if (len(lineEditText) == 0):
+            lineEditText = '0'
+
+        lineEditText = lineEditText.replace(',', '.')
+        print(f'setting {float(lineEditText)} frequency')
 
 
     def StopSettingFrequency(self):
