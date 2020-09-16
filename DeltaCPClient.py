@@ -59,15 +59,11 @@ class DeltaCPClient(ModbusClient):
                 self.if_connected = False
             return self.if_connected
 
-    def WriteOutputFreqRegister(self, FreqStr):
-        print('writing the f=' + str(FreqStr) + ' in the output register')
-        pass
 
-    def SendRunCommand(self):
-        pass
+    def SetFrequency(self, value):
+        print(f'DeltaCP Client sends frequency = {value}')
 
-    def SendStopCommand(self):
-        pass
+
 
 # Source Code from video on Youtube:
 #client = ModbusClient(

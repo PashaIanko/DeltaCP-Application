@@ -1,9 +1,11 @@
 from CallBackOperator import CallBackOperator
+from DeltaCPClient import DeltaCPClient
 
 
 class SetAndStopFrequencyOperator(CallBackOperator):
     def __init__(self):
         self.window = None
+        self.client = DeltaCPClient()
 
     def ConnectCallBack(self, window):
         window.SetFrequencypushButton.clicked.connect(self.SetFrequency)
@@ -15,11 +17,11 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         lineEditText = self.window.OutputFrequencylineEdit.text()
 
         if (len(lineEditText) == 0):
-            lineEditText = '0'
+            lineEditText = '0.0'
 
         lineEditText = lineEditText.replace(',', '.')
-        print(f'setting {float(lineEditText)} frequency')
+        self.client.SetFrequency(float(lineEditText))
 
 
     def StopSettingFrequency(self):
-        print(f'stop setting')
+        self.client.SetFrequency(0.0)
