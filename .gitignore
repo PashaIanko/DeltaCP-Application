@@ -1,8 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
 .idea/
 .idea/workspace.xml
 __pycache__
 CallBackOperators/__pycache__
 SignalGenerationPackage/__pycache__
+__pycache__/
+__pycache__/ApplicationManager.cpython-38.pyc
+__pycache__/Graphics.cpython-38.pyc
+
+
 
 
 

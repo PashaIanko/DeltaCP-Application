@@ -15,7 +15,6 @@ class ConnectionOperator(CallBackOperator):
         self.window = window
 
     def Connect(self):
-        print('in Connect')
         ConnectionParameters = self.ConnectionParameters.GetConnectionParameters()
 
         try:
@@ -28,6 +27,7 @@ class ConnectionOperator(CallBackOperator):
                 Parity=ConnectionParameters['Parity'],
                 BaudRate=ConnectionParameters['BaudRate']
             )
+            repr(self.DeltaCPClient)
         except:
             print('exception')
             return

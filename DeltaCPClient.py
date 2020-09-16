@@ -14,24 +14,23 @@ class DeltaCPClient(ModbusClient):
         self.if_created = False
         self.Client = None
 
+    def __repr__(self):
+        if self.if_created == True:
+            return f'method = {self.Client.method},' \
+                   f'port = {self.Client.port},' \
+                   f'stopbits = {self.Client.stopbits},' \
+                   f'bytesize = {self.Client.bytesize},' \
+                   f'parity = {self.Client.parity},' \
+                   f'baudrate = {self.Client.baudrate},' \
+                   f'timeout = {self.Client.timeout}'
+        else:
+            return 'Client is not created'
+
     def CreateClient(self,
-            Protocol,
-            COMPort,
-            Timeout,
-            StopBits,
-            ByteSize,
-            Parity,
-            BaudRate
-        ):
+            Protocol, COMPort, Timeout, StopBits, ByteSize, Parity, BaudRate ):
+
         print(
-            Protocol,
-            COMPort,
-            Timeout,
-            StopBits,
-            ByteSize,
-            Parity,
-            BaudRate
-        )
+            Protocol, COMPort, Timeout, StopBits, ByteSize, Parity, BaudRate)
         try:
             self.Client = ModbusClient\
                 (
@@ -59,15 +58,11 @@ class DeltaCPClient(ModbusClient):
                 self.if_connected = False
             return self.if_connected
 
-    def WriteOutputFreqRegister(self, FreqStr):
-        print('writing the f=' + str(FreqStr) + ' in the output register')
-        pass
 
-    def SendRunCommand(self):
-        pass
+    def SetFrequency(self, value):
+        print(f'DeltaCP Client sends frequency = {value}')
 
-    def SendStopCommand(self):
-        pass
+
 
 # Source Code from video on Youtube:
 #client = ModbusClient(

@@ -3,6 +3,7 @@ from Graphics import Ui_MainWindow
 from ConnectionPackage.ConnectionModule import ConnectionModule
 from SignalGenerationPackage.SignalGenerationModule import SignalGenerationModule
 from SignalSendingPackage.SignalSendingModule import SignalSendingModule
+from FrequencySettingPackage.FrequencySettingModule import FrequencySettingModule
 from Singleton import Singleton
 
 
@@ -13,6 +14,7 @@ class ApplicationManager(QtWidgets.QMainWindow):
         self.ApplicationModules = \
             [
                 ConnectionModule(),
+                FrequencySettingModule(),
                 SignalGenerationModule(),
                 SignalSendingModule()
             ]
