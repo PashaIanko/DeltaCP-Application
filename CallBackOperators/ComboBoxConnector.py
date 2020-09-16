@@ -19,10 +19,8 @@ class ComboBoxOperator(CallBackOperator):
 
     def SetProtocol(self):
         arg = self.window.ProtocolcomboBox.currentText()
-        print('arg=', arg)
         if (len(arg)):
             self.ConnectionParameters.SetProtocol(arg)
-            print(self.ConnectionParameters.__dict__)
 
     def SetByteSize(self):
         arg = (self.window.ByteSizecomboBox.currentText())

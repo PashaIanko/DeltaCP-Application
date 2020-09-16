@@ -21,6 +21,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
         lineEditText = lineEditText.replace(',', '.')
         self.client.SetFrequency(float(lineEditText))
+        print(repr(self.client))
 
 
     def StopSettingFrequency(self):
