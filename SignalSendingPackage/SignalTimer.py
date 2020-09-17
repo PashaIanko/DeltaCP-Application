@@ -1,9 +1,7 @@
-from Singleton import Singleton
 from threading import Thread, Event, Timer
 import time
 
 
-@Singleton
 class SignalTimer(Thread):
     def __init__(self, interval, function):
         self.interval = interval
