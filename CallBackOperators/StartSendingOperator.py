@@ -23,10 +23,14 @@ class StartSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
 
-        Signal = SignalData.x.copy()
-        Time = SignalData.y.copy()
+        Signal = SignalData.y.copy()
+        Time = SignalData.x.copy()
         N = len(Time)
-        DeltaTimes = [1, 2, 3]  # [dt_next - dt_prev for dt_next, dt_prev in zip(range(1, N), range(0, N-1))]
+
+        DeltaTimes = [Time[dt_next_idx] - Time[dt_prev_idx]
+                      for dt_next_idx, dt_prev_idx
+                      in zip(range(1, N), range(0, N-1))]
+        DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
 
         if len(DeltaTimes):
             print(f' start: {time.asctime()}')
@@ -34,7 +38,6 @@ class StartSendingOperator(CallBackOperator):
             self.Timer.run()
             i = 0
             while True:
-                # print('inside while')
                 if self.FunctionWasCalled:
                     self.FunctionWasCalled = False
                     i += 1
@@ -48,7 +51,7 @@ class StartSendingOperator(CallBackOperator):
 
 
     def StartSendingSignal(self):
-        '''if self.SendingThread is None:
+        if self.SendingThread is None:
             print(f'launching thread')
             self.LaunchSendingThread()
         else:
@@ -56,16 +59,7 @@ class StartSendingOperator(CallBackOperator):
                 print(f'launching thread')
                 self.LaunchSendingThread()
             else:
-                print(f'Prev sending thread is executing, cant launch one')'''
-
-        if self.SendingThreadWasLaunched == False:  # Или поток завершился или не был запущен
-            self.SendingThread = Thread(target=self.ThreadFunc)
-            self.SendingThread.start()  # TODO: Защита, если два раза нажали Start Sending - чтобы два раза поток не запускался
-            self.SendingThreadWasLaunched = True
-            print(self.SendingThread.is_alive())
-        else:
-            print(self.SendingThread.is_alive())
-
+                print(f'Prev sending thread is executing, cant launch one')
 
 
     def TestTimer(self):
