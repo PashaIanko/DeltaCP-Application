@@ -26,24 +26,33 @@ class StartSendingOperator(CallBackOperator):
         Signal = SignalData.y.copy()
         Time = SignalData.x.copy()
         N = len(Time)
+        DeltaTimes = []  # Array consists of dt's. After each dt in the array we execute
+                        # Sending a new value to DeltaPc
+        if N == 0:
+            return
+        elif N == 1:
+            DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
+        else:
+            DeltaTimes = [Time[dt_next_idx] - Time[dt_prev_idx]
+                          for dt_next_idx, dt_prev_idx
+                          in zip(range(1, N), range(0, N-1))]
+            DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
+            print(f'DeltaTimes = {DeltaTimes}')
 
-        DeltaTimes = [Time[dt_next_idx] - Time[dt_prev_idx]
-                      for dt_next_idx, dt_prev_idx
-                      in zip(range(1, N), range(0, N-1))]
-        DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
-
-        if len(DeltaTimes):
-            print(f' start: {time.asctime()}')
-            self.Timer.interval = DeltaTimes[0]
-            self.Timer.run()
-            i = 0
-            while True:
-                if self.FunctionWasCalled:
-                    self.FunctionWasCalled = False
-                    i += 1
-                    self.Timer.reset(DeltaTimes[i])
+        print(f' start: {time.asctime()}')
+        self.Timer.interval = DeltaTimes[0]
+        self.FunctionWasCalled = False
+        self.Timer.run()
+        i = 0
+        while True:
+            if self.FunctionWasCalled:
+                self.FunctionWasCalled = False
+                i += 1
+                self.Timer.reset(DeltaTimes[i])
                 if i == len(DeltaTimes) - 1:
                     break
+        print('Cycle finished successfully!')
+
 
     def LaunchSendingThread(self):
         self.SendingThread = Thread(target=self.ThreadFunc)
