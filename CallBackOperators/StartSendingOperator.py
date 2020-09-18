@@ -29,6 +29,7 @@ class StartSendingOperator(CallBackOperator):
         DeltaTimes = []  # Array consists of dt's. After each dt in the array we execute
                         # Sending a new value to DeltaPc
         if N == 0:
+            print('no points to send')
             return  # No points at all
         elif N == 1:
             DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
@@ -54,7 +55,7 @@ class StartSendingOperator(CallBackOperator):
                     self.Timer.reset(DeltaTimes[i])
                     if i == len(DeltaTimes) - 1:
                         break
-            print('Cycle finished successfully!')
+        print('Cycle finished successfully!')
 
 
     def LaunchSendingThread(self):
