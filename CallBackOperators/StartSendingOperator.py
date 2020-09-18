@@ -26,7 +26,7 @@ class StartSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
 
-        Signal = SignalData.y.copy()
+        Signal = SignalData.y.copy()  # TODO: Check that TimeFrom <= TimeTo
         Time = SignalData.x.copy()
         N = len(Time)
         DeltaTimes = []  # Array consists of dt's. After each dt in the array we execute
@@ -79,9 +79,11 @@ class StartSendingOperator(CallBackOperator):
 
 
     def TestTimer(self):
-        # Client.send(SignalData[SignalIterator])
-        # self.Visualizer.updateVisualization(SignalData.x[Iterator], SignalData.y[Iterator])  # Plot(SignalData.x[Iterator], SignalData.y[Iterator])
-        # SignalIterator += 1
+        current_value = SignalData.y[self.PointsIterator]
+        time_stamp = SignalData.x[self.PointsIterator]
+        # Client.send(value_to_send)
+        self.SignalVisualizer.UpdateVisualization(time_stamp, current_value)
+        self.PointsIterator += 1
         print('Test', time.asctime())
         self.FunctionWasCalled = True
 
