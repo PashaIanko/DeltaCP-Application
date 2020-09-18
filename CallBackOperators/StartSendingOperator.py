@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.SignalData import SignalData
 from SignalSendingPackage.SignalTimer import SignalTimer
+from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from threading import Thread
 import time
 import sys
@@ -14,6 +15,8 @@ class StartSendingOperator(CallBackOperator):
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
         self.SendingThread = None  # Поток, в котором отправляем данные сигнала
+        self.SignalVisualizer = SignalVisualizer()
+        self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
 
     def ConnectCallBack(self, UserInterface):
@@ -76,6 +79,9 @@ class StartSendingOperator(CallBackOperator):
 
 
     def TestTimer(self):
+        # Client.send(SignalData[SignalIterator])
+        # self.Visualizer.updateVisualization(SignalIterator)  # Plot(SignalData.x[Iterator], SignalData.y[Iterator])
+        # SignalIterator += 1
         print('Test', time.asctime())
         self.FunctionWasCalled = True
 
