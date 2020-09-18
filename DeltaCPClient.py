@@ -62,6 +62,11 @@ class DeltaCPClient(ModbusClient):
     def SetFrequency(self, value):
         print(f'DeltaCP Client sends frequency = {value}')
 
+    def ReadRegister(self, address):
+        hh = self.Client.read_holding_registers(address, count=1, unit=1)
+        print('Результат считывания = ', hh.registers[0])
+
+
 
 
 # Source Code from video on Youtube:

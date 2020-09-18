@@ -80,7 +80,7 @@ class StartSendingOperator(CallBackOperator):
 
     def TestTimer(self):
         # Client.send(SignalData[SignalIterator])
-        # self.Visualizer.updateVisualization(SignalIterator)  # Plot(SignalData.x[Iterator], SignalData.y[Iterator])
+        # self.Visualizer.updateVisualization(SignalData.x[Iterator], SignalData.y[Iterator])  # Plot(SignalData.x[Iterator], SignalData.y[Iterator])
         # SignalIterator += 1
         print('Test', time.asctime())
         self.FunctionWasCalled = True
