@@ -42,8 +42,8 @@ class StartSendingOperator(CallBackOperator):
                           in zip(range(1, N), range(0, N-1))]
             DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
 
-        print(f'DeltaTimes = {DeltaTimes}')
-        print(f'Start: {time.asctime()}')
+        #print(f'DeltaTimes = {DeltaTimes}')
+        #print(f'Start: {time.asctime()}')
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.Timer.run()
@@ -59,6 +59,7 @@ class StartSendingOperator(CallBackOperator):
                     if i == len(DeltaTimes) - 1:
                         break
         print('Cycle finished successfully!')
+
 
 
     def LaunchSendingThread(self):
