@@ -2,6 +2,8 @@ from pymodbus.exceptions import ParameterException
 from Singleton import Singleton
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from pymodbus.constants import Defaults
+from DeltaCPRegisters import DeltaCPRegisters
+import numpy as np
 import sys
 
 Defaults.RetryOnEmpty = True
@@ -71,14 +73,37 @@ class DeltaCPClient(ModbusClient):
     def ReadRegister(self, address):
         hh = self.Client.read_holding_registers(address, count=1, unit=1)
         print('Результат считывания = ', hh.registers[0])
+        return hh.registers[0]
+
+    def AdjustRegister(self, mask_bit_AND, mask_bit_OR):
+        try:
+            value = self.ReadRegister(DeltaCPRegisters.StartStopRegister)
+            # value - это 16 битное значение. Чтобы отправить Run (стр. 514/868)
+            # необходимо 0-1 биты выставить как 10
+            # Старший бит должен быть 1
+            # Младший бит должен быть 0
+            # Чтобы отправить Stop - должно быть наоборот
+            print(f'type is {type(value)}, value is {value}')
+            value &= mask_bit_AND
+            value |= mask_bit_OR
+            self.WriteRegister(DeltaCPRegisters.StartStopRegister, value)
+        except:
+            print(sys.exc_info())
 
     def SendStart(self):
         print(f'sending start command')
-        pass
+        mask_bit_AND = np.uint16(65534)  # 0x1111 1111 1111 1110
+        mask_bit_OR = np.uint16(2)   # 0x0000 0000 0000 0010
+        self.AdjustRegister(mask_bit_AND, mask_bit_OR)
+
 
     def SendStop(self):
         print(f'sending stop command')
-        pass
+        mask_bit_AND = np.uint16(65533)  # 0x1111 1111 1111 1101
+        mask_bit_OR = np.uint16(1)  # 0x0000 0000 0000 0001
+        self.AdjustRegister(mask_bit_AND, mask_bit_OR)
+
+
 
 
 
