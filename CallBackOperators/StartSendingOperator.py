@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.SignalData import SignalData
 from SignalSendingPackage.SignalTimer import SignalTimer
+from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from threading import Thread
 import time
 import sys
@@ -14,6 +15,8 @@ class StartSendingOperator(CallBackOperator):
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
         self.SendingThread = None  # Поток, в котором отправляем данные сигнала
+        self.SignalVisualizer = SignalVisualizer()
+        self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
 
     def ConnectCallBack(self, UserInterface):
@@ -23,7 +26,7 @@ class StartSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
 
-        Signal = SignalData.y.copy()
+        Signal = SignalData.y.copy()  # TODO: Check that TimeFrom <= TimeTo
         Time = SignalData.x.copy()
         N = len(Time)
         DeltaTimes = []  # Array consists of dt's. After each dt in the array we execute
@@ -39,8 +42,8 @@ class StartSendingOperator(CallBackOperator):
                           in zip(range(1, N), range(0, N-1))]
             DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
 
-        print(f'DeltaTimes = {DeltaTimes}')
-        print(f'Start: {time.asctime()}')
+        #print(f'DeltaTimes = {DeltaTimes}')
+        #print(f'Start: {time.asctime()}')
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.Timer.run()
@@ -55,7 +58,10 @@ class StartSendingOperator(CallBackOperator):
                     self.Timer.reset(DeltaTimes[i])
                     if i == len(DeltaTimes) - 1:
                         break
-        print('Cycle finished successfully!')
+        print('Cycle finished successfully!')  # TODO: Жмёшь StartSignalSending.Жждёшь завершения. Ещё раз жмёшь - баг
+        # TODO: Паузу, стоп сделать. Сделать бесконечную отправку.
+        # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
+
 
 
     def LaunchSendingThread(self):
@@ -76,6 +82,11 @@ class StartSendingOperator(CallBackOperator):
 
 
     def TestTimer(self):
+        current_value = SignalData.y[self.PointsIterator]
+        time_stamp = SignalData.x[self.PointsIterator]
+        # Client.send(value_to_send)
+        self.SignalVisualizer.UpdateVisualization(time_stamp, current_value)
+        self.PointsIterator += 1
         print('Test', time.asctime())
         self.FunctionWasCalled = True
 

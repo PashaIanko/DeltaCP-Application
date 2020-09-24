@@ -73,6 +73,7 @@ class Ui_MainWindow(object):
         self.BaudRatecomboBox.addItem("")
         self.BaudRatecomboBox.addItem("")
         self.BaudRatecomboBox.addItem("")
+        self.BaudRatecomboBox.addItem("")
         self.gridLayout.addWidget(self.BaudRatecomboBox, 6, 3, 1, 2)
         self.ByteSizecomboBox = QtWidgets.QComboBox(self.layoutWidget1)
         self.ByteSizecomboBox.setObjectName("ByteSizecomboBox")
@@ -201,7 +202,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuNew.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.aaa.setCurrentIndex(1)
+        self.aaa.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -227,6 +228,7 @@ class Ui_MainWindow(object):
         self.BaudRatecomboBox.setItemText(1, _translate("MainWindow", "1200"))
         self.BaudRatecomboBox.setItemText(2, _translate("MainWindow", "2400"))
         self.BaudRatecomboBox.setItemText(3, _translate("MainWindow", "3600"))
+        self.BaudRatecomboBox.setItemText(4, _translate("MainWindow", "9600"))
         self.ByteSizecomboBox.setItemText(1, _translate("MainWindow", "7"))
         self.ByteSizecomboBox.setItemText(2, _translate("MainWindow", "8"))
         self.ParitycomboBox.setItemText(1, _translate("MainWindow", "O"))
@@ -266,4 +268,3 @@ class Ui_MainWindow(object):
         self.menuConnection_Parameters.setTitle(_translate("MainWindow", "Connection Parameters"))
         self.menuOutput_Frequency_Settings.setTitle(_translate("MainWindow", "Output Frequency Settings"))
         self.menuNew.setTitle(_translate("MainWindow", "New"))
-

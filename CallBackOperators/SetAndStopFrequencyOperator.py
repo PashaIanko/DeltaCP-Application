@@ -1,5 +1,6 @@
 from CallBackOperator import CallBackOperator
 from DeltaCPClient import DeltaCPClient
+import sys
 
 
 class SetAndStopFrequencyOperator(CallBackOperator):
@@ -22,6 +23,14 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         lineEditText = lineEditText.replace(',', '.')
         self.client.SetFrequency(float(lineEditText))
         print(repr(self.client))
+
+        # Тест для клиента частотника
+        address = 0x2103
+        try:
+            hh = self.client.ReadRegister(address)
+        except:
+            print(sys.exc_info())
+
 
 
     def StopSettingFrequency(self):

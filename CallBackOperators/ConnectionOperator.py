@@ -33,3 +33,7 @@ class ConnectionOperator(CallBackOperator):
             return
         if_connected = self.DeltaCPClient.Connect()
         print(if_connected)
+
+        # TODO: Есть Баг - Жмёшь Connect, считываешь частоту, ещё раз жмёшь Connect (уже False). Ещё раз считываешь /
+        # частоту - exception (failed to connect)
+        #
