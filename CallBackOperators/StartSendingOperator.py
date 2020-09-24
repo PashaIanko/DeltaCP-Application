@@ -58,7 +58,9 @@ class StartSendingOperator(CallBackOperator):
                     self.Timer.reset(DeltaTimes[i])
                     if i == len(DeltaTimes) - 1:
                         break
-        print('Cycle finished successfully!')
+        print('Cycle finished successfully!')  # TODO: Жмёшь StartSignalSending.Жждёшь завершения. Ещё раз жмёшь - баг
+        # TODO: Паузу, стоп сделать. Сделать бесконечную отправку.
+        # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
 
 
 

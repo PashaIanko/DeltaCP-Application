@@ -14,9 +14,7 @@ class SignalVisualizer:
 
         self.Graph.clear()
         self.Graph.plot(self.x, self.y, marker='.')
-        print(f'Visualization upd: x= {self.x}, y= {self.y}')
         plt.title('SENDING Voltage (Flowrate) VS Time')
         plt.ylabel('Voltage amplitude, V')
         plt.xlabel('Time, sec')
-        # plt.show()
         self.Figure.show()
