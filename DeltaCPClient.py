@@ -84,9 +84,10 @@ class DeltaCPClient(ModbusClient):
             # Младший бит должен быть 0
             # Чтобы отправить Stop - должно быть наоборот
             print(f'type is {type(value)}, value is {value}')
-            value &= mask_bit_AND
-            value |= mask_bit_OR
-            self.WriteRegister(DeltaCPRegisters.StartStopRegister, value)
+            value_16bit = np.uint16(value)
+            value_16bit &= mask_bit_AND
+            value_16bit |= mask_bit_OR
+            self.WriteRegister(DeltaCPRegisters.StartStopRegister, value_16bit)
         except:
             print(sys.exc_info())
 
