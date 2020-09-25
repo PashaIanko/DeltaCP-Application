@@ -28,10 +28,12 @@ class SetAndStopFrequencyOperator(CallBackOperator):
             lineEditText = '0.0'
 
         lineEditText = lineEditText.replace(',', '.')
-
+        #  Если хотим 10 Гц, то представление частоты (XXX.XX Hz) --> Надо
+        #  Отправлять int число == 1000 (Два нуля приписали)
+        value_to_send = int(float(lineEditText) * 100)
         try:
             self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
-                                      float(lineEditText))
+                                      value_to_send)
         except:
             print(sys.exc_info())
 
