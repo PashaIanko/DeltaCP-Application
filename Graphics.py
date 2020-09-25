@@ -116,7 +116,7 @@ class Ui_MainWindow(object):
         self.SetFrequencypushButton.setGeometry(QtCore.QRect(20, 110, 93, 28))
         self.SetFrequencypushButton.setObjectName("SetFrequencypushButton")
         self.StopFrequencypushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
-        self.StopFrequencypushButton.setGeometry(QtCore.QRect(130, 110, 93, 28))
+        self.StopFrequencypushButton.setGeometry(QtCore.QRect(220, 110, 93, 28))
         self.StopFrequencypushButton.setObjectName("StopFrequencypushButton")
         self.layoutWidget2 = QtWidgets.QWidget(self.OutputFrequencySettingTab)
         self.layoutWidget2.setGeometry(QtCore.QRect(10, 40, 267, 41))
@@ -136,6 +136,15 @@ class Ui_MainWindow(object):
         self.FrequencyMaxlineEdit = QtWidgets.QLineEdit(self.OutputFrequencySettingTab)
         self.FrequencyMaxlineEdit.setGeometry(QtCore.QRect(660, 50, 51, 22))
         self.FrequencyMaxlineEdit.setObjectName("FrequencyMaxlineEdit")
+        self.StartFrequencypushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
+        self.StartFrequencypushButton.setGeometry(QtCore.QRect(120, 110, 93, 28))
+        self.StartFrequencypushButton.setObjectName("StartFrequencypushButton")
+        self.RequestCurrentFrequencypushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
+        self.RequestCurrentFrequencypushButton.setGeometry(QtCore.QRect(20, 150, 101, 51))
+        self.RequestCurrentFrequencypushButton.setObjectName("RequestCurrentFrequencypushButton")
+        self.RequestSetFrequencypushButton = QtWidgets.QPushButton(self.OutputFrequencySettingTab)
+        self.RequestSetFrequencypushButton.setGeometry(QtCore.QRect(120, 150, 93, 51))
+        self.RequestSetFrequencypushButton.setObjectName("RequestSetFrequencypushButton")
         self.layoutWidget.raise_()
         self.HztextEdit.raise_()
         self.FrequencySetSlider.raise_()
@@ -143,6 +152,9 @@ class Ui_MainWindow(object):
         self.StopFrequencypushButton.raise_()
         self.FrequencyMinlineEdit.raise_()
         self.FrequencyMaxlineEdit.raise_()
+        self.StartFrequencypushButton.raise_()
+        self.RequestCurrentFrequencypushButton.raise_()
+        self.RequestSetFrequencypushButton.raise_()
         self.aaa.addTab(self.OutputFrequencySettingTab, "")
         self.FrequencySignalSetting = QtWidgets.QWidget()
         self.FrequencySignalSetting.setObjectName("FrequencySignalSetting")
@@ -202,7 +214,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuNew.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.aaa.setCurrentIndex(0)
+        self.aaa.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -250,6 +262,11 @@ class Ui_MainWindow(object):
         self.OutputFrequencylineEdit.setText(_translate("MainWindow", "0"))
         self.FrequencyMinlineEdit.setText(_translate("MainWindow", "0"))
         self.FrequencyMaxlineEdit.setText(_translate("MainWindow", "100"))
+        self.StartFrequencypushButton.setText(_translate("MainWindow", "Start"))
+        self.RequestCurrentFrequencypushButton.setText(_translate("MainWindow", "Request Current\n"
+                                                                                "Frequency"))
+        self.RequestSetFrequencypushButton.setText(_translate("MainWindow", "Request Set \n"
+                                                                            "Frequency"))
         self.aaa.setTabText(self.aaa.indexOf(self.OutputFrequencySettingTab),
                             _translate("MainWindow", "Output Frequency Setting"))
         self.SignalTypecomboBox.setItemText(1, _translate("MainWindow", "sin"))
