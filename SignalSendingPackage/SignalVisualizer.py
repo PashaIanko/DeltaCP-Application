@@ -8,7 +8,11 @@ class SignalVisualizer:
         self.Graph.set_title('SENDING Voltage (Flowrate) VS Time')
         self.Graph.set_xlabel('Time, sec')
         self.Graph.set_ylabel('Voltage amplitude, V')
+        self.x = []
+        self.y = []
 
     def UpdateVisualization(self, x_val, y_val):
-        self.Graph.plot(x_val, y_val, color='b', marker='.')
+        self.x.append(x_val)
+        self.y.append(y_val)
+        self.Graph.plot(self.x, self.y, color='b', marker='.')
         self.Figure.show()
