@@ -3,6 +3,7 @@ from SignalGenerationPackage.SignalData import SignalData
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from threading import Thread
+from DeltaCPClient import DeltaCPClient
 import time
 import sys
 
@@ -12,6 +13,7 @@ class StartSendingOperator(CallBackOperator):
     def __init__(self):
         self.UserInterface = None  # TODO: Перенести в родительский класс UserInterface
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
+        self.DeltaCPClient = DeltaCPClient()
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
         self.SendingThread = None  # Поток, в котором отправляем данные сигнала
@@ -26,8 +28,8 @@ class StartSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
 
-        Signal = SignalData.y.copy()  # TODO: Check that TimeFrom <= TimeTo
-        Time = SignalData.x.copy()
+        # TODO: Check that TimeFrom <= TimeTo
+        Time = SignalData.x  #.copy()
         N = len(Time)
         DeltaTimes = []  # Array consists of dt's. After each dt in the array we execute
                         # Sending a new value to DeltaPc
@@ -42,8 +44,6 @@ class StartSendingOperator(CallBackOperator):
                           in zip(range(1, N), range(0, N-1))]
             DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
 
-        #print(f'DeltaTimes = {DeltaTimes}')
-        #print(f'Start: {time.asctime()}')
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.Timer.run()
@@ -51,13 +51,12 @@ class StartSendingOperator(CallBackOperator):
         if N != 1:  # If the Time array has only one point, then we've already accomplished it in
                     # the method self.Timer.run()
             i = 0
-            while True:
+            i_limit = len(DeltaTimes) - 1
+            while i < i_limit:
                 if self.FunctionWasCalled:
                     self.FunctionWasCalled = False
                     i += 1
                     self.Timer.reset(DeltaTimes[i])
-                    if i == len(DeltaTimes) - 1:
-                        break
         print('Cycle finished successfully!')
         # TODO: Жмёшь StartSignalSending.Жждёшь завершения. Ещё раз жмёшь - баг
         # TODO: Паузу, стоп сделать. Сделать бесконечную отправку.
@@ -85,10 +84,10 @@ class StartSendingOperator(CallBackOperator):
     def TestTimer(self):
         current_value = SignalData.y[self.PointsIterator]
         time_stamp = SignalData.x[self.PointsIterator]
-        # Client.send(value_to_send)
+        # Client.send(value_to_send) ЕЩЕЩ
+        self.DeltaCPClient.SetFrequency(current_value)
         self.SignalVisualizer.UpdateVisualization(time_stamp, current_value)
         self.PointsIterator += 1
-        print('Test', time.asctime())
         self.FunctionWasCalled = True
 
 

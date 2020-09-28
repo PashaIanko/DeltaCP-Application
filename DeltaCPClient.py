@@ -104,6 +104,10 @@ class DeltaCPClient(ModbusClient):
         mask_bit_OR = np.uint16(1)  # 0x0000 0000 0000 0001
         self.AdjustRegister(mask_bit_AND, mask_bit_OR)
 
+    def SetFrequency(self, value):
+        self.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, value)
+
+
 
 
 
