@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 from DeltaCPClient import DeltaCPClient
 from DeltaCPRegisters import DeltaCPRegisters
+import time
 import sys
 
 
@@ -19,7 +20,9 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
 
     def SendStartCommand(self):
+        print(f'before sending START command, time={time.asctime()}')
         self.client.SendStart()
+        print(f'after sending START command, time={time.asctime()}')
 
     def SetFrequency(self):
         lineEditText = self.window.OutputFrequencylineEdit.text()
@@ -32,8 +35,10 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         #  Отправлять int число == 1000 (Два нуля приписали)
         value_to_send = int(float(lineEditText) * 100)
         try:
+            print('before writing into the register', time.asctime())
             self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                       value_to_send)
+            print('after writing into the register', time.asctime())
         except:
             print(sys.exc_info())
 
@@ -41,7 +46,9 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
 
     def SendStopCommand(self):
+        print(f'before sending STOP command, time={time.asctime()}')
         self.client.SendStop()
+        print(f'after sending STOP command, time={time.asctime()}')
 
     def RequestCurrentFrequency(self):
         #  Узнать истинную частоту в данный момент времени
