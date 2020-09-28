@@ -64,6 +64,7 @@ class StartSendingOperator(CallBackOperator):
                           for dt_next_idx, dt_prev_idx
                           in zip(range(1, N), range(0, N-1))]
             DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
+            # TODO: Расчёт DeltaTimes перенести в методы MVC паттерна
 
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
@@ -82,8 +83,7 @@ class StartSendingOperator(CallBackOperator):
                     print('Stop push button --> finishing thread execution')
                     return
         print('Cycle finished successfully!')
-        # TODO: Жмёшь StartSignalSending.Жждёшь завершения. Ещё раз жмёшь - баг
-        # TODO: Паузу, стоп сделать. Сделать бесконечную отправку.
+        # TODO: Сделать бесконечную отправку.
         # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
 
 
@@ -100,7 +100,8 @@ class StartSendingOperator(CallBackOperator):
         else:
             if not self.SendingThread.is_alive():
                 print(f'launching thread')
-                # TODO: Здесь, при запуске нового треда надо restart() визуализации сделать и обновить итератор (опять == 0 его сделать)
+                self.SignalVisualizer.Restart()
+                self.RestartSignalIterator()
                 self.SendingStopped = False  # Надо почистить этот флаг
                 self.LaunchSendingThread()
             else:
@@ -111,7 +112,8 @@ class StartSendingOperator(CallBackOperator):
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
 
-
+    def RestartSignalIterator(self):
+        self.PointsIterator = 0
 
     def TestTimer(self):
         current_value = SignalData.y[self.PointsIterator]

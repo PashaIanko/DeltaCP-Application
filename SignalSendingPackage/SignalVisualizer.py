@@ -16,3 +16,8 @@ class SignalVisualizer:
         self.y.append(y_val)
         self.Graph.plot(self.x, self.y, color='b', marker='.')
         self.Figure.show()
+
+    def Restart(self):
+        self.x.clear()
+        self.y.clear()
+        self.Graph.clear()
