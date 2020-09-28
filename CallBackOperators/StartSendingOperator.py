@@ -24,6 +24,20 @@ class StartSendingOperator(CallBackOperator):
     def ConnectCallBack(self, UserInterface):
         self.UserInterface = UserInterface
         UserInterface.pushButtonStartSignalSending.clicked.connect(self.StartSendingSignal)
+        UserInterface.PauseSendingradioButton.toggled.connect(self.PauseSending)
+        UserInterface.ResumeSendingradioButton.toggled.connect(self.ResumeSending)
+
+    def PauseSending(self):
+        if self.UserInterface.PauseSendingradioButton.isChecked():
+            self.UserInterface.ResumeSendingradioButton.setChecked(False)
+        else:
+            self.UserInterface.ResumeSendingradioButton.setChecked(True)
+
+    def ResumeSending(self):
+        if self.UserInterface.ResumeSendingradioButton.isChecked():
+            self.UserInterface.PauseSendingradioButton.setChecked(False)
+        else:
+            self.UserInterface.PauseSendingradioButton.setChecked(True)
 
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
@@ -84,7 +98,6 @@ class StartSendingOperator(CallBackOperator):
     def TestTimer(self):
         current_value = SignalData.y[self.PointsIterator]
         time_stamp = SignalData.x[self.PointsIterator]
-        # Client.send(value_to_send) ЕЩЕЩ
         self.DeltaCPClient.SetFrequency(current_value)
         self.SignalVisualizer.UpdateVisualization(time_stamp, current_value)
         self.PointsIterator += 1
