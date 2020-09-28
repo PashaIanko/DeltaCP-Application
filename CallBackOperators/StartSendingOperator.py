@@ -19,6 +19,8 @@ class StartSendingOperator(CallBackOperator):
         self.SendingThread = None  # Поток, в котором отправляем данные сигнала
         self.SignalVisualizer = SignalVisualizer()
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
+        self.SendingOnPause = False
+        self.SendingStopped = False
 
 
     def ConnectCallBack(self, UserInterface):
@@ -26,15 +28,20 @@ class StartSendingOperator(CallBackOperator):
         UserInterface.pushButtonStartSignalSending.clicked.connect(self.StartSendingSignal)
         UserInterface.PauseSendingradioButton.toggled.connect(self.PauseSending)
         UserInterface.ResumeSendingradioButton.toggled.connect(self.ResumeSending)
+        UserInterface.pushButtonStopSignalSending.clicked.connect(self.StopSendingSignal)
 
     def PauseSending(self):
         if self.UserInterface.PauseSendingradioButton.isChecked():
+            print('Paused')
+            self.SendingOnPause = True
             self.UserInterface.ResumeSendingradioButton.setChecked(False)
         else:
             self.UserInterface.ResumeSendingradioButton.setChecked(True)
 
     def ResumeSending(self):
         if self.UserInterface.ResumeSendingradioButton.isChecked():
+            print('Resumed')
+            self.SendingOnPause = False
             self.UserInterface.PauseSendingradioButton.setChecked(False)
         else:
             self.UserInterface.PauseSendingradioButton.setChecked(True)
@@ -67,10 +74,13 @@ class StartSendingOperator(CallBackOperator):
             i = 0
             i_limit = len(DeltaTimes) - 1
             while i < i_limit:
-                if self.FunctionWasCalled:
+                if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
                     i += 1
                     self.Timer.reset(DeltaTimes[i])
+                if self.SendingStopped:
+                    print('Stop push button --> finishing thread execution')
+                    return
         print('Cycle finished successfully!')
         # TODO: Жмёшь StartSignalSending.Жждёшь завершения. Ещё раз жмёшь - баг
         # TODO: Паузу, стоп сделать. Сделать бесконечную отправку.
@@ -90,9 +100,17 @@ class StartSendingOperator(CallBackOperator):
         else:
             if not self.SendingThread.is_alive():
                 print(f'launching thread')
+                # TODO: Здесь, при запуске нового треда надо restart() визуализации сделать и обновить итератор (опять == 0 его сделать)
+                self.SendingStopped = False  # Надо почистить этот флаг
                 self.LaunchSendingThread()
             else:
                 print(f'Prev sending thread is executing, cant launch one')
+
+    def StopSendingSignal(self):
+        self.DeltaCPClient.SetFrequency(0.0)
+        self.DeltaCPClient.SendStop()
+        self.SendingStopped = True
+
 
 
     def TestTimer(self):
