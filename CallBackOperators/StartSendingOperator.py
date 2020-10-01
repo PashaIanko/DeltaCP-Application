@@ -97,7 +97,6 @@ class StartSendingOperator(CallBackOperator):
 
                 if self.SendingStopped:
                     print('Stop push button --> finishing thread execution')
-                    self.CycleFinishedSuccessfully = True
                     return
         self.CycleFinishedSuccessfully = True
         return
@@ -110,7 +109,10 @@ class StartSendingOperator(CallBackOperator):
         Time = SignalData.x.copy()
         self.ExecuteSending(Time)
         while True:
-            if self.EndlessSendingEnabled and self.CycleFinishedSuccessfully:
+            if self.SendingStopped == True:
+                self.SendingStopped = False  # Reset the flag
+                return
+            elif self.EndlessSendingEnabled and self.CycleFinishedSuccessfully:
                 # update Time array and restart the cycle
                 self.CycleFinishedSuccessfully = False
                 upd_val = SignalData.x[-1]
