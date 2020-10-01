@@ -21,6 +21,7 @@ class StartSendingOperator(CallBackOperator):
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
         self.SendingOnPause = False
         self.SendingStopped = False
+        self.EndlessSendingEnabled = False
 
 
     def ConnectCallBack(self, UserInterface):
@@ -29,6 +30,13 @@ class StartSendingOperator(CallBackOperator):
         UserInterface.PauseSendingradioButton.toggled.connect(self.PauseSending)
         UserInterface.ResumeSendingradioButton.toggled.connect(self.ResumeSending)
         UserInterface.pushButtonStopSignalSending.clicked.connect(self.StopSendingSignal)
+        UserInterface.EndlessSendingcheckBox.stateChanged.connect(lambda: self.EnableEndlessSending())
+
+
+    def EnableEndlessSending(self):
+        self.EndlessSendingEnabled = \
+            self.UserInterface.EndlessSendingcheckBox.isChecked()
+        print(f'EndlessSendingEnabled = {self.EndlessSendingEnabled}')
 
     def PauseSending(self):
         if self.UserInterface.PauseSendingradioButton.isChecked():
