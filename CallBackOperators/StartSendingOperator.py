@@ -12,6 +12,8 @@ class StartSendingOperator(CallBackOperator):
 
     def __init__(self):
         self.UserInterface = None  # TODO: Перенести в родительский класс UserInterface
+        self.TimeStamp = 0
+        self.ValueToSend = 0
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         self.DeltaCPClient = DeltaCPClient()
         self.FunctionWasCalled = False
@@ -22,6 +24,8 @@ class StartSendingOperator(CallBackOperator):
         self.SendingOnPause = False
         self.SendingStopped = False
         self.EndlessSendingEnabled = False
+        self.CycleFinishedSuccessfully = False
+
 
 
     def ConnectCallBack(self, UserInterface):
@@ -54,14 +58,10 @@ class StartSendingOperator(CallBackOperator):
         else:
             self.UserInterface.PauseSendingradioButton.setChecked(True)
 
-    def ThreadFunc(self):
-        self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
-
-        # TODO: Check that TimeFrom <= TimeTo
-        Time = SignalData.x  #.copy()
+    def ExecuteSending(self, Time):
         N = len(Time)
         DeltaTimes = []  # Array consists of dt's. After each dt in the array we execute
-                        # Sending a new value to DeltaPc
+        # Sending a new value to DeltaPc
         if N == 0:
             print('no points to send')
             return  # No points at all
@@ -70,16 +70,20 @@ class StartSendingOperator(CallBackOperator):
         else:
             DeltaTimes = [Time[dt_next_idx] - Time[dt_prev_idx]
                           for dt_next_idx, dt_prev_idx
-                          in zip(range(1, N), range(0, N-1))]
+                          in zip(range(1, N), range(0, N - 1))]
             DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
             # TODO: Расчёт DeltaTimes перенести в методы MVC паттерна
 
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
+        self.PointsIterator = 0
+        self.TimeStamp = Time[self.PointsIterator]
+        self.ValueToSend = SignalData.y[self.PointsIterator]
         self.Timer.run()
 
+
         if N != 1:  # If the Time array has only one point, then we've already accomplished it in
-                    # the method self.Timer.run()
+            # the method self.Timer.run()
             i = 0
             i_limit = len(DeltaTimes) - 1
             while i < i_limit:
@@ -87,18 +91,43 @@ class StartSendingOperator(CallBackOperator):
                     self.FunctionWasCalled = False
                     i += 1
                     self.Timer.reset(DeltaTimes[i])
+                    self.PointsIterator += 1
+                    self.ValueToSend = SignalData.y[self.PointsIterator]
+                    self.TimeStamp = Time[self.PointsIterator]
+
                 if self.SendingStopped:
                     print('Stop push button --> finishing thread execution')
+                    self.CycleFinishedSuccessfully = True
                     return
-        print('Cycle finished successfully!')
+        self.CycleFinishedSuccessfully = True
+        return
         # TODO: Сделать бесконечную отправку.
         # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
+
+    def ThreadFunc(self):
+        self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
+        # TODO: Check that TimeFrom <= TimeTo
+        Time = SignalData.x.copy()
+        self.ExecuteSending(Time)
+        while True:
+            if self.EndlessSendingEnabled and self.CycleFinishedSuccessfully:
+                # update Time array and restart the cycle
+                self.CycleFinishedSuccessfully = False
+                upd_val = SignalData.x[-1]
+                for i in range(len(Time)):
+                    Time[i] += upd_val
+                self.RestartSignalIterator()
+                self.ExecuteSending(Time)
+
+
 
 
 
     def LaunchSendingThread(self):
         self.SendingThread = Thread(target=self.ThreadFunc)
         self.SendingThread.start()
+
+
 
 
     def StartSendingSignal(self):
@@ -124,11 +153,8 @@ class StartSendingOperator(CallBackOperator):
         self.PointsIterator = 0
 
     def TestTimer(self):
-        current_value = SignalData.y[self.PointsIterator]
-        time_stamp = SignalData.x[self.PointsIterator]
-        self.DeltaCPClient.SetFrequency(current_value)
-        self.SignalVisualizer.UpdateVisualization(time_stamp, current_value)
-        self.PointsIterator += 1
+        self.DeltaCPClient.SetFrequency(self.ValueToSend)
+        self.SignalVisualizer.UpdateVisualization(self.TimeStamp, self.ValueToSend)
         self.FunctionWasCalled = True
 
 
