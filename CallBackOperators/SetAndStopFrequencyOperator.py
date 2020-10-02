@@ -10,6 +10,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         self.window = None
         self.client = DeltaCPClient()
 
+
     def ConnectCallBack(self, window):
         window.SetFrequencypushButton.clicked.connect(self.SetFrequency)
         window.StartFrequencypushButton.clicked.connect(self.SendStartCommand)
@@ -20,9 +21,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
 
     def SendStartCommand(self):
-        print(f'before sending START command, time={time.asctime()}')
         self.client.SendStart()
-        print(f'after sending START command, time={time.asctime()}')
 
     def SetFrequency(self):
         lineEditText = self.window.OutputFrequencylineEdit.text()
@@ -35,27 +34,20 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         #  Отправлять int число == 1000 (Два нуля приписали)
         value_to_send = int(float(lineEditText) * 100)
         try:
-            print('before writing into the register', time.asctime())
             res = self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                       value_to_send)
-            print('after writing into the register', time.asctime())
-
         except:
             print(sys.exc_info())
 
 
-
-
     def SendStopCommand(self):
-        print(f'before sending STOP command, time={time.asctime()}')
         self.client.SendStop()
-        print(f'after sending STOP command, time={time.asctime()}')
+
 
     def RequestCurrentFrequency(self):
         #  Узнать истинную частоту в данный момент времени
         try:
             CurrentFreq = self.client.RequestCurrentFrequency()
-            print('Истинная выходная частота = ', CurrentFreq)
         except:
             print(sys.exc_info())
 
@@ -64,6 +56,5 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         #  Узнать, какую частоту мы задали (Output Frequency Command)
         try:
             SetFreq = self.client.RequestSetFrequency()
-            print(f'Заданная частота = {SetFreq}')
         except:
             print(sys.exc_info())
