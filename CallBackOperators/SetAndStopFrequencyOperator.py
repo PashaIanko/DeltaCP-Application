@@ -36,9 +36,10 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         value_to_send = int(float(lineEditText) * 100)
         try:
             print('before writing into the register', time.asctime())
-            self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
+            res = self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                       value_to_send)
             print('after writing into the register', time.asctime())
+
         except:
             print(sys.exc_info())
 

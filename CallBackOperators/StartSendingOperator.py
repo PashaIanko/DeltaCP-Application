@@ -100,7 +100,6 @@ class StartSendingOperator(CallBackOperator):
                     return
         self.CycleFinishedSuccessfully = True
         return
-        # TODO: Сделать бесконечную отправку.
         # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
 
     def ThreadFunc(self):

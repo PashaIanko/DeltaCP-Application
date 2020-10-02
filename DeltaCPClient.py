@@ -10,6 +10,7 @@ Defaults.RetryOnEmpty = True
 Defaults.Timeout = 5
 Defaults.Retries = 5
 
+
 @Singleton
 class DeltaCPClient(ModbusClient):
     # Frequency Transducer Client
