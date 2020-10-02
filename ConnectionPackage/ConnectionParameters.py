@@ -9,7 +9,7 @@ class ConnectionParameters:
         self.ByteSize = 0
         self.Parity = ""
         self.StopBits = 0
-        self.Timeout = 2
+        self.Timeout = 0.1
 
     def SetProtocol(self, Protocol):
         self.Protocol = Protocol

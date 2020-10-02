@@ -10,6 +10,7 @@ Defaults.RetryOnEmpty = True
 Defaults.Timeout = 5
 Defaults.Retries = 5
 
+
 @Singleton
 class DeltaCPClient(ModbusClient):
     # Frequency Transducer Client
@@ -71,9 +72,12 @@ class DeltaCPClient(ModbusClient):
             print(sys.exc_info())
 
     def ReadRegister(self, address):
-        hh = self.Client.read_holding_registers(address, count=1, unit=1)
-        print('Результат считывания = ', hh.registers[0])
-        return hh.registers[0]
+        try:
+            hh = self.Client.read_holding_registers(address, count=1, unit=1)
+            print('Результат считывания = ', hh.registers[0])
+            return hh.registers[0]
+        except:
+            print(sys.exc_info())
 
     def AdjustRegister(self, mask_bit_AND, mask_bit_OR):
         try:
@@ -106,6 +110,16 @@ class DeltaCPClient(ModbusClient):
 
     def SetFrequency(self, value):
         self.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, value)
+
+    def RequestCurrentFrequency(self):
+        res = self.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister)
+        if res is not None:
+            return res / 100
+
+    def RequestSetFrequency(self):
+        res = self.ReadRegister(DeltaCPRegisters.SetFrequencyRegister)
+        if res is not None:
+            return res / 100
 
 
 

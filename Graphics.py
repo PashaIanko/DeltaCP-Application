@@ -186,6 +186,9 @@ class Ui_MainWindow(object):
         self.pushButtonStopSignalSending = QtWidgets.QPushButton(self.SignalSendingTab)
         self.pushButtonStopSignalSending.setGeometry(QtCore.QRect(40, 170, 131, 41))
         self.pushButtonStopSignalSending.setObjectName("pushButtonStopSignalSending")
+        self.EndlessSendingcheckBox = QtWidgets.QCheckBox(self.SignalSendingTab)
+        self.EndlessSendingcheckBox.setGeometry(QtCore.QRect(200, 70, 191, 20))
+        self.EndlessSendingcheckBox.setObjectName("EndlessSendingcheckBox")
         self.aaa.addTab(self.SignalSendingTab, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -272,6 +275,7 @@ class Ui_MainWindow(object):
         self.PauseSendingradioButton.setText(_translate("MainWindow", "Pause"))
         self.ResumeSendingradioButton.setText(_translate("MainWindow", "Resume"))
         self.pushButtonStopSignalSending.setText(_translate("MainWindow", "Stop Signal Sending"))
+        self.EndlessSendingcheckBox.setText(_translate("MainWindow", "Send Pattern Continuously"))
         self.aaa.setTabText(self.aaa.indexOf(self.SignalSendingTab),
                             _translate("MainWindow", "Signal Sending to Delta PC"))
         self.menuConnection_Parameters.setTitle(_translate("MainWindow", "Connection Parameters"))
