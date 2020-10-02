@@ -10,12 +10,18 @@ class SignalVisualizer:
         self.Graph.set_ylabel('Voltage amplitude, V')
         self.x = []
         self.y = []
+        self.actual_freq = []
 
-    def UpdateVisualization(self, x_val, y_val):
+    def UpdateSetFrequency(self, x_val, y_val):
         self.x.append(x_val)
         self.y.append(y_val)
         self.Graph.plot(self.x, self.y, color='b', marker='.')
         self.Figure.show()
+
+    def UpdateCurrentFrequency(self, x_val, y_val):
+        self.actual_freq.append(y_val)
+        self.Graph.plot(self.x, self.actual_freq, color='r', marker='.')
+
 
     def Restart(self):
         self.x.clear()

@@ -134,6 +134,7 @@ class StartSendingOperator(CallBackOperator):
     def StartSendingSignal(self):
         if self.SendingThread is None:
             print(f'launching thread')
+            self.DeltaCPClient.SendStart()
             self.LaunchSendingThread()
         else:
             if not self.SendingThread.is_alive():
@@ -154,8 +155,12 @@ class StartSendingOperator(CallBackOperator):
         self.PointsIterator = 0
 
     def TestTimer(self):
-        self.DeltaCPClient.SetFrequency(self.ValueToSend)
-        self.SignalVisualizer.UpdateVisualization(self.TimeStamp, self.ValueToSend)
+        value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+        self.DeltaCPClient.SetFrequency(value_to_send)
+        CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+        self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
+        self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+
         self.FunctionWasCalled = True
 
 

@@ -54,7 +54,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
     def RequestCurrentFrequency(self):
         #  Узнать истинную частоту в данный момент времени
         try:
-            CurrentFreq = self.client.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister)
+            CurrentFreq = self.client.RequestCurrentFrequency()
             print('Истинная выходная частота = ', CurrentFreq)
         except:
             print(sys.exc_info())
@@ -63,7 +63,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
     def RequestSetFrequency(self):
         #  Узнать, какую частоту мы задали (Output Frequency Command)
         try:
-            SetFreq = self.client.ReadRegister(DeltaCPRegisters.SetFrequencyRegister)
+            SetFreq = self.client.RequestSetFrequency()
             print(f'Заданная частота = {SetFreq}')
         except:
             print(sys.exc_info())
