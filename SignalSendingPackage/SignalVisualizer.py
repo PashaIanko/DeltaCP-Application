@@ -12,11 +12,13 @@ class SignalVisualizer:
         self.y = []
         self.actual_freq = []
 
+
     def UpdateSetFrequency(self, x_val, y_val):
         self.x.append(x_val)
         self.y.append(y_val)
         self.Graph.plot(self.x, self.y, color='b', marker='.')
         self.Figure.show()
+
 
     def UpdateCurrentFrequency(self, x_val, y_val):
         self.actual_freq.append(y_val)

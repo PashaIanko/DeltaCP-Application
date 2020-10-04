@@ -59,21 +59,8 @@ class StartSendingOperator(CallBackOperator):
             self.UserInterface.PauseSendingradioButton.setChecked(True)
 
     def ExecuteSending(self, Time):
-        N = len(Time)
-        DeltaTimes = []  # Array consists of dt's. After each dt in the array we execute
-        # Sending a new value to DeltaPc
-        if N == 0:
-            print('no points to send')
-            return  # No points at all
-        elif N == 1:
-            DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
-        else:
-            DeltaTimes = [Time[dt_next_idx] - Time[dt_prev_idx]
-                          for dt_next_idx, dt_prev_idx
-                          in zip(range(1, N), range(0, N - 1))]
-            DeltaTimes.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
-            # TODO: Расчёт DeltaTimes перенести в методы MVC паттерна
-
+        DeltaTimes = SignalData.dx
+        N = len(DeltaTimes)
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 0
@@ -83,9 +70,9 @@ class StartSendingOperator(CallBackOperator):
 
 
         if N != 1:  # If the Time array has only one point, then we've already accomplished it in
-            # the method self.Timer.run()
+                    # the method self.Timer.run()
             i = 0
-            i_limit = len(DeltaTimes) - 1
+            i_limit = N - 1
             while i < i_limit:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
