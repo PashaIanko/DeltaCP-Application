@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 class SignalVisualizer:
     def __init__(self):
         self.Figure = plt.figure()
+        self.Figure.canvas.mpl_connect('close_event', self.HandleCloseEvent)
         self.Graph = plt.subplot(111)
         self.Graph.set_title('SENDING Voltage (Flowrate) VS Time')
         self.Graph.set_xlabel('Time, sec')
@@ -17,13 +18,16 @@ class SignalVisualizer:
         self.x.append(x_val)
         self.y.append(y_val)
         self.Graph.plot(self.x, self.y, color='b', marker='.')
+        #self.Graph.plot(x_val, y_val, color='b', marker='.')
         self.Figure.show()
-
 
     def UpdateCurrentFrequency(self, x_val, y_val):
         self.actual_freq.append(y_val)
         self.Graph.plot(self.x, self.actual_freq, color='r', marker='.')
 
+    def HandleCloseEvent(self, evt):
+        print('closed figure')
+        self.Figure = plt.figure()
 
     def Restart(self):
         self.x.clear()
