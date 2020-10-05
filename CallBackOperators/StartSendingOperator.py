@@ -65,6 +65,7 @@ class StartSendingOperator(CallBackOperator):
     def ExecuteSending(self, Time):
         DeltaTimes = SignalData.dx
         N = len(DeltaTimes)
+        print(f'len Delta times = {N}')
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 0
@@ -84,13 +85,16 @@ class StartSendingOperator(CallBackOperator):
                     i += 1
                     self.Timer.reset(DeltaTimes[i])
                     self.PointsIterator += 1
+                    print(f'Points Iterator = {self.PointsIterator}')
                     self.ValueToSend = SignalData.y[self.PointsIterator]
                     self.TimeStamp = Time[self.PointsIterator]
+
 
                 if self.SendingStopped:
                     print('Stop push button --> finishing thread execution')
                     return
         self.CycleFinishedSuccessfully = True
+        print(f'Finished CYCLE!')
         return
         # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
 

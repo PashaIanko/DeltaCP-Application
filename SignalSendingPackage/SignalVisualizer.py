@@ -14,6 +14,7 @@ class SignalVisualizer:
         self.Offset = 0.3
 
     def UpdateSetFrequency(self, x_val, y_val):
+        print(f'I AM SENDING {x_val, y_val} VALUE!')
         self.Graph.plot(x_val, y_val, 'r+', markersize=15)
         self.Graph.plot(self.x, self.y, color='b', marker='.')
         self.Figure.show()

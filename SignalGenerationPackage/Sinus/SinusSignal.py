@@ -1,6 +1,7 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.Sinus.SinusData import SinusData
 from SignalGenerationPackage.SignalData import SignalData
+import statistics
 import numpy as np
 
 
@@ -42,6 +43,8 @@ class SinusSignal(Signal):
                 for dt_next_idx, dt_prev_idx
                 in zip(range(1, N), range(0, N - 1))
             ]
+            #SignalData.dx.insert(len(SignalData.dx), statistics.mean(SignalData.dx))  # Ещё одно значение нужно, а то
+                                                                                    # точку последнюю не дорисовывает
             SignalData.dx.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
 
 
