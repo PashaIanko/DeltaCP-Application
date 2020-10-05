@@ -70,8 +70,7 @@ class StartSendingOperator(CallBackOperator):
         self.PointsIterator = 0
         self.TimeStamp = Time[self.PointsIterator]
         self.ValueToSend = SignalData.y[self.PointsIterator]
-        self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
-        print(f'self.TimeStamp = {self.TimeStamp}, value= {self.ValueToSend} ')
+
         self.Timer.run()
 
 
@@ -99,7 +98,10 @@ class StartSendingOperator(CallBackOperator):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
         Time = SignalData.x.copy()
+        self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
         self.ExecuteSending(Time)
+
+
         while True:
             if self.SendingStopped == True:
                 self.SendingStopped = False  # Reset the flag
@@ -116,6 +118,7 @@ class StartSendingOperator(CallBackOperator):
 
 
     def RestartVisualization(self, TimeArray):
+        print(f'Restarting Visualization!!')
         self.SignalVisualizer.Restart(TimeArray)
 
 
