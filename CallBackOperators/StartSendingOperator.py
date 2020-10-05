@@ -25,6 +25,10 @@ class StartSendingOperator(CallBackOperator):
         self.SendingStopped = False
         self.EndlessSendingEnabled = False
         self.CycleFinishedSuccessfully = False
+        self.CommandExecutionTime = 0.02  # Часть времени уходит на исполнение команды (отправку частоты на
+                                        # частотник, обновление отрисовки). Надо подобрать этот параметр,
+                                        # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
+                                        # на исполнение команды
 
 
 
@@ -66,6 +70,8 @@ class StartSendingOperator(CallBackOperator):
         self.PointsIterator = 0
         self.TimeStamp = Time[self.PointsIterator]
         self.ValueToSend = SignalData.y[self.PointsIterator]
+        self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
+        print(f'self.TimeStamp = {self.TimeStamp}, value= {self.ValueToSend} ')
         self.Timer.run()
 
 
@@ -105,7 +111,13 @@ class StartSendingOperator(CallBackOperator):
                 for i in range(len(Time)):
                     Time[i] += upd_val
                 self.RestartSignalIterator()
+                self.RestartVisualization(Time)
                 self.ExecuteSending(Time)
+
+
+    def RestartVisualization(self, TimeArray):
+        self.SignalVisualizer.Restart(TimeArray)
+
 
 
 
@@ -126,7 +138,7 @@ class StartSendingOperator(CallBackOperator):
         else:
             if not self.SendingThread.is_alive():
                 print(f'launching thread')
-                self.SignalVisualizer.Restart()
+                self.SignalVisualizer.Restart(TimeArray=[])
                 self.RestartSignalIterator()
                 self.SendingStopped = False  # Надо почистить этот флаг
                 self.LaunchSendingThread()
