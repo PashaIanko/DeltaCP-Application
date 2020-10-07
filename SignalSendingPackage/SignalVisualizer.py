@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+import sys
 
 class SignalVisualizer:
     def __init__(self, x_arr=[], y_arr=[]):

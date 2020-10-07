@@ -63,9 +63,10 @@ class StartSendingOperator(CallBackOperator):
             self.UserInterface.PauseSendingradioButton.setChecked(True)
 
     def ExecuteSending(self, Time):
+        self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         DeltaTimes = SignalData.dx
         N = len(DeltaTimes)
-        print(f'len Delta times = {N}')
+        print(f'len Delta times = {N}, DeltaTime = {DeltaTimes[0]}')
         self.Timer.interval = DeltaTimes[0]
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 0
@@ -73,13 +74,14 @@ class StartSendingOperator(CallBackOperator):
         self.ValueToSend = SignalData.y[self.PointsIterator]
 
         self.Timer.run()
-
+        print(f'After Timer run')
 
         if N != 1:  # If the Time array has only one point, then we've already accomplished it in
                     # the method self.Timer.run()
             i = 0
             i_limit = N - 1
             while i < i_limit:
+                #print(f'inside while')
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
                     i += 1
@@ -94,9 +96,14 @@ class StartSendingOperator(CallBackOperator):
                     print('Stop push button --> finishing thread execution')
                     return
 
-        self.CycleFinishedSuccessfully = True
-        print(f'Finished CYCLE!')
-        return
+        #self.CycleFinishedSuccessfully = True
+        #print(f'Finished CYCLE!')
+        while True:
+            if self.FunctionWasCalled == True:
+                self.FunctionWasCalled = False
+                self.CycleFinishedSuccessfully = True
+                print(f'Finished CYCLE!')
+                return
         # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
 
     def ThreadFunc(self):
@@ -116,7 +123,7 @@ class StartSendingOperator(CallBackOperator):
                 self.CycleFinishedSuccessfully = False
                 upd_val = SignalData.x[-1]
                 for i in range(len(Time)):
-                    Time[i] += upd_val
+                    Time[i] += upd_val + SignalData.dx[i]
                 self.RestartSignalIterator()
                 self.RestartVisualization(Time)
                 self.ExecuteSending(Time)
@@ -162,6 +169,7 @@ class StartSendingOperator(CallBackOperator):
         self.PointsIterator = 0
 
     def TestTimer(self):
+        print(f'Inside Timer Function')
         value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
         self.DeltaCPClient.SetFrequency(value_to_send)
         CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
