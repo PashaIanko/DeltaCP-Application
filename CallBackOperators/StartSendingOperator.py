@@ -83,16 +83,17 @@ class StartSendingOperator(CallBackOperator):
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
                     i += 1
-                    self.Timer.reset(DeltaTimes[i])
                     self.PointsIterator += 1
+
                     print(f'Points Iterator = {self.PointsIterator}')
                     self.ValueToSend = SignalData.y[self.PointsIterator]
                     self.TimeStamp = Time[self.PointsIterator]
-
+                    self.Timer.reset(DeltaTimes[i])
 
                 if self.SendingStopped:
                     print('Stop push button --> finishing thread execution')
                     return
+
         self.CycleFinishedSuccessfully = True
         print(f'Finished CYCLE!')
         return
