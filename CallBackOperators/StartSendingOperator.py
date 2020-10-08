@@ -25,7 +25,7 @@ class StartSendingOperator(CallBackOperator):
         self.SendingStopped = False
         self.EndlessSendingEnabled = False
         self.CycleFinishedSuccessfully = False
-        self.CommandExecutionTime = 0.05  # Часть времени уходит на исполнение команды (отправку частоты на
+        self.CommandExecutionTime = 0.23  # Часть времени уходит на исполнение команды (отправку частоты на
                                         # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                         # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                         # на исполнение команды
