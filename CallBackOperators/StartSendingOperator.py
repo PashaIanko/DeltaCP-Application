@@ -124,9 +124,24 @@ class StartSendingOperator(CallBackOperator):
                 upd_val = SignalData.x[-1]
                 for i in range(len(Time)):
                     Time[i] += upd_val + SignalData.dx[i]
-                self.RestartSignalIterator()
-                self.RestartVisualization(Time)
+
+                # restarting points Iterator, Visualisation and Sending Thread
+                self.PointsIterator = 0
+                self.SignalVisualizer.Restart(Time)
                 self.ExecuteSending(Time)
+
+                #self.RestartSignalIterator()
+                #self.RestartVisualization(Time)
+                #self.ExecuteSending(Time)
+
+    def Restart(self, Time):
+        self.CycleFinishedSuccessfully = False
+        upd_val = SignalData.x[-1]
+        for i in range(len(Time)):
+            Time[i] += upd_val + SignalData.dx[i]
+        self.RestartSignalIterator()
+        self.RestartVisualization(Time)
+        self.ExecuteSending(Time)
 
 
     def RestartVisualization(self, TimeArray):
