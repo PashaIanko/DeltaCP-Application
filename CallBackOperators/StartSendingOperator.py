@@ -25,7 +25,7 @@ class StartSendingOperator(CallBackOperator):
         self.SendingStopped = False
         self.EndlessSendingEnabled = False
         self.CycleFinishedSuccessfully = False
-        self.CommandExecutionTime = 0.02  # Часть времени уходит на исполнение команды (отправку частоты на
+        self.CommandExecutionTime = 0.05  # Часть времени уходит на исполнение команды (отправку частоты на
                                         # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                         # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                         # на исполнение команды
@@ -71,10 +71,10 @@ class StartSendingOperator(CallBackOperator):
         self.TimeStamp = Time[self.PointsIterator]
         self.ValueToSend = SignalData.y[self.PointsIterator]
 
-        self.Timer.interval = DeltaTimes[0]
         if self.Timer.if_started == True:  # Если уже дали старт таймеру на предудущем цикле
-            self.Timer.reset(DeltaTimes[0])
+            self.Timer.reset(DeltaTimes[0] - self.CommandExecutionTime)
         else:
+            self.Timer.interval = DeltaTimes[0] - self.CommandExecutionTime
             self.Timer.run()
 
         if N != 1:  # If the Time array has only one point, then we've already accomplished it in
@@ -87,19 +87,14 @@ class StartSendingOperator(CallBackOperator):
                     self.FunctionWasCalled = False
                     i += 1
                     self.PointsIterator += 1
-
-                    print(f'Points Iterator = {self.PointsIterator}')
                     self.ValueToSend = SignalData.y[self.PointsIterator]
                     self.TimeStamp = Time[self.PointsIterator]
-                    self.Timer.reset(DeltaTimes[i])
+                    self.Timer.reset(DeltaTimes[i] - self.CommandExecutionTime)
 
                 if self.SendingStopped:
                     print('Stop push button --> finishing thread execution')
                     return
-
-        #self.CycleFinishedSuccessfully = True
-        #print(f'Finished CYCLE!')
-        while True:
+        while True: # Дожидаемся отправки последней команды (на краю сэмпла, чтобы на визуализации тоже это увидеть)
             if self.FunctionWasCalled == True:
                 self.FunctionWasCalled = False
                 self.CycleFinishedSuccessfully = True
