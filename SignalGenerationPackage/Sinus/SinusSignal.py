@@ -1,6 +1,7 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.Sinus.SinusData import SinusData
 from SignalGenerationPackage.SignalData import SignalData
+import statistics
 import numpy as np
 
 
@@ -24,11 +25,26 @@ class SinusSignal(Signal):
     def Func(self, x):
         return abs(self.SignalData.Amplitude * np.sin(self.SignalData.Omega * x + self.SignalData.Phase))
 
-    def RecalcData(self):
-        SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber, endpoint=True) # Пересчёт ГЛОБАЛЬНЫХ Переменных
-        SignalData.y = [self.Func(x) for x in SignalData.x] # TODO: X_From, X_To запихать в родителя
-        # self.SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber)
-        # self.SignalData.y = [self.Func(x) for x in self.SignalData.x]
+    def UpdateSignalData(self):
+        print('updating SignalData')
+        SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber,
+                                   endpoint=True)  # Пересчёт ГЛОБАЛЬНЫХ Переменных
+        SignalData.y = [self.Func(x) for x in SignalData.x]  # TODO: X_From, X_To запихать в родителя
+
+    def UpdateDeltaTimes(self):
+        N = len(SignalData.x)
+        if N == 0:
+            return  # No points at all
+        elif N == 1:
+            SignalData.dx.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
+        elif N > 1:
+            SignalData.dx = [
+                SignalData.x[dt_next_idx] - SignalData.x[dt_prev_idx]
+                for dt_next_idx, dt_prev_idx
+                in zip(range(1, N), range(0, N - 1))
+            ]
+            SignalData.dx.insert(0, statistics.mean(SignalData.dx))  # Начальная точка отсчёта по времени, 0.00
+
 
     @property
     def amplitude(self):

@@ -21,6 +21,22 @@ class Signal(metaclass=ABCMeta):
     def Func(self, x):
         pass
 
+
+    @abstractmethod
+    def UpdateSignalData(self):
+        pass
+
+    @abstractmethod
+    def UpdateDeltaTimes(self):
+        pass
+
+
+
+    def RecalcData(self):
+        self.UpdateSignalData()
+        self.UpdateDeltaTimes()  # We calculate the array of dt values for optimization sakes, in the
+                                # Signal Sending Module
+
     def AddObserver(self, Observer):
         self.Observers.append(Observer)
 
