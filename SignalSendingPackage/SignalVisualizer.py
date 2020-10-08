@@ -14,7 +14,6 @@ class SignalVisualizer:
         self.Offset = 0.3
 
     def UpdateSetFrequency(self, x_val, y_val):
-        print(f'I AM SENDING {x_val, y_val} VALUE!')
         self.Graph.plot(x_val, y_val, 'r+', markersize=15)
         self.Graph.plot(self.x, self.y, color='b', marker='.')
         self.Figure.show()
@@ -27,7 +26,7 @@ class SignalVisualizer:
         self.Figure = plt.figure()
 
     def Restart(self, TimeArray):
-        self.Graph.clear()
+        #self.Graph.clear()
         if len(TimeArray) != 0:
             self.x = TimeArray
             self.Graph.set_xlim(self.x[0] - self.Offset, self.x[-1] + self.Offset)

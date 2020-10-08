@@ -4,6 +4,7 @@ from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from pymodbus.constants import Defaults
 from DeltaCPRegisters import DeltaCPRegisters
 import numpy as np
+import time
 import sys
 
 Defaults.RetryOnEmpty = True
@@ -109,6 +110,7 @@ class DeltaCPClient(ModbusClient):
         self.AdjustRegister(mask_bit_AND, mask_bit_OR)
 
     def SetFrequency(self, value):
+        print(f'Client sends freq={value}, time={time.asctime()}')
         self.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, value)
 
     def RequestCurrentFrequency(self):
