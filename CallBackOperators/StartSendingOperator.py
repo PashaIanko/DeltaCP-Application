@@ -63,18 +63,19 @@ class StartSendingOperator(CallBackOperator):
             self.UserInterface.PauseSendingradioButton.setChecked(True)
 
     def ExecuteSending(self, Time):
-        self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         DeltaTimes = SignalData.dx
         N = len(DeltaTimes)
-        print(f'len Delta times = {N}, DeltaTime = {DeltaTimes[0]}')
-        self.Timer.interval = DeltaTimes[0]
+
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 0
         self.TimeStamp = Time[self.PointsIterator]
         self.ValueToSend = SignalData.y[self.PointsIterator]
 
-        self.Timer.run()
-        print(f'After Timer run')
+        self.Timer.interval = DeltaTimes[0]
+        if self.Timer.if_started == True:  # Если уже дали старт таймеру на предудущем цикле
+            self.Timer.reset(DeltaTimes[0])
+        else:
+            self.Timer.run()
 
         if N != 1:  # If the Time array has only one point, then we've already accomplished it in
                     # the method self.Timer.run()
@@ -104,7 +105,7 @@ class StartSendingOperator(CallBackOperator):
                 self.CycleFinishedSuccessfully = True
                 print(f'Finished CYCLE!')
                 return
-        # TODO: Медленно работает, если частота отправки > раза в секунду. Оптимизировать
+
 
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
