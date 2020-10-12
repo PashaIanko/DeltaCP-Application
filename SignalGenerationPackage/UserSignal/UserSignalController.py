@@ -2,12 +2,13 @@ from SignalGenerationPackage.SignalController import  SignalController
 from SignalGenerationPackage.UserSignal.Ui_UserSignalWindow import Ui_UserSignalWindow
 from SignalGenerationPackage.UserSignal.UserSignal import UserSignal
 from SignalGenerationPackage.UserSignal.UserSignalObserver import UserSignalObserver
-from SignalGenerationPackage.UserSignal import AccelerationTimeCallBackOperator
-from SignalGenerationPackage.UserSignal import DecelerationTimeCallBackOperator
-from SignalGenerationPackage.UserSignal import HighLevelFrequencyCallBackOperator
-from SignalGenerationPackage.UserSignal import LowLevelFrequencyCallBackOperator
-from SignalGenerationPackage.UserSignal import PlateauTimeCallBackOperator
-from SignalGenerationPackage.UserSignal import PointsNumberCallBackOperator
+from SignalGenerationPackage.UserSignal.AccelerationTimeCallBackOperator import AccelerationTimeCallBackOperator
+from SignalGenerationPackage.UserSignal.DecelerationTimeCallBackOperator import DecelerationTimeCallBackOperator
+from SignalGenerationPackage.UserSignal.HighLevelFrequencyCallBackOperator import HighLevelFrequencyCallBackOperator
+from SignalGenerationPackage.UserSignal.LowLevelFrequencyCallBackOperator import LowLevelFrequencyCallBackOperator
+from SignalGenerationPackage.UserSignal.PlateauTimeCallBackOperator import PlateauTimeCallBackOperator
+from SignalGenerationPackage.UserSignal.PointsNumberCallBackOperator import PointsNumberCallBackOperator
+from SignalGenerationPackage.UserSignal.TimeToCallBackOperator import TimeToCallBackOperator
 
 
 class UserSignalController(SignalController):
@@ -37,7 +38,8 @@ class UserSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator(self.Model),
                 LowLevelFrequencyCallBackOperator(self.Model),
                 PlateauTimeCallBackOperator(self.Model),
-                PointsNumberCallBackOperator(self.Model)
+                PointsNumberCallBackOperator(self.Model),
+                TimeToCallBackOperator(self.Model)
             ]
 
     # overriden

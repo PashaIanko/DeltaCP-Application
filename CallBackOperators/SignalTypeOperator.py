@@ -1,7 +1,7 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.Sinus.SinusSignalController import SinusSignalController
 from SignalGenerationPackage.UserSignal.UserSignalController import UserSignalController
-
+import sys
 
 class SignalTypeOperator(CallBackOperator):
     def __init__(self):
@@ -18,5 +18,8 @@ class SignalTypeOperator(CallBackOperator):
         if signal_text == 'sin':
             self.SignalController = SinusSignalController()
         elif signal_text == 'user signal':
-            self.SignalController = UserSignalController()
+            try:
+                self.SignalController = UserSignalController()
+            except:
+                print(sys.exc_info())
         # TODO: для меандра и пользовательского сигнала здесь контроллеры добавить
