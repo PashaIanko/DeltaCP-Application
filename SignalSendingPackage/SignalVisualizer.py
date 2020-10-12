@@ -24,7 +24,7 @@ class SignalVisualizer:
 
     def UpdateCurrentFrequency(self, x_val, y_val):
         if x_val is not None and y_val is not None:
-            self.Graph.plot(x_val, y_val, color='yellow', marker='.')
+            self.Graph.plot(x_val, y_val, color='black', marker='x', markersize=7)
 
     def HandleCloseEvent(self, evt):
         self.Figure = plt.figure()

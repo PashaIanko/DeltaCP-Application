@@ -155,7 +155,7 @@ class StartSendingOperator(CallBackOperator):
 
 
 
-
+    # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
     def StartSendingSignal(self):
         if self.SendingThread is None:
             print(f'launching thread')
