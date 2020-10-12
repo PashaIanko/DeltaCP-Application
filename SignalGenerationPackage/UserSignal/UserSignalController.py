@@ -2,6 +2,13 @@ from SignalGenerationPackage.SignalController import  SignalController
 from SignalGenerationPackage.UserSignal.Ui_UserSignalWindow import Ui_UserSignalWindow
 from SignalGenerationPackage.UserSignal.UserSignal import UserSignal
 from SignalGenerationPackage.UserSignal.UserSignalObserver import UserSignalObserver
+from SignalGenerationPackage.UserSignal import AccelerationTimeCallBackOperator
+from SignalGenerationPackage.UserSignal import DecelerationTimeCallBackOperator
+from SignalGenerationPackage.UserSignal import HighLevelFrequencyCallBackOperator
+from SignalGenerationPackage.UserSignal import LowLevelFrequencyCallBackOperator
+from SignalGenerationPackage.UserSignal import PlateauTimeCallBackOperator
+from SignalGenerationPackage.UserSignal import PointsNumberCallBackOperator
+
 
 class UserSignalController(SignalController):
 
@@ -25,7 +32,12 @@ class UserSignalController(SignalController):
     def InitCallBackOperators(self):
         self.CallbackOperators = \
             [
-                # SinusOmegaCallBackOperator(self.Model)
+                AccelerationTimeCallBackOperator(self.Model),
+                DecelerationTimeCallBackOperator(self.Model),
+                HighLevelFrequencyCallBackOperator(self.Model),
+                LowLevelFrequencyCallBackOperator(self.Model),
+                PlateauTimeCallBackOperator(self.Model),
+                PointsNumberCallBackOperator(self.Model)
             ]
 
     # overriden

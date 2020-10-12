@@ -3,7 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(800, 576)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.aaa = QtWidgets.QTabWidget(self.centralwidget)
@@ -165,7 +165,6 @@ class Ui_MainWindow(object):
         self.SignalTypecomboBox.setItemText(0, "")
         self.SignalTypecomboBox.addItem("")
         self.SignalTypecomboBox.addItem("")
-        self.SignalTypecomboBox.addItem("")
         self.label_4 = QtWidgets.QLabel(self.FrequencySignalSetting)
         self.label_4.setGeometry(QtCore.QRect(40, 50, 96, 22))
         self.label_4.setObjectName("label_4")
@@ -210,7 +209,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuNew.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.aaa.setCurrentIndex(3)
+        self.aaa.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -266,8 +265,7 @@ class Ui_MainWindow(object):
         self.aaa.setTabText(self.aaa.indexOf(self.OutputFrequencySettingTab),
                             _translate("MainWindow", "Output Frequency Setting"))
         self.SignalTypecomboBox.setItemText(1, _translate("MainWindow", "sin"))
-        self.SignalTypecomboBox.setItemText(2, _translate("MainWindow", "meander"))
-        self.SignalTypecomboBox.setItemText(3, _translate("MainWindow", "saw"))
+        self.SignalTypecomboBox.setItemText(2, _translate("MainWindow", "user signal"))
         self.label_4.setText(_translate("MainWindow", "Signal type:"))
         self.aaa.setTabText(self.aaa.indexOf(self.FrequencySignalSetting),
                             _translate("MainWindow", "Frequency Signal Setting"))

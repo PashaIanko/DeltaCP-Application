@@ -1,7 +1,6 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.Sinus.SinusSignalController import SinusSignalController
 from SignalGenerationPackage.UserSignal.UserSignalController import UserSignalController
-import sys
 
 
 class SignalTypeOperator(CallBackOperator):
