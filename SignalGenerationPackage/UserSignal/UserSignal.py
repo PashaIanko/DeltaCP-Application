@@ -79,9 +79,11 @@ class UserSignal(Signal):
                 DecelerationX0 = 0
 
             AccelerationY = [LowLevelFreq + AccelerationCoeff * (x - AccelerationX0) for x in AccelerationX]
-
             DecelerationY = [HighLevelFreq + DecelerationCoeff * (x - DecelerationX0) for x in DecelerationX]
 
+            # Подправляем баги на стыках линейных функций
+            AccelerationY = [y if y <= HighLevelFreq else HighLevelFreq for y in AccelerationY]
+            DecelerationY = [y if y >= LowLevelFreq else LowLevelFreq for y in DecelerationY]
 
             SignalData.y = StartY + AccelerationY + PlateauY + DecelerationY + EndY
 
