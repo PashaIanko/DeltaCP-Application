@@ -24,58 +24,66 @@ class UserSignal(Signal):
     def UpdateSignalData(self):
         WholePeriod = self.SignalData.StartTime + self.SignalData.AccelerationTime + self.SignalData.PlateauTime + \
                       self.SignalData.DecelerationTime + self.SignalData.EndTime
-        print(f'In Method UpdadteSignalData')
+
         if WholePeriod != 0:
             WholePointsNumber = self.SignalData.PointsNumber
-
-            StartPercent = self.SignalData.StartTime / WholePeriod
-            AccelerationPercent = self.SignalData.AccelerationTime / WholePeriod
-            PlateauPercent = self.SignalData.PlateauTime / WholePeriod
-            DecelerationPercent = self.SignalData.DecelerationTime / WholePeriod
-            # EndPercent = self.SignalData.EndTime / WholePeriod
-
-            # Три порции точек - На acceleration, plateau и deceleration
-            StartPoints = int(WholePointsNumber * StartPercent)
-            AccelerationPoints = int(WholePointsNumber * AccelerationPercent)
-            PlateauPoints = int(WholePointsNumber * PlateauPercent)
-            DecelerationPoints = int(WholePointsNumber * DecelerationPercent)
-            # EndPoints = WholePointsNumber - (StartPoints + AccelerationPoints + PlateauPoints + DecelerationPoints)
-
-            try:
-                SignalData.x = np.linspace(self.SignalData.X_from, WholePeriod, WholePointsNumber,
+            SignalData.x = np.linspace(self.SignalData.X_from, WholePeriod, WholePointsNumber,
                                        endpoint=True)  # Пересчёт ГЛОБАЛЬНЫХ Переменных
-            except:
-                print(f' After Sign.x')
-                print(sys.exc_info())
 
             # Разобьём массив X на кусочки
-            try:
-                StartX = SignalData.x[0: StartPoints]
-                AccelerationX = SignalData.x[StartPoints: StartPoints + AccelerationPoints]
-                PlateauX = SignalData.x[StartPoints + AccelerationPoints: StartPoints + AccelerationPoints + PlateauPoints]
-                DecelerationX = SignalData.x[StartPoints + AccelerationPoints + PlateauPoints:
-                                             DecelerationPoints + StartPoints + AccelerationPoints + PlateauPoints]
-                EndX = SignalData.x[DecelerationPoints + StartPoints + AccelerationPoints + PlateauPoints:
-                                    WholePointsNumber]
-            except:
-                print('Caught here!!')
+            StartTime = self.SignalData.StartTime
+            AccTime = self.SignalData.AccelerationTime
+            PlateauTime = self.SignalData.PlateauTime
+            DecTime = self.SignalData.DecelerationTime
 
-            try:
-                LowLevelFreq = self.SignalData.LowLevelFrequency
-                HighLevelFreq = self.SignalData.HighLevelFrequency
-                AccelerationCoeff = (HighLevelFreq - LowLevelFreq) / self.SignalData.AccelerationTime
-                DecelerationCoeff = -(HighLevelFreq - LowLevelFreq) / self.SignalData.DecelerationTime
+            StartX = SignalData.x[
+                (SignalData.x >= 0) &
+                (SignalData.x <= StartTime)]
+            AccelerationX = SignalData.x[
+                (SignalData.x > StartTime) &
+                (SignalData.x <= StartTime + AccTime)]
+            PlateauX = SignalData.x[
+                (SignalData.x > StartTime + AccTime) &
+                (SignalData.x <= StartTime + AccTime + PlateauTime)]
+            DecelerationX = SignalData.x[
+                (SignalData.x > StartTime + AccTime + PlateauTime) &
+                (SignalData.x <= StartTime + AccTime + PlateauTime + DecTime)]
+            EndX = SignalData.x[
+                (SignalData.x > StartTime + AccTime + PlateauTime + DecTime)]
 
-                StartY = [LowLevelFreq for x in StartX]
-                AccelerationY = [LowLevelFreq + AccelerationCoeff * x for x in AccelerationX]
-                PlateauY = [HighLevelFreq for x in PlateauX]
-                DecelerationY = [HighLevelFreq + DecelerationCoeff * x for x in DecelerationX]
-                EndY = [LowLevelFreq for x in EndX]
-            except:
-                print('CAUGHT HERE')
+            print(f' PlateauX is {PlateauX}, PlateauTime is {PlateauTime}')
+
+            LowLevelFreq = self.SignalData.LowLevelFrequency
+            HighLevelFreq = self.SignalData.HighLevelFrequency
+            AccelerationCoeff = (HighLevelFreq - LowLevelFreq) / self.SignalData.AccelerationTime
+            DecelerationCoeff = (LowLevelFreq - HighLevelFreq) / self.SignalData.DecelerationTime
+
+            StartY = [LowLevelFreq for x in StartX]
+            EndY = [LowLevelFreq for x in EndX]
+            PlateauY = [HighLevelFreq for x in PlateauX]
+
+            # Линейная зависимость виде y_0 + k * (x - x_0). Поэтому определим x_0 для
+            # Участка с ускорением и замедлением
+            if len(StartX):
+                AccelerationX0 = StartX[-1]
+            else:
+                AccelerationX0 = 0
+
+            if len(PlateauX):
+                DecelerationX0 = PlateauX[-1]
+            elif len(AccelerationX):
+                DecelerationX0 = AccelerationX[-1]
+            elif len(StartX):
+                DecelerationX0 = StartX[-1]
+            else:
+                DecelerationX0 = 0
+
+            AccelerationY = [LowLevelFreq + AccelerationCoeff * (x - AccelerationX0) for x in AccelerationX]
+
+            DecelerationY = [HighLevelFreq + DecelerationCoeff * (x - DecelerationX0) for x in DecelerationX]
+
 
             SignalData.y = StartY + AccelerationY + PlateauY + DecelerationY + EndY
-            #[self.Func(x) for x in SignalData.x]  # TODO: X_From, X_To запихать в родителя
 
     @property
     def AccelerationTime(self):
@@ -167,21 +175,11 @@ class UserSignal(Signal):
         self.RecalcData()
         self.NotifyObservers()
 
-    # @property
-    # def X_to(self):
-    #     return self.SignalData.X_to
-    #
-    # @X_to.setter
-    # def X_to(self, val):
-    #     self.SignalData.X_to = val
-    #     self.RecalcData()
-    #     self.NotifyObservers()
-
     @property
     def x(self):
         return SignalData.x  # TODO: В родительский класс переместить это!!
 
     @property
     def y(self):
-        return SignalData.y  # self.SignalData.y # Возвращаются глобальные перем (class attributes) - x и y
+        return SignalData.y
 

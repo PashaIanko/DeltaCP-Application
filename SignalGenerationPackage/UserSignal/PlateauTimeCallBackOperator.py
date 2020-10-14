@@ -19,6 +19,6 @@ class PlateauTimeCallBackOperator(CallBackOperator):
         try:
             if(type(text) is str):
                 text = text.replace(',', '.')
-                self.Model.Plateau = float(text)
+                self.Model.PlateauTime = float(text)
         except:
             print(sys.exc_info())
