@@ -3,7 +3,7 @@ from PyQt5.QtGui import QDoubleValidator
 import sys
 
 
-class TimeToCallBackOperator(CallBackOperator):
+class EndTimeCallBackOperator(CallBackOperator):
 
     def __init__(self, Model):
         super().__init__()
@@ -11,14 +11,14 @@ class TimeToCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.lineEditTimeTo.setValidator(QDoubleValidator(0.00, 6000.00, 2))
-        window.lineEditTimeTo.textChanged.connect(self.SetTimeTo)
+        window.lineEditEndTime.setValidator(QDoubleValidator(0.00, 6000.00, 2))
+        window.lineEditEndTime.textChanged.connect(self.SetEndTime)
 
 
-    def SetTimeTo(self, text):
+    def SetEndTime(self, text):
         try:
             if(type(text) is str):
                 text = text.replace(',', '.')
-                self.Model.X_to = float(text)
+                self.Model.EndTime = float(text)
         except:
             print(sys.exc_info())

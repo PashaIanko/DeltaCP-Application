@@ -8,7 +8,8 @@ from SignalGenerationPackage.UserSignal.HighLevelFrequencyCallBackOperator impor
 from SignalGenerationPackage.UserSignal.LowLevelFrequencyCallBackOperator import LowLevelFrequencyCallBackOperator
 from SignalGenerationPackage.UserSignal.PlateauTimeCallBackOperator import PlateauTimeCallBackOperator
 from SignalGenerationPackage.UserSignal.PointsNumberCallBackOperator import PointsNumberCallBackOperator
-from SignalGenerationPackage.UserSignal.TimeToCallBackOperator import TimeToCallBackOperator
+from SignalGenerationPackage.UserSignal.EndTimeCallBackOperator import EndTimeCallBackOperator
+from SignalGenerationPackage.UserSignal.StartTimeCallBackOperator import StartTimeCallBackOperator
 
 
 class UserSignalController(SignalController):
@@ -33,13 +34,15 @@ class UserSignalController(SignalController):
     def InitCallBackOperators(self):
         self.CallbackOperators = \
             [
+                StartTimeCallBackOperator(self.Model),
                 AccelerationTimeCallBackOperator(self.Model),
+                PlateauTimeCallBackOperator(self.Model),
                 DecelerationTimeCallBackOperator(self.Model),
+                EndTimeCallBackOperator(self.Model),
+
                 HighLevelFrequencyCallBackOperator(self.Model),
                 LowLevelFrequencyCallBackOperator(self.Model),
-                PlateauTimeCallBackOperator(self.Model),
-                PointsNumberCallBackOperator(self.Model),
-                TimeToCallBackOperator(self.Model)
+                PointsNumberCallBackOperator(self.Model)
             ]
 
     # overriden
