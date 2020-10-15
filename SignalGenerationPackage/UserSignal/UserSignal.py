@@ -39,19 +39,30 @@ class UserSignal(Signal):
             StartX = SignalData.x[
                 (SignalData.x >= 0) &
                 (SignalData.x <= StartTime)]
+
+            if len(StartX) > 2:
+                StartX = [StartX[0], StartX[-1]]
+            #print(StartX)
+            #print(f'circumsices :{StartX[-1:1]}')
+
             AccelerationX = SignalData.x[
                 (SignalData.x > StartTime) &
                 (SignalData.x <= StartTime + AccTime)]
+
             PlateauX = SignalData.x[
                 (SignalData.x > StartTime + AccTime) &
                 (SignalData.x <= StartTime + AccTime + PlateauTime)]
+            if len(PlateauX) > 2:
+                PlateauX = [PlateauX[0], PlateauX[-1]]
+
             DecelerationX = SignalData.x[
                 (SignalData.x > StartTime + AccTime + PlateauTime) &
                 (SignalData.x <= StartTime + AccTime + PlateauTime + DecTime)]
+
             EndX = SignalData.x[
                 (SignalData.x > StartTime + AccTime + PlateauTime + DecTime)]
-
-            print(f' PlateauX is {PlateauX}, PlateauTime is {PlateauTime}')
+            if len(EndX) > 2:
+                EndX = [EndX[0], EndX[-1]]
 
             LowLevelFreq = self.SignalData.LowLevelFrequency
             HighLevelFreq = self.SignalData.HighLevelFrequency
@@ -86,6 +97,7 @@ class UserSignal(Signal):
             DecelerationY = [y if y >= LowLevelFreq else LowLevelFreq for y in DecelerationY]
 
             SignalData.y = StartY + AccelerationY + PlateauY + DecelerationY + EndY
+            SignalData.x = np.concatenate((StartX, AccelerationX, PlateauX, DecelerationX, EndX))
 
     @property
     def AccelerationTime(self):
