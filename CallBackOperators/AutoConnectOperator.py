@@ -21,31 +21,25 @@ class AutoConnectOperator(CallBackOperator):
         self.window = window
 
     def AutoConnect(self):
-        print(f'auto connection')
+        for index, config in self.ConnectionConfigs.iterrows():
+            self.set_config_and_connect\
+            (
+                [config['Protocol'],        self.window.ProtocolcomboBox],
+                [str(config['Byte Size']),  self.window.ByteSizecomboBox],
+                [config['Parity'],          self.window.ParitycomboBox],
+                [str(config['Stop Bits']),  self.window.StopBitscomboBox],
+                [config['COM Port'],        self.window.COMPortcomboBox],
+                [str(config['Baud Rate']),  self.window.BaudRatecomboBox]
+            )
 
-        #print(self.ConnectionConfigs.head())
-        #print(self.ConnectionConfigs.shape[0])
-        #config_size = self.ConnectionConfigs.shape[0] - 1
 
-        try:
-            for index, config in self.ConnectionConfigs.iterrows():
-                protocol = config['Protocol']
-                byte_size = config['Byte Size']
-                parity = config['Parity']
-                stop_bits = config['Stop Bits']
-                com_port = config['COM Port']
-                baud_rate = config['Baud Rate']
-                self.set_config_and_connect(protocol, byte_size, parity, stop_bits, com_port, baud_rate)
+    def set_config_and_connect(self, *param_combobox_pairs):
 
-        except:
-            print(sys.exc_info())
+        for pair in param_combobox_pairs:
+            val = pair[0]
+            combo_box = pair[1]
+            combo_box_items = [combo_box.itemText(i) for i in range(combo_box.count())]
+            if not (val in combo_box_items):
+                combo_box.addItems([val])
+            combo_box.setCurrentText(val)
 
-    def set_config_and_connect(self, protocol, byte_size, parity, stop_bits, com_port, baud_rate):
-        #AllItems = [QComboBoxName.itemText(i) for i in range(QComboBoxName.count())]
-        self.window.BaudRatecomboBox.addItems([str(baud_rate)])
-        self.window.BaudRatecomboBox.setCurrentText(str(baud_rate))
-
-        #geek_list = ["100", "Geeky Geek", "Legend Geek", "Ultra Legend Geek"]
-        #self.window.BaudRatecomboBox.addItems(geek_list)
-
-        #self.window.BaudRatecomboBox.setCurrentText('1200')
