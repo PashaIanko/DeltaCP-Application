@@ -1,6 +1,7 @@
 from ApplicationModule import ApplicationModule
 from CallBackOperators.ComboBoxConnector import ComboBoxOperator
 from CallBackOperators.ConnectionOperator import ConnectionOperator
+from CallBackOperators.AutoConnectOperator import AutoConnectOperator
 
 
 class ConnectionModule(ApplicationModule):
@@ -8,7 +9,8 @@ class ConnectionModule(ApplicationModule):
     callback_operators = \
         [
             ComboBoxOperator(),
-            ConnectionOperator()
+            ConnectionOperator(),
+            AutoConnectOperator()
         ]
 
     def __init__(self):
