@@ -10,6 +10,7 @@ from SignalGenerationPackage.UserSignal.PlateauTimeCallBackOperator import Plate
 from SignalGenerationPackage.UserSignal.PointsNumberCallBackOperator import PointsNumberCallBackOperator
 from SignalGenerationPackage.UserSignal.EndTimeCallBackOperator import EndTimeCallBackOperator
 from SignalGenerationPackage.UserSignal.StartTimeCallBackOperator import StartTimeCallBackOperator
+from SignalGenerationPackage.UserSignal.VerticalOffsetCallBackOperator import VerticalOffsetCallBackOperator
 
 
 class UserSignalController(SignalController):
@@ -39,7 +40,7 @@ class UserSignalController(SignalController):
                 PlateauTimeCallBackOperator(self.Model),
                 DecelerationTimeCallBackOperator(self.Model),
                 EndTimeCallBackOperator(self.Model),
-
+                VerticalOffsetCallBackOperator(self.Model),
                 HighLevelFrequencyCallBackOperator(self.Model),
                 LowLevelFrequencyCallBackOperator(self.Model),
                 PointsNumberCallBackOperator(self.Model)

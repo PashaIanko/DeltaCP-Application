@@ -1,6 +1,5 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator
-import sys
+from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
 
 
 class HighLevelFrequencyCallBackOperator(CallBackOperator):
@@ -11,14 +10,35 @@ class HighLevelFrequencyCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.lineEditHighLevelFrequency.setValidator(QDoubleValidator(0.00, 600.00, 2))
-        window.lineEditHighLevelFrequency.textChanged.connect(self.SetHighLevelFrequency)
+        self.window = window
 
+        self.setup_callback_and_synchronize_slider(
+            validator_min=UserSignalUIParameters.HighLevelFrequencySliderMin,
+            validator_max=UserSignalUIParameters.HighLevelFrequencySliderMax,
+            validator_accuracy=UserSignalUIParameters.HighLevelFrequencyLineEditAccuracy,
+            line_edit=window.HighLevelFrequencylineEdit,
+            slider_min=UserSignalUIParameters.HighLevelFrequencySliderMin,
+            slider_max=UserSignalUIParameters.HighLevelFrequencySliderMax,
+            slider=window.HighLevelFrequencyhorizontalSlider,
+            update_slider_func=self.update_high_level_freq_slider,
+            update_line_edit_func=self.update_high_level_freq_line_edit
+        )
 
-    def SetHighLevelFrequency(self, text):
-        try:
-            if(type(text) is str):
-                text = text.replace(',', '.')
-                self.Model.HighLevelFrequency = float(text)
-        except:
-            print(sys.exc_info())
+    def update_high_level_freq_slider(self):
+        self.update_slider(
+            line_edit=self.window.HighLevelFrequencylineEdit,
+            slider=self.window.HighLevelFrequencyhorizontalSlider,
+            calc_constant=UserSignalUIParameters.HighLevelFrequencyCalcConstant
+        )
+
+    def update_high_level_freq_line_edit(self):
+        self.update_line_edit(
+            line_edit=self.window.HighLevelFrequencylineEdit,
+            slider=self.window.HighLevelFrequencyhorizontalSlider,
+            calc_constant=UserSignalUIParameters.HighLevelFrequencyCalcConstant,
+            update_model_func=self.update_high_level_freq
+        )
+
+    def update_high_level_freq(self, val):
+        print(f'updating model, now val = {val}')
+        self.Model.HighLevelFrequency = val
