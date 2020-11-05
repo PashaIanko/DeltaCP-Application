@@ -40,5 +40,4 @@ class PlateauTimeCallBackOperator(CallBackOperator):
         )
 
     def update_plateau_time(self, val):
-        print(f'updating model, now val = {val}')
         self.Model.PlateauTime = val

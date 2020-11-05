@@ -41,5 +41,4 @@ class DecelerationTimeCallBackOperator(CallBackOperator):
         )
 
     def update_deceleration_time(self, val):
-        print(f'updating model, now val = {val}')
         self.Model.DecelerationTime = val

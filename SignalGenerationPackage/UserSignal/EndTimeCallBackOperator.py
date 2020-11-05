@@ -39,5 +39,4 @@ class EndTimeCallBackOperator(CallBackOperator):
         )
 
     def update_end_time(self, val):
-        print(f'updating model, now val = {val}')
         self.Model.EndTime = val

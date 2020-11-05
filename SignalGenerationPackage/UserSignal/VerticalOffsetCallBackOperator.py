@@ -40,5 +40,4 @@ class VerticalOffsetCallBackOperator(CallBackOperator):
         )
 
     def update_vertical_offset(self, val):
-        print(f'updating model, now val = {val}')
         self.Model.VerticalOffset = val
