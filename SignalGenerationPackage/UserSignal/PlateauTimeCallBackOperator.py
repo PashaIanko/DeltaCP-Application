@@ -36,7 +36,7 @@ class PlateauTimeCallBackOperator(CallBackOperator):
             line_edit=self.window.PlateauTimelineEdit,
             slider=self.window.PlateauTimehorizontalSlider,
             calc_constant=UserSignalUIParameters.PlateauTimeCalcConstant,
-            update_model_func=self.update_Plateau_time
+            update_model_func=self.update_plateau_time
         )
 
     def update_plateau_time(self, val):

@@ -40,6 +40,6 @@ class LowLevelFrequencyCallBackOperator(CallBackOperator):
             update_model_func=self.update_low_level_freq
         )
 
-    def update_high_level_freq(self, val):
+    def update_low_level_freq(self, val):
         print(f'updating model, now val = {val}')
         self.Model.LowLevelFrequency = val

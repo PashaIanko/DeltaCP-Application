@@ -24,20 +24,28 @@ class PointsNumberCallBackOperator(CallBackOperator):
         )
 
     def update_points_number_slider(self):
-        self.update_slider(
-            line_edit=self.window.PointsNumberlineEdit,
-            slider=self.window.PointsNumberhorizontalSlider,
-            calc_constant=UserSignalUIParameters.PointsNumberCalcConstant
-        )
+        try:
+            self.update_slider(
+                line_edit=self.window.PointsNumberlineEdit,
+                slider=self.window.PointsNumberhorizontalSlider,
+                calc_constant=UserSignalUIParameters.PointsNumberCalcConstant
+            )
+        except:
+            import sys
+            print(sys.exc_info())
 
     def update_points_number_line_edit(self):
-        self.update_line_edit(
-            line_edit=self.window.PointsNumberlineEdit,
-            slider=self.window.PointsNumberhorizontalSlider,
-            calc_constant=UserSignalUIParameters.PointsNumberCalcConstant,
-            update_model_func=self.update_points_number
-        )
+        try:
+            self.update_line_edit(
+                line_edit=self.window.PointsNumberlineEdit,
+                slider=self.window.PointsNumberhorizontalSlider,
+                calc_constant=UserSignalUIParameters.PointsNumberCalcConstant,
+                update_model_func=self.update_points_number
+            )
+        except:
+            import sys
+            print(sys.exc_info())
 
     def update_points_number(self, val):
         print(f'updating model, now val = {val}')
-        self.Model.PointsNumber = val
+        self.Model.PointsNumber = int(val)

@@ -32,12 +32,16 @@ class StartTimeCallBackOperator(CallBackOperator):
         )
 
     def update_start_time_line_edit(self):
-        self.update_line_edit(
-            line_edit=self.window.StartTimelineEdit,
-            slider=self.window.StartTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.StartTimeCalcConstant,
-            update_model_func=self.update_end_time
-        )
+        try:
+            self.update_line_edit(
+                line_edit=self.window.StartTimelineEdit,
+                slider=self.window.StartTimehorizontalSlider,
+                calc_constant=UserSignalUIParameters.StartTimeCalcConstant,
+                update_model_func=self.update_start_time
+            )
+        except:
+            import sys
+            print(sys.exc_info())
 
     def update_start_time(self, val):
         print(f'updating model, now val = {val}')
