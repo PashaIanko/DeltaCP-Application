@@ -11,8 +11,8 @@ class PointsNumberCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.lineEditPointsNumber.setValidator(QIntValidator(0, 500))
-        window.lineEditPointsNumber.textChanged.connect(self.SetPointsNumber)
+        window.PointsNumberlineEdit.setValidator(QIntValidator(0, 500))
+        window.PointsNumberlineEdit.textChanged.connect(self.SetPointsNumber)
 
 
     def SetPointsNumber(self, text):

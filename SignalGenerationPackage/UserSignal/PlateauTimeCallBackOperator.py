@@ -11,8 +11,8 @@ class PlateauTimeCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.lineEditPlateauTime.setValidator(QDoubleValidator(0.00, 600.00, 2))
-        window.lineEditPlateauTime.textChanged.connect(self.SetPlateauTime)
+        window.PlateauTimelineEdit.setValidator(QDoubleValidator(0.00, 600.00, 2))
+        window.PlateauTimelineEdit.textChanged.connect(self.SetPlateauTime)
 
 
     def SetPlateauTime(self, text):

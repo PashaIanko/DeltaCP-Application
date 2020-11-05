@@ -11,8 +11,8 @@ class EndTimeCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.lineEditEndTime.setValidator(QDoubleValidator(0.00, 6000.00, 2))
-        window.lineEditEndTime.textChanged.connect(self.SetEndTime)
+        window.EndTimelineEdit.setValidator(QDoubleValidator(0.00, 6000.00, 2))
+        window.EndTimelineEdit.textChanged.connect(self.SetEndTime)
 
 
     def SetEndTime(self, text):

@@ -11,8 +11,8 @@ class HighLevelFrequencyCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.lineEditHighLevelFrequency.setValidator(QDoubleValidator(0.00, 600.00, 2))
-        window.lineEditHighLevelFrequency.textChanged.connect(self.SetHighLevelFrequency)
+        window.HighLevelFrequencylineEdit.setValidator(QDoubleValidator(0.00, 600.00, 2))
+        window.HighLevelFrequencylineEdit.textChanged.connect(self.SetHighLevelFrequency)
 
 
     def SetHighLevelFrequency(self, text):

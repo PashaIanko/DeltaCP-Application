@@ -14,15 +14,15 @@ class AccelerationTimeCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=UserSignalUIParameters.AccelerationTimeSliderMin,
-            validator_max=UserSignalUIParameters.AccelerationTimeSliderMax,
-            validator_accuracy=UserSignalUIParameters.AccelerationTimeLineEditAccuracy,
-            line_edit=self.window.AccelerationTimelineEdit,
-            slider_min=UserSignalUIParameters.AccelerationTimeSliderMin,
-            slider_max=UserSignalUIParameters.AccelerationTimeSliderMax,
-            slider=self.window.AccelerationTimehorizontalSlider,
-            update_slider_func=self.update_acceleration_time_slider,
-            update_line_edit_func=self.update_acceleration_time_line_edit
+            validator_min=          UserSignalUIParameters.AccelerationTimeSliderMin,
+            validator_max=          UserSignalUIParameters.AccelerationTimeSliderMax,
+            validator_accuracy=     UserSignalUIParameters.AccelerationTimeLineEditAccuracy,
+            line_edit=              window.AccelerationTimelineEdit,
+            slider_min=             UserSignalUIParameters.AccelerationTimeSliderMin,
+            slider_max=             UserSignalUIParameters.AccelerationTimeSliderMax,
+            slider=                 window.AccelerationTimehorizontalSlider,
+            update_slider_func=     self.update_acceleration_time_slider,
+            update_line_edit_func=  self.update_acceleration_time_line_edit
         )
 
     def update_acceleration_time_slider(self):
@@ -42,7 +42,4 @@ class AccelerationTimeCallBackOperator(CallBackOperator):
 
     def update_acceleration_time(self, val):
         print(f'updating model, now val = {val}')
-        try:
-            self.Model.AccelerationTime = val
-        except:
-            print(sys.exc_info())
+        self.Model.AccelerationTime = val

@@ -11,8 +11,8 @@ class StartTimeCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.lineEditStartTime.setValidator(QDoubleValidator(0.00, 6000.00, 2))
-        window.lineEditStartTime.textChanged.connect(self.SetStartTime)
+        window.StartTimelineEdit.setValidator(QDoubleValidator(0.00, 6000.00, 2))
+        window.StartTimelineEdit.textChanged.connect(self.SetStartTime)
 
 
     def SetStartTime(self, text):
