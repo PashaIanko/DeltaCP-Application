@@ -11,6 +11,7 @@ from SignalGenerationPackage.UserSignal.PointsNumberCallBackOperator import Poin
 from SignalGenerationPackage.UserSignal.EndTimeCallBackOperator import EndTimeCallBackOperator
 from SignalGenerationPackage.UserSignal.StartTimeCallBackOperator import StartTimeCallBackOperator
 from SignalGenerationPackage.UserSignal.VerticalOffsetCallBackOperator import VerticalOffsetCallBackOperator
+from SignalGenerationPackage.UserSignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 
 
 class UserSignalController(SignalController):
@@ -43,7 +44,8 @@ class UserSignalController(SignalController):
                 VerticalOffsetCallBackOperator(self.Model),
                 HighLevelFrequencyCallBackOperator(self.Model),
                 LowLevelFrequencyCallBackOperator(self.Model),
-                PointsNumberCallBackOperator(self.Model)
+                PointsNumberCallBackOperator(self.Model),
+                AutoFillCallBackOperator()
             ]
 
     # overriden
