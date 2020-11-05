@@ -1,7 +1,5 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator
-import sys
-
+from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
 
 class EndTimeCallBackOperator(CallBackOperator):
 
@@ -11,14 +9,35 @@ class EndTimeCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.EndTimelineEdit.setValidator(QDoubleValidator(0.00, 6000.00, 2))
-        window.EndTimelineEdit.textChanged.connect(self.SetEndTime)
+        self.window = window
 
+        self.setup_callback_and_synchronize_slider(
+            validator_min=UserSignalUIParameters.EndTimeSliderMin,
+            validator_max=UserSignalUIParameters.EndTimeSliderMax,
+            validator_accuracy=UserSignalUIParameters.EndTimeLineEditAccuracy,
+            line_edit=window.EndTimelineEdit,
+            slider_min=UserSignalUIParameters.EndTimeSliderMin,
+            slider_max=UserSignalUIParameters.EndTimeSliderMax,
+            slider=window.EndTimehorizontalSlider,
+            update_slider_func=self.update_end_time_slider,
+            update_line_edit_func=self.update_end_time_line_edit
+        )
 
-    def SetEndTime(self, text):
-        try:
-            if(type(text) is str):
-                text = text.replace(',', '.')
-                self.Model.EndTime = float(text)
-        except:
-            print(sys.exc_info())
+    def update_end_time_slider(self):
+        self.update_slider(
+            line_edit=self.window.EndTimelineEdit,
+            slider=self.window.EndTimehorizontalSlider,
+            calc_constant=UserSignalUIParameters.EndTimeCalcConstant
+        )
+
+    def update_end_time_line_edit(self):
+        self.update_line_edit(
+            line_edit=self.window.EndTimelineEdit,
+            slider=self.window.EndTimehorizontalSlider,
+            calc_constant=UserSignalUIParameters.EndTimeCalcConstant,
+            update_model_func=self.update_end_time
+        )
+
+    def update_end_time(self, val):
+        print(f'updating model, now val = {val}')
+        self.Model.EndTime = val

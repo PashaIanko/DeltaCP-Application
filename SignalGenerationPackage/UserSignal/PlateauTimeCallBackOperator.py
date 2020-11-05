@@ -1,6 +1,5 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator
-import sys
+from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
 
 
 class PlateauTimeCallBackOperator(CallBackOperator):
@@ -11,14 +10,35 @@ class PlateauTimeCallBackOperator(CallBackOperator):
 
     # overriden
     def ConnectCallBack(self, window):
-        window.PlateauTimelineEdit.setValidator(QDoubleValidator(0.00, 600.00, 2))
-        window.PlateauTimelineEdit.textChanged.connect(self.SetPlateauTime)
+        self.window = window
 
+        self.setup_callback_and_synchronize_slider(
+            validator_min=UserSignalUIParameters.PlateauTimeSliderMin,
+            validator_max=UserSignalUIParameters.PlateauTimeSliderMax,
+            validator_accuracy=UserSignalUIParameters.PlateauTimeLineEditAccuracy,
+            line_edit=window.PlateauTimelineEdit,
+            slider_min=UserSignalUIParameters.PlateauTimeSliderMin,
+            slider_max=UserSignalUIParameters.PlateauTimeSliderMax,
+            slider=window.PlateauTimehorizontalSlider,
+            update_slider_func=self.update_plateau_time_slider,
+            update_line_edit_func=self.update_plateau_time_line_edit
+        )
 
-    def SetPlateauTime(self, text):
-        try:
-            if(type(text) is str):
-                text = text.replace(',', '.')
-                self.Model.PlateauTime = float(text)
-        except:
-            print(sys.exc_info())
+    def update_plateau_time_slider(self):
+        self.update_slider(
+            line_edit=self.window.PlateauTimelineEdit,
+            slider=self.window.PlateauTimehorizontalSlider,
+            calc_constant=UserSignalUIParameters.PlateauTimeCalcConstant
+        )
+
+    def update_plateau_time_line_edit(self):
+        self.update_line_edit(
+            line_edit=self.window.PlateauTimelineEdit,
+            slider=self.window.PlateauTimehorizontalSlider,
+            calc_constant=UserSignalUIParameters.PlateauTimeCalcConstant,
+            update_model_func=self.update_Plateau_time
+        )
+
+    def update_plateau_time(self, val):
+        print(f'updating model, now val = {val}')
+        self.Model.PlateauTime = val

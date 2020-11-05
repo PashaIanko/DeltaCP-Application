@@ -1,6 +1,5 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator
-import sys
+from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
 
 
 class LowLevelFrequencyCallBackOperator(CallBackOperator):
@@ -9,16 +8,38 @@ class LowLevelFrequencyCallBackOperator(CallBackOperator):
         super().__init__()
         self.Model = Model
 
-    # overriden
+        # overriden
+
     def ConnectCallBack(self, window):
-        window.LowLevelFrequencylineEdit.setValidator(QDoubleValidator(0.00, 600.00, 2))
-        window.LowLevelFrequencylineEdit.textChanged.connect(self.SetLowLevelFrequency)
+        self.window = window
 
+        self.setup_callback_and_synchronize_slider(
+            validator_min=UserSignalUIParameters.LowLevelFrequencySliderMin,
+            validator_max=UserSignalUIParameters.LowLevelFrequencySliderMax,
+            validator_accuracy=UserSignalUIParameters.LowLevelFrequencyLineEditAccuracy,
+            line_edit=window.LowLevelFrequencylineEdit,
+            slider_min=UserSignalUIParameters.LowLevelFrequencySliderMin,
+            slider_max=UserSignalUIParameters.LowLevelFrequencySliderMax,
+            slider=window.LowLevelFrequencyhorizontalSlider,
+            update_slider_func=self.update_low_level_freq_slider,
+            update_line_edit_func=self.update_low_level_freq_line_edit
+        )
 
-    def SetLowLevelFrequency(self, text):
-        try:
-            if(type(text) is str):
-                text = text.replace(',', '.')
-                self.Model.LowLevelFrequency = float(text)
-        except:
-            print(sys.exc_info())
+    def update_low_level_freq_slider(self):
+        self.update_slider(
+            line_edit=self.window.LowLevelFrequencylineEdit,
+            slider=self.window.LowLevelFrequencyhorizontalSlider,
+            calc_constant=UserSignalUIParameters.LowLevelFrequencyCalcConstant
+        )
+
+    def update_low_level_freq_line_edit(self):
+        self.update_line_edit(
+            line_edit=self.window.LowLevelFrequencylineEdit,
+            slider=self.window.LowLevelFrequencyhorizontalSlider,
+            calc_constant=UserSignalUIParameters.LowLevelFrequencyCalcConstant,
+            update_model_func=self.update_low_level_freq
+        )
+
+    def update_high_level_freq(self, val):
+        print(f'updating model, now val = {val}')
+        self.Model.LowLevelFrequency = val
