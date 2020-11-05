@@ -52,7 +52,7 @@ class UserSignalUIParameters:
 
     # LOW LEVEL
     LowLevelFrequencyMin = 0.1
-    LowLevelFrequencyMax = 600.0
+    LowLevelFrequencyMax = 20.0
     LowLevelFrequencyLineEditAccuracy = 2
 
     LowLevelFrequencyCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
@@ -62,7 +62,7 @@ class UserSignalUIParameters:
 
     # HIGH LEVEL
     HighLevelFrequencyMin = 0.1
-    HighLevelFrequencyMax = 600.0
+    HighLevelFrequencyMax = 80.0
     HighLevelFrequencyLineEditAccuracy = 2
 
     HighLevelFrequencyCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
