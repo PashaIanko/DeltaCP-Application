@@ -21,6 +21,16 @@ class UserSignal(Signal):
         pass
         #return abs(self.SignalData.Amplitude * np.sin(self.SignalData.Omega * x + self.SignalData.Phase))
 
+    def prepare_arr(self, time_from, time_to, subtract=False):
+        x_arr = SignalData.x[
+             (SignalData.x >= time_from) &
+             (SignalData.x <= time_to)]
+
+        if subtract:
+            if len(x_arr) > 2:
+                x_arr = [x_arr[0], x_arr[-1]]
+        return x_arr
+
     def UpdateSignalData(self):
         WholePeriod = self.SignalData.StartTime + self.SignalData.AccelerationTime + self.SignalData.PlateauTime + \
                       self.SignalData.DecelerationTime + self.SignalData.EndTime
@@ -35,34 +45,25 @@ class UserSignal(Signal):
             AccTime = self.SignalData.AccelerationTime
             PlateauTime = self.SignalData.PlateauTime
             DecTime = self.SignalData.DecelerationTime
+            EndTime = self.SignalData.EndTime
 
-            StartX = SignalData.x[
-                (SignalData.x >= 0) &
-                (SignalData.x <= StartTime)]
+            StartX = self.prepare_arr(time_from=0,
+                                      time_to=StartTime,
+                                      subtract=True)
 
-            if len(StartX) > 2:
-                StartX = [StartX[0], StartX[-1]]
-            #print(StartX)
-            #print(f'circumsices :{StartX[-1:1]}')
+            AccelerationX = self.prepare_arr(time_from=StartTime,
+                                             time_to=StartTime + AccTime)
 
-            AccelerationX = SignalData.x[
-                (SignalData.x > StartTime) &
-                (SignalData.x <= StartTime + AccTime)]
+            PlateauX = self.prepare_arr(time_from=StartTime + AccTime,
+                                        time_to=StartTime + AccTime + PlateauTime,
+                                        subtract=True)
 
-            PlateauX = SignalData.x[
-                (SignalData.x > StartTime + AccTime) &
-                (SignalData.x <= StartTime + AccTime + PlateauTime)]
-            if len(PlateauX) > 2:
-                PlateauX = [PlateauX[0], PlateauX[-1]]
+            DecelerationX = self.prepare_arr(time_from=StartTime + AccTime + PlateauTime,
+                                        time_to=StartTime + AccTime + PlateauTime + DecTime)
 
-            DecelerationX = SignalData.x[
-                (SignalData.x > StartTime + AccTime + PlateauTime) &
-                (SignalData.x <= StartTime + AccTime + PlateauTime + DecTime)]
-
-            EndX = SignalData.x[
-                (SignalData.x > StartTime + AccTime + PlateauTime + DecTime)]
-            if len(EndX) > 2:
-                EndX = [EndX[0], EndX[-1]]
+            EndX = self.prepare_arr(time_from=StartTime + AccTime + PlateauTime + DecTime,
+                                    time_to=StartTime + AccTime + PlateauTime + DecTime + EndTime,
+                                    subtract=True)
 
             LowLevelFreq = self.SignalData.LowLevelFrequency
             HighLevelFreq = self.SignalData.HighLevelFrequency
