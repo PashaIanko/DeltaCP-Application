@@ -34,7 +34,6 @@ class AutoConnectOperator(CallBackOperator):
             )
 
             ConnectionParameters = self.ConnectionParameters.GetConnectionParameters()
-            print(f'Auto Connect for config = {ConnectionParameters}')
 
             self.DeltaCPClient.CreateClient(
                 Protocol=ConnectionParameters['Protocol'],
