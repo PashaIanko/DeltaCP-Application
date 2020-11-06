@@ -31,7 +31,6 @@ class AccelerationTimeCallBackOperator(CallBackOperator):
         )
 
     def update_acceleration_time_line_edit(self):
-        print(f'UPDATING ACCELERATION TIME LINE EDIT')
         self.update_line_edit(
             line_edit=self.window.AccelerationTimelineEdit,
             slider=self.window.AccelerationTimehorizontalSlider,

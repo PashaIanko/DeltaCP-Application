@@ -38,15 +38,12 @@ class FrequencySliderAndTextOperator(CallBackOperator):
 
 
     def UpdateFrequencyLineEdit(self):
-        try:
-            value_to_set = self.window.FrequencySetSlider.value()
-            value_to_set /= 10 ** FrequencySettingGUIParameters.FrequencyLineEditAccuracy  #  These calculations
-                                                                    # are for correct scaling on the slider
-            text_to_set = str(value_to_set).replace('.', ',')
-            self.window.OutputFrequencylineEdit.setText(str(text_to_set))
+        value_to_set = self.window.FrequencySetSlider.value()
+        value_to_set /= 10 ** FrequencySettingGUIParameters.FrequencyLineEditAccuracy  #  These calculations
+                                                                # are for correct scaling on the slider
+        text_to_set = str(value_to_set).replace('.', ',')
+        self.window.OutputFrequencylineEdit.setText(str(text_to_set))
 
-        except:
-            print('caught!')
 
 
 

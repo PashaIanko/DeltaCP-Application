@@ -66,7 +66,6 @@ class DeltaCPClient(ModbusClient):
 
 
     def WriteRegister(self, address, value):
-        print(f'DeltaCPClient: writing {value} in register {address}')
         try:
             self.Client.write_register(address, value)
         except:
@@ -97,20 +96,17 @@ class DeltaCPClient(ModbusClient):
             print(sys.exc_info())
 
     def SendStart(self):
-        print(f'sending start command')
         mask_bit_AND = np.uint16(65534)  # 0x1111 1111 1111 1110
         mask_bit_OR = np.uint16(2)   # 0x0000 0000 0000 0010
         self.AdjustRegister(mask_bit_AND, mask_bit_OR)
 
 
     def SendStop(self):
-        print(f'sending stop command')
         mask_bit_AND = np.uint16(65533)  # 0x1111 1111 1111 1101
         mask_bit_OR = np.uint16(1)  # 0x0000 0000 0000 0001
         self.AdjustRegister(mask_bit_AND, mask_bit_OR)
 
     def SetFrequency(self, value):
-        print(f'Client sends freq={value}, time={time.asctime()}')
         self.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, value)
 
     def RequestCurrentFrequency(self):
@@ -126,23 +122,3 @@ class DeltaCPClient(ModbusClient):
 
 # TODO: Переделать визуализацию (чтоб два графика в едином окошке)
 # TODO: Исправить баг (когда закрываешь окошко с визуализацией, вылезает баг)
-
-
-
-
-# Source Code from video on Youtube:
-#client = ModbusClient(
-#    method = 'rtu',
-#    port = 'COM4',
-#    timeout = 2,
-#    stopbits = 1,
-#    bytesize = 8,
-#    parity = 'N',
-#    baudrate = 2400
-#)
-
-#while True:
-   # hh = client.read_holding_registers(address = 245, count = 8, unit = 1)
-   # h2 = hh.registers[7]/10
-
-   # print(h2)

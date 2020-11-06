@@ -17,6 +17,11 @@ class AutoConnectOperator(CallBackOperator):
         self.window = window
 
     def AutoConnect(self):
+        already_connected = self.DeltaCPClient.if_connected
+        if already_connected:
+            print(f'Client already Connected!')  # TODO: Pop up window here!
+            return
+
         for index, config in self.ConnectionConfigs.iterrows():
             self.set_config_into_comboboxes\
             (
@@ -29,7 +34,6 @@ class AutoConnectOperator(CallBackOperator):
             )
 
             ConnectionParameters = self.ConnectionParameters.GetConnectionParameters()
-            print(f'Auto Connect for config = {ConnectionParameters}')
 
             self.DeltaCPClient.CreateClient(
                 Protocol=ConnectionParameters['Protocol'],
@@ -44,7 +48,7 @@ class AutoConnectOperator(CallBackOperator):
             if_connected = self.DeltaCPClient.Connect()
             if if_connected:
                 print(f'Auto Connection successful') # TODO: Вместо print сделать предупредительное pop up окно
-                break
+                return
 
         print(f'Auto Connection was not successful. Please write other configs into'
               f' Connection_Configs.xlsx file or set parameters manually')  # TODO: Вместо print сделать предупредительное pop up окно
