@@ -39,5 +39,4 @@ class PointsNumberCallBackOperator(CallBackOperator):
         )
 
     def update_points_number(self, val):
-        print(f'updating model, now val = {val}')
         self.Model.PointsNumber = int(val)
