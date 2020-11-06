@@ -9,7 +9,7 @@ class UserSignal(Signal):
 
     # Model in MVC pattern
     def __repr__(self):
-        print(f'UserSignal in __repr__ method')
+        pass
 
     def __init__(self):
         super().__init__()

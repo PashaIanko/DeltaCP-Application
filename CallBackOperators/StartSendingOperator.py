@@ -44,7 +44,6 @@ class StartSendingOperator(CallBackOperator):
     def EnableEndlessSending(self):
         self.EndlessSendingEnabled = \
             self.UserInterface.EndlessSendingcheckBox.isChecked()
-        print(f'EndlessSendingEnabled = {self.EndlessSendingEnabled}')
 
     def PauseSending(self):
         if self.UserInterface.PauseSendingradioButton.isChecked():
@@ -180,7 +179,6 @@ class StartSendingOperator(CallBackOperator):
         self.PointsIterator = 0
 
     def TestTimer(self):
-        print(f'Inside Timer Function')
         value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
         self.DeltaCPClient.SetFrequency(value_to_send)
         CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
