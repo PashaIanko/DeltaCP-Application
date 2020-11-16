@@ -159,10 +159,11 @@ class Ui_MainWindow(object):
         self.FrequencySignalSetting = QtWidgets.QWidget()
         self.FrequencySignalSetting.setObjectName("FrequencySignalSetting")
         self.SignalTypecomboBox = QtWidgets.QComboBox(self.FrequencySignalSetting)
-        self.SignalTypecomboBox.setGeometry(QtCore.QRect(150, 50, 73, 22))
+        self.SignalTypecomboBox.setGeometry(QtCore.QRect(150, 50, 151, 22))
         self.SignalTypecomboBox.setObjectName("SignalTypecomboBox")
         self.SignalTypecomboBox.addItem("")
         self.SignalTypecomboBox.setItemText(0, "")
+        self.SignalTypecomboBox.addItem("")
         self.SignalTypecomboBox.addItem("")
         self.SignalTypecomboBox.addItem("")
         self.label_4 = QtWidgets.QLabel(self.FrequencySignalSetting)
@@ -209,7 +210,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuNew.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.aaa.setCurrentIndex(0)
+        self.aaa.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -266,6 +267,7 @@ class Ui_MainWindow(object):
                             _translate("MainWindow", "Output Frequency Setting"))
         self.SignalTypecomboBox.setItemText(1, _translate("MainWindow", "sin"))
         self.SignalTypecomboBox.setItemText(2, _translate("MainWindow", "user signal"))
+        self.SignalTypecomboBox.setItemText(3, _translate("MainWindow", "dynamic points density"))
         self.label_4.setText(_translate("MainWindow", "Signal type:"))
         self.aaa.setTabText(self.aaa.indexOf(self.FrequencySignalSetting),
                             _translate("MainWindow", "Frequency Signal Setting"))
