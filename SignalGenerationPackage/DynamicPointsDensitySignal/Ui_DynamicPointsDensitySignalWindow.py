@@ -207,7 +207,8 @@ class Ui_DynamicPointsDensitySignalWindow(object):
         self.label.setMinimumSize(QtCore.QSize(621, 0))
         self.label.setMaximumSize(QtCore.QSize(621, 321))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("C:\\Users\\79137\\Pasha\\6 semester\\Coursework\\GUI_test_code\\../../../7 semester/Диплом/Illustration.png"))
+        self.label.setPixmap(QtGui.QPixmap(
+            "C:\\Users\\79137\\Pasha\\6 semester\\Coursework\\GUI_test_code\\../../../7 semester/Диплом/Illustration.png"))
         self.label.setObjectName("label")
         self.ConfigFileNamelineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.ConfigFileNamelineEdit.setGeometry(QtCore.QRect(200, 20, 221, 22))
@@ -263,4 +264,7 @@ class Ui_DynamicPointsDensitySignalWindow(object):
         self.labelEndTime.setText(_translate("MainWindow", "End Time:"))
         self.ConfigFilenamelabel.setText(_translate("MainWindow", "Config Filename"))
         self.AutoFillpushButton.setText(_translate("MainWindow", "Auto-Fill"))
+
+
+
 
