@@ -70,14 +70,14 @@ class UserSignalUIParameters:
     HighLevelFrequencySliderMax = HighLevelFrequencyMax * HighLevelFrequencyCalcConstant
 
 
-    # POINTS NUMBER
-    PointsNumberMin = 5
-    PointsNumberMax = 200
-    PointsNumberLineEditAccuracy = 0
+    # POINTS DENSITY
+    PointsDensityMin = 0
+    PointsDensityMax = 3
+    PointsDensityLineEditAccuracy = 2
 
-    PointsNumberCalcConstant = 1
-    PointsNumberSliderMin = PointsNumberMin * PointsNumberCalcConstant
-    PointsNumberSliderMax = PointsNumberMax * PointsNumberCalcConstant
+    PointsDensityCalcConstant = 100
+    PointsDensitySliderMin = PointsDensityMin * PointsDensityCalcConstant
+    PointsDensitySliderMax = PointsDensityMax * PointsDensityCalcConstant
 
 
     # VERTICAL OFFSET
