@@ -7,7 +7,7 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.DecelerationTimeCallBack
 from SignalGenerationPackage.DynamicPointsDensitySignal.HighLevelFrequencyCallBackOperator import HighLevelFrequencyCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.LowLevelFrequencyCallBackOperator import LowLevelFrequencyCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.PlateauTimeCallBackOperator import PlateauTimeCallBackOperator
-from SignalGenerationPackage.DynamicPointsDensitySignal.PointsNumberCallBackOperator import PointsNumberCallBackOperator
+from SignalGenerationPackage.DynamicPointsDensitySignal.PointsDensityCallBackOperator import PointsDensityCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.EndTimeCallBackOperator import EndTimeCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.StartTimeCallBackOperator import StartTimeCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.VerticalOffsetCallBackOperator import VerticalOffsetCallBackOperator
@@ -41,7 +41,7 @@ class DynamicPointsDensitySignalController(SignalController):
                 VerticalOffsetCallBackOperator(self.Model),
                 HighLevelFrequencyCallBackOperator(self.Model),
                 LowLevelFrequencyCallBackOperator(self.Model),
-                PointsNumberCallBackOperator(self.Model),
+                PointsDensityCallBackOperator(self.Model),
                 AutoFillCallBackOperator()
             ]
 
