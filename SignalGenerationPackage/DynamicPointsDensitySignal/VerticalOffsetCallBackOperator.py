@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
 class VerticalOffsetCallBackOperator(CallBackOperator):
 
@@ -13,12 +13,12 @@ class VerticalOffsetCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=UserSignalUIParameters.VerticalOffsetSliderMin,
-            validator_max=UserSignalUIParameters.VerticalOffsetSliderMax,
-            validator_accuracy=UserSignalUIParameters.VerticalOffsetLineEditAccuracy,
+            validator_min=DynamicPointsDensityUIParameters.VerticalOffsetSliderMin,
+            validator_max=DynamicPointsDensityUIParameters.VerticalOffsetSliderMax,
+            validator_accuracy=DynamicPointsDensityUIParameters.VerticalOffsetLineEditAccuracy,
             line_edit=window.VerticalOffsetlineEdit,
-            slider_min=UserSignalUIParameters.VerticalOffsetSliderMin,
-            slider_max=UserSignalUIParameters.VerticalOffsetSliderMax,
+            slider_min=DynamicPointsDensityUIParameters.VerticalOffsetSliderMin,
+            slider_max=DynamicPointsDensityUIParameters.VerticalOffsetSliderMax,
             slider=window.VerticalOffsethorizontalSlider,
             update_slider_func=self.update_vertical_offset_slider,
             update_line_edit_func=self.update_vertical_offset_line_edit
@@ -28,14 +28,14 @@ class VerticalOffsetCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.VerticalOffsetlineEdit,
             slider=self.window.VerticalOffsethorizontalSlider,
-            calc_constant=UserSignalUIParameters.VerticalOffsetCalcConstant
+            calc_constant=DynamicPointsDensityUIParameters.VerticalOffsetCalcConstant
         )
 
     def update_vertical_offset_line_edit(self):
         self.update_line_edit(
             line_edit=self.window.VerticalOffsetlineEdit,
             slider=self.window.VerticalOffsethorizontalSlider,
-            calc_constant=UserSignalUIParameters.VerticalOffsetCalcConstant,
+            calc_constant=DynamicPointsDensityUIParameters.VerticalOffsetCalcConstant,
             update_model_func=self.update_vertical_offset
         )
 

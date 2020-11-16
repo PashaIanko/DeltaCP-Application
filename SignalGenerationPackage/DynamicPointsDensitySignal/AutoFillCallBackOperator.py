@@ -1,4 +1,4 @@
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 from CallBackOperator import CallBackOperator
 import pandas as pd
 import sys
@@ -23,15 +23,15 @@ class AutoFillCallBackOperator(CallBackOperator):
             window = self.window
             self.set_signal_parameters(
                 [
-                    [config_params['Start Time'],           UserSignalUIParameters.StartTimeCalcConstant,           window.StartTimehorizontalSlider],
-                    [config_params['Acceleration Time'],    UserSignalUIParameters.AccelerationTimeCalcConstant,    window.AccelerationTimehorizontalSlider],
-                    [config_params['Plateau Time'],         UserSignalUIParameters.PlateauTimeCalcConstant,         window.PlateauTimehorizontalSlider],
-                    [config_params['Deceleration Time'],    UserSignalUIParameters.DecelerationTimeCalcConstant,    window.DecelerationTimehorizontalSlider],
-                    [config_params['Low Level Frequency'],  UserSignalUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
-                    [config_params['High Level Frequency'], UserSignalUIParameters.HighLevelFrequencyCalcConstant,  window.HighLevelFrequencyhorizontalSlider],
-                    [config_params['Vertical Offset'],      UserSignalUIParameters.VerticalOffsetCalcConstant,      window.VerticalOffsethorizontalSlider],
-                    [config_params['Points Number'],        UserSignalUIParameters.PointsNumberCalcConstant,        window.PointsNumberhorizontalSlider],
-                    [config_params['End Time'],             UserSignalUIParameters.EndTimeCalcConstant,             window.EndTimehorizontalSlider]
+                    [config_params['Start Time'],           DynamicPointsDensityUIParameters.StartTimeCalcConstant,           window.StartTimehorizontalSlider],
+                    [config_params['Acceleration Time'],    DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant,    window.AccelerationTimehorizontalSlider],
+                    [config_params['Plateau Time'],         DynamicPointsDensityUIParameters.PlateauTimeCalcConstant,         window.PlateauTimehorizontalSlider],
+                    [config_params['Deceleration Time'],    DynamicPointsDensityUIParameters.DecelerationTimeCalcConstant,    window.DecelerationTimehorizontalSlider],
+                    [config_params['Low Level Frequency'],  DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
+                    [config_params['High Level Frequency'], DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,  window.HighLevelFrequencyhorizontalSlider],
+                    [config_params['Vertical Offset'],      DynamicPointsDensityUIParameters.VerticalOffsetCalcConstant,      window.VerticalOffsethorizontalSlider],
+                    [config_params['Points Density'],       DynamicPointsDensityUIParameters.PointsDensityCalcConstant,        window.PointsDensityhorizontalSlider],
+                    [config_params['End Time'],             DynamicPointsDensityUIParameters.EndTimeCalcConstant,             window.EndTimehorizontalSlider]
                 ]
             )
         except:

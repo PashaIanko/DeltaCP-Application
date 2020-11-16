@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
 
 class StartTimeCallBackOperator(CallBackOperator):
@@ -13,12 +13,12 @@ class StartTimeCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=          UserSignalUIParameters.StartTimeSliderMin,
-            validator_max=          UserSignalUIParameters.StartTimeSliderMax,
-            validator_accuracy=     UserSignalUIParameters.StartTimeLineEditAccuracy,
+            validator_min=          DynamicPointsDensityUIParameters.StartTimeSliderMin,
+            validator_max=          DynamicPointsDensityUIParameters.StartTimeSliderMax,
+            validator_accuracy=     DynamicPointsDensityUIParameters.StartTimeLineEditAccuracy,
             line_edit=              window.StartTimelineEdit,
-            slider_min=             UserSignalUIParameters.StartTimeSliderMin,
-            slider_max=             UserSignalUIParameters.StartTimeSliderMax,
+            slider_min=             DynamicPointsDensityUIParameters.StartTimeSliderMin,
+            slider_max=             DynamicPointsDensityUIParameters.StartTimeSliderMax,
             slider=                 window.StartTimehorizontalSlider,
             update_slider_func=     self.update_start_time_slider,
             update_line_edit_func=  self.update_start_time_line_edit
@@ -28,7 +28,7 @@ class StartTimeCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.StartTimelineEdit,
             slider=self.window.StartTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.StartTimeCalcConstant
+            calc_constant=DynamicPointsDensityUIParameters.StartTimeCalcConstant
         )
 
     def update_start_time_line_edit(self):
@@ -36,7 +36,7 @@ class StartTimeCallBackOperator(CallBackOperator):
             self.update_line_edit(
                 line_edit=self.window.StartTimelineEdit,
                 slider=self.window.StartTimehorizontalSlider,
-                calc_constant=UserSignalUIParameters.StartTimeCalcConstant,
+                calc_constant=DynamicPointsDensityUIParameters.StartTimeCalcConstant,
                 update_model_func=self.update_start_time
             )
         except:

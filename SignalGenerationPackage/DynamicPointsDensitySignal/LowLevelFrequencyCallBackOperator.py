@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
 
 class LowLevelFrequencyCallBackOperator(CallBackOperator):
@@ -14,12 +14,12 @@ class LowLevelFrequencyCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=UserSignalUIParameters.LowLevelFrequencySliderMin,
-            validator_max=UserSignalUIParameters.LowLevelFrequencySliderMax,
-            validator_accuracy=UserSignalUIParameters.LowLevelFrequencyLineEditAccuracy,
+            validator_min=DynamicPointsDensityUIParameters.LowLevelFrequencySliderMin,
+            validator_max=DynamicPointsDensityUIParameters.LowLevelFrequencySliderMax,
+            validator_accuracy=DynamicPointsDensityUIParameters.LowLevelFrequencyLineEditAccuracy,
             line_edit=window.LowLevelFrequencylineEdit,
-            slider_min=UserSignalUIParameters.LowLevelFrequencySliderMin,
-            slider_max=UserSignalUIParameters.LowLevelFrequencySliderMax,
+            slider_min=DynamicPointsDensityUIParameters.LowLevelFrequencySliderMin,
+            slider_max=DynamicPointsDensityUIParameters.LowLevelFrequencySliderMax,
             slider=window.LowLevelFrequencyhorizontalSlider,
             update_slider_func=self.update_low_level_freq_slider,
             update_line_edit_func=self.update_low_level_freq_line_edit
@@ -29,14 +29,14 @@ class LowLevelFrequencyCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.LowLevelFrequencylineEdit,
             slider=self.window.LowLevelFrequencyhorizontalSlider,
-            calc_constant=UserSignalUIParameters.LowLevelFrequencyCalcConstant
+            calc_constant=DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant
         )
 
     def update_low_level_freq_line_edit(self):
         self.update_line_edit(
             line_edit=self.window.LowLevelFrequencylineEdit,
             slider=self.window.LowLevelFrequencyhorizontalSlider,
-            calc_constant=UserSignalUIParameters.LowLevelFrequencyCalcConstant,
+            calc_constant=DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant,
             update_model_func=self.update_low_level_freq
         )
 

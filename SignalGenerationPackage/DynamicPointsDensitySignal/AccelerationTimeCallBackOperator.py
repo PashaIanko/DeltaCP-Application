@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
 class AccelerationTimeCallBackOperator(CallBackOperator):
 
@@ -12,12 +12,12 @@ class AccelerationTimeCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=          UserSignalUIParameters.AccelerationTimeSliderMin,
-            validator_max=          UserSignalUIParameters.AccelerationTimeSliderMax,
-            validator_accuracy=     UserSignalUIParameters.AccelerationTimeLineEditAccuracy,
+            validator_min=          DynamicPointsDensityUIParameters.AccelerationTimeSliderMin,
+            validator_max=          DynamicPointsDensityUIParameters.AccelerationTimeSliderMax,
+            validator_accuracy=     DynamicPointsDensityUIParameters.AccelerationTimeLineEditAccuracy,
             line_edit=              window.AccelerationTimelineEdit,
-            slider_min=             UserSignalUIParameters.AccelerationTimeSliderMin,
-            slider_max=             UserSignalUIParameters.AccelerationTimeSliderMax,
+            slider_min=             DynamicPointsDensityUIParameters.AccelerationTimeSliderMin,
+            slider_max=             DynamicPointsDensityUIParameters.AccelerationTimeSliderMax,
             slider=                 window.AccelerationTimehorizontalSlider,
             update_slider_func=     self.update_acceleration_time_slider,
             update_line_edit_func=  self.update_acceleration_time_line_edit
@@ -27,14 +27,14 @@ class AccelerationTimeCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.AccelerationTimelineEdit,
             slider=self.window.AccelerationTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.AccelerationTimeCalcConstant
+            calc_constant=DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant
         )
 
     def update_acceleration_time_line_edit(self):
         self.update_line_edit(
             line_edit=self.window.AccelerationTimelineEdit,
             slider=self.window.AccelerationTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.AccelerationTimeCalcConstant,
+            calc_constant=DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant,
             update_model_func=self.update_acceleration_time
         )
 

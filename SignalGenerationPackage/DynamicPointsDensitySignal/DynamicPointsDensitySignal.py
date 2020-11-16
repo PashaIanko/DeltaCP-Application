@@ -1,5 +1,5 @@
 from SignalGenerationPackage.Signal import Signal
-from SignalGenerationPackage.UserSignal.UserSignalData import UserSignalData
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalData import DynamicPointsDensitySignalData
 from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
 import sys
@@ -15,11 +15,11 @@ class DynamicPointsDensitySignal(Signal):
         super().__init__()
 
     def InitSignalData(self):
-        self.SignalData = UserSignalData()
+        self.SignalData = DynamicPointsDensitySignalData()
 
     def Func(self, x):
         pass
-        #return abs(self.SignalData.Amplitude * np.sin(self.SignalData.Omega * x + self.SignalData.Phase))
+
 
     def prepare_arr(self, time_from, time_to, subtract=False):
         x_arr = SignalData.x[
@@ -31,44 +31,78 @@ class DynamicPointsDensitySignal(Signal):
                 x_arr = [x_arr[0], x_arr[-1]]
         return x_arr
 
+    def prepare_data_arr(self, time_from, time_to, points_density, endpoint=False, subtract=False):
+        N = int(points_density * (time_to - time_from))
+        x_arr = np.linspace(time_from, time_to, N, endpoint=endpoint)
+        if subtract:
+            if len(x_arr) > 2:
+                x_arr = [x_arr[0], x_arr[-1]]
+        return x_arr
+
+    def prepare_acceleration_arr(self, time_from, time_to, tangent, endpoint=False):
+        points_density = self.SignalData.PointsDensity * (1 - (tangent / self.SignalData.CriticalAccelerationTangent))
+        if points_density <= 0:
+            return np.linspace(time_from, time_to, num=0, endpoint=endpoint)
+        else:
+            return self.prepare_data_arr(time_from, time_to, abs(points_density), endpoint, subtract=False)
+
+    def prepare_deceleration_arr(self, time_from, time_to, tangent, endpoint=False):
+        points_density = self.SignalData.PointsDensity * (1 - abs(tangent / self.SignalData.CriticalDecelerationTangent))
+        if points_density <= 0:
+            return np.linspace(time_from, time_to, num=0, endpoint=endpoint)
+        else:
+            return self.prepare_data_arr(time_from, time_to, points_density, endpoint, subtract=False)
+
     def UpdateSignalData(self):
         WholePeriod = self.SignalData.StartTime + self.SignalData.AccelerationTime + self.SignalData.PlateauTime + \
                       self.SignalData.DecelerationTime + self.SignalData.EndTime
 
+        LowLevelFreq = self.SignalData.LowLevelFrequency
+        HighLevelFreq = self.SignalData.HighLevelFrequency
+        StartTime = self.SignalData.StartTime
+        AccTime = self.SignalData.AccelerationTime
+        PlateauTime = self.SignalData.PlateauTime
+        DecTime = self.SignalData.DecelerationTime
+        EndTime = self.SignalData.EndTime
+        PointsDensity = self.SignalData.PointsDensity
+        AccelerationTime = self.SignalData.AccelerationTime
+        DecelerationTime = self.SignalData.DecelerationTime
+
         if WholePeriod != 0:
-            WholePointsNumber = self.SignalData.PointsNumber
-            SignalData.x = np.linspace(self.SignalData.X_from, WholePeriod, WholePointsNumber,
-                                       endpoint=True)  # Пересчёт ГЛОБАЛЬНЫХ Переменных
+            StartX = self.prepare_data_arr(time_from=0,
+                                           time_to=StartTime,
+                                           points_density=PointsDensity,
+                                           endpoint=False,
+                                           subtract=True)
 
-            # Разобьём массив X на кусочки
-            StartTime = self.SignalData.StartTime
-            AccTime = self.SignalData.AccelerationTime
-            PlateauTime = self.SignalData.PlateauTime
-            DecTime = self.SignalData.DecelerationTime
-            EndTime = self.SignalData.EndTime
 
-            StartX = self.prepare_arr(time_from=0,
-                                      time_to=StartTime,
-                                      subtract=True)
+            if AccelerationTime != 0:
+                AccelerationTangent = (HighLevelFreq - LowLevelFreq) / AccelerationTime
+                AccelerationX = self.prepare_acceleration_arr(time_from=StartTime,
+                                                              time_to=StartTime + AccTime,
+                                                              tangent=AccelerationTangent,
+                                                              endpoint=False)
+            else: AccelerationX = []
 
-            AccelerationX = self.prepare_arr(time_from=StartTime,
-                                             time_to=StartTime + AccTime)
 
-            PlateauX = self.prepare_arr(time_from=StartTime + AccTime,
-                                        time_to=StartTime + AccTime + PlateauTime,
-                                        subtract=True)
+            PlateauX = self.prepare_data_arr(time_from=StartTime + AccTime,
+                                             time_to=StartTime + AccTime + PlateauTime,
+                                             points_density=PointsDensity,
+                                             endpoint=False,
+                                             subtract=True)
 
-            DecelerationX = self.prepare_arr(time_from=StartTime + AccTime + PlateauTime,
-                                        time_to=StartTime + AccTime + PlateauTime + DecTime)
+            if DecelerationTime != 0:
+                DecelerationTangent = (LowLevelFreq - HighLevelFreq) / DecelerationTime
+                DecelerationX = self.prepare_deceleration_arr(time_from=StartTime + AccTime + PlateauTime,
+                                                              time_to=StartTime + AccTime + PlateauTime + DecTime,
+                                                              tangent=DecelerationTangent)
+            else: DecelerationX = []
 
-            EndX = self.prepare_arr(time_from=StartTime + AccTime + PlateauTime + DecTime,
-                                    time_to=StartTime + AccTime + PlateauTime + DecTime + EndTime,
-                                    subtract=True)
-
-            LowLevelFreq = self.SignalData.LowLevelFrequency
-            HighLevelFreq = self.SignalData.HighLevelFrequency
-            AccelerationCoeff = (HighLevelFreq - LowLevelFreq) / self.SignalData.AccelerationTime
-            DecelerationCoeff = (LowLevelFreq - HighLevelFreq) / self.SignalData.DecelerationTime
+            EndX = self.prepare_data_arr(time_from=StartTime + AccTime + PlateauTime + DecTime,
+                                         time_to=StartTime + AccTime + PlateauTime + DecTime + EndTime,
+                                         points_density=PointsDensity,
+                                         endpoint=False,
+                                         subtract=True)
 
             StartY = [LowLevelFreq for x in StartX]
             EndY = [LowLevelFreq for x in EndX]
@@ -76,11 +110,7 @@ class DynamicPointsDensitySignal(Signal):
 
             # Линейная зависимость виде y_0 + k * (x - x_0). Поэтому определим x_0 для
             # Участка с ускорением и замедлением
-            if len(StartX):
-                AccelerationX0 = StartX[-1]
-            else:
-                AccelerationX0 = 0
-
+            AccelerationX0 = StartX[-1] if len(StartX) else 0
             if len(PlateauX):
                 DecelerationX0 = PlateauX[-1]
             elif len(AccelerationX):
@@ -90,8 +120,8 @@ class DynamicPointsDensitySignal(Signal):
             else:
                 DecelerationX0 = 0
 
-            AccelerationY = [LowLevelFreq + AccelerationCoeff * (x - AccelerationX0) for x in AccelerationX]
-            DecelerationY = [HighLevelFreq + DecelerationCoeff * (x - DecelerationX0) for x in DecelerationX]
+            AccelerationY = [LowLevelFreq + AccelerationTangent * (x - AccelerationX0) for x in AccelerationX]
+            DecelerationY = [HighLevelFreq + DecelerationTangent * (x - DecelerationX0) for x in DecelerationX]
 
             # Подправляем баги на стыках линейных функций
             AccelerationY = [y if y <= HighLevelFreq else HighLevelFreq for y in AccelerationY]
@@ -197,4 +227,14 @@ class DynamicPointsDensitySignal(Signal):
     @property
     def y(self):
         return SignalData.y
+
+    @property
+    def PointsDensity(self):
+        return self.SignalData.PointsDensity
+
+    @PointsDensity.setter
+    def PointsDensity(self, val):
+        self.SignalData.PointsDensity = val
+        self.RecalcData()
+        self.NotifyObservers()
 

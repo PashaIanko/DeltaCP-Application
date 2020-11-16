@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
 
 class PlateauTimeCallBackOperator(CallBackOperator):
@@ -13,12 +13,12 @@ class PlateauTimeCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=UserSignalUIParameters.PlateauTimeSliderMin,
-            validator_max=UserSignalUIParameters.PlateauTimeSliderMax,
-            validator_accuracy=UserSignalUIParameters.PlateauTimeLineEditAccuracy,
+            validator_min=DynamicPointsDensityUIParameters.PlateauTimeSliderMin,
+            validator_max=DynamicPointsDensityUIParameters.PlateauTimeSliderMax,
+            validator_accuracy=DynamicPointsDensityUIParameters.PlateauTimeLineEditAccuracy,
             line_edit=window.PlateauTimelineEdit,
-            slider_min=UserSignalUIParameters.PlateauTimeSliderMin,
-            slider_max=UserSignalUIParameters.PlateauTimeSliderMax,
+            slider_min=DynamicPointsDensityUIParameters.PlateauTimeSliderMin,
+            slider_max=DynamicPointsDensityUIParameters.PlateauTimeSliderMax,
             slider=window.PlateauTimehorizontalSlider,
             update_slider_func=self.update_plateau_time_slider,
             update_line_edit_func=self.update_plateau_time_line_edit
@@ -28,14 +28,14 @@ class PlateauTimeCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.PlateauTimelineEdit,
             slider=self.window.PlateauTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.PlateauTimeCalcConstant
+            calc_constant=DynamicPointsDensityUIParameters.PlateauTimeCalcConstant
         )
 
     def update_plateau_time_line_edit(self):
         self.update_line_edit(
             line_edit=self.window.PlateauTimelineEdit,
             slider=self.window.PlateauTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.PlateauTimeCalcConstant,
+            calc_constant=DynamicPointsDensityUIParameters.PlateauTimeCalcConstant,
             update_model_func=self.update_plateau_time
         )
 

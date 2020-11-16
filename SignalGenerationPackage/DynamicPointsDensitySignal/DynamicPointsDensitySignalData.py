@@ -1,7 +1,7 @@
 from SignalGenerationPackage.SignalData import SignalData
 
 
-class UserSignalData(SignalData):
+class DynamicPointsDensitySignalData(SignalData):
 
     def __init__(self):
         super().__init__()
@@ -14,8 +14,6 @@ class UserSignalData(SignalData):
         self.EndTime = 0
 
         self.X_from = 0
-        #self.X_to = 0
-        self.PointsNumber = 0
+        self.PointsDensity = 0
         self.LowLevelFrequency = 0
-        self.HighLevelFrequency = 0  # Это не частота сигнала - это частота переменного
-                                    # Напряжения на DeltaCP 2000. (LowLevel, HighLevel - минимум и максимум сигнала)
+        self.HighLevelFrequency = 0

@@ -1,5 +1,5 @@
 
-class UserSignalUIParameters:
+class DynamicPointsDensityUIParameters:
 
     # ACCELERATION TIME
     AccelerationTimeMin = 0.1

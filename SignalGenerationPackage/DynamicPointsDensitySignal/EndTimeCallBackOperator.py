@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
 class EndTimeCallBackOperator(CallBackOperator):
 
@@ -12,12 +12,12 @@ class EndTimeCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=UserSignalUIParameters.EndTimeSliderMin,
-            validator_max=UserSignalUIParameters.EndTimeSliderMax,
-            validator_accuracy=UserSignalUIParameters.EndTimeLineEditAccuracy,
+            validator_min=DynamicPointsDensityUIParameters.EndTimeSliderMin,
+            validator_max=DynamicPointsDensityUIParameters.EndTimeSliderMax,
+            validator_accuracy=DynamicPointsDensityUIParameters.EndTimeLineEditAccuracy,
             line_edit=window.EndTimelineEdit,
-            slider_min=UserSignalUIParameters.EndTimeSliderMin,
-            slider_max=UserSignalUIParameters.EndTimeSliderMax,
+            slider_min=DynamicPointsDensityUIParameters.EndTimeSliderMin,
+            slider_max=DynamicPointsDensityUIParameters.EndTimeSliderMax,
             slider=window.EndTimehorizontalSlider,
             update_slider_func=self.update_end_time_slider,
             update_line_edit_func=self.update_end_time_line_edit
@@ -27,14 +27,14 @@ class EndTimeCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.EndTimelineEdit,
             slider=self.window.EndTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.EndTimeCalcConstant
+            calc_constant=DynamicPointsDensityUIParameters.EndTimeCalcConstant
         )
 
     def update_end_time_line_edit(self):
         self.update_line_edit(
             line_edit=self.window.EndTimelineEdit,
             slider=self.window.EndTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.EndTimeCalcConstant,
+            calc_constant=DynamicPointsDensityUIParameters.EndTimeCalcConstant,
             update_model_func=self.update_end_time
         )
 
