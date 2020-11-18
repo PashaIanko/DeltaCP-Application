@@ -4,10 +4,10 @@ class SignalObserver(metaclass=ABCMeta):
     """
     Абстрактный суперкласс для всех наблюдателей.
     """
-    def __init__(self, Controller, Model):
-        self.Controller = Controller
-        self.Model = Model
-        self.Model.AddObserver(self)
+    def __init__(self, model, plot_canvas):
+        self.model = model
+        self.model.AddObserver(self)
+        self.plot_canvas = plot_canvas
 
     @abstractmethod
     def UpdateModel(self):

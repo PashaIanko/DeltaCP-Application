@@ -1,26 +1,48 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator
-import sys
+from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
+from sys import exc_info
 
 
 class SinusTimeFromCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        print(sys.exc_info())
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
     def ConnectCallBack(self, window):
-        # window.TestpushButton1.clicked.connect(self.SetAmplitude)
-        window.lineEditTimeFrom.setValidator(QDoubleValidator(0.00, 600.00,2))
-        window.lineEditTimeFrom.textChanged.connect(self.SetTimeFrom)
+        self.window = window
 
+        self.setup_callback_and_synchronize_slider(
+            validator_min=SinusUIParameters.TimeFromSliderMin,
+            validator_max=SinusUIParameters.TimeFromSliderMax,
+            validator_accuracy=SinusUIParameters.TimeFromLineEditAccuracy,
+            line_edit=self.window.TimeFromlineEdit,
+            slider_min=SinusUIParameters.TimeFromSliderMin,
+            slider_max=SinusUIParameters.TimeFromSliderMax,
+            slider=self.window.horizontalSliderTimeFrom,
+            update_slider_func=self.update_time_from_slider,
+            update_line_edit_func=self.update_time_from_line_edit
+        )
 
-    def SetTimeFrom(self, text):
+    def update_time_from_slider(self):
         try:
-            if(type(text) is str):
-                text = text.replace(',', '.')
-                self.Model.X_from = float(text)
+            self.update_slider(
+                line_edit=self.window.TimeFromlineEdit,
+                slider=self.window.horizontalSliderTimeFrom,
+                calc_constant=SinusUIParameters.TimeFromCalcConstant
+            )
         except:
-            print(sys.exc_info())
+            print(exc_info())
+
+    def update_time_from_line_edit(self):
+        try:
+            self.update_line_edit(
+                line_edit=self.window.TimeFromlineEdit,
+                slider=self.window.horizontalSliderTimeFrom,
+                calc_constant=SinusUIParameters.TimeFromCalcConstant,
+                update_model_func=self.update_time_from
+            )
+        except:
+            print(exc_info())
+
+    def update_time_from(self, val):
+        self.model.X_from = val

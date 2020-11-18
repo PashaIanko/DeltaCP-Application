@@ -1,29 +1,48 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator
-import numpy as np
-import sys
+from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
+from sys import exc_info
 
 
 class SinusPhaseCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        print(sys.exc_info())
-        self.Model = Model
-        self.PhaseFrom = 0.0
-        self.PhaseTo = 2 * np.pi
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
     def ConnectCallBack(self, window):
-        # window.TestpushButton1.clicked.connect(self.SetAmplitude)
-        window.lineEditPhase.setValidator(QDoubleValidator(self.PhaseFrom, self.PhaseTo, 2))
-        window.lineEditPhase.textChanged.connect(self.SetPhase)
+        self.window = window
 
+        self.setup_callback_and_synchronize_slider(
+            validator_min=SinusUIParameters.PhaseSliderMin,
+            validator_max=SinusUIParameters.PhaseSliderMax,
+            validator_accuracy=SinusUIParameters.PhaseLineEditAccuracy,
+            line_edit=self.window.PhaselineEdit,
+            slider_min=SinusUIParameters.PhaseSliderMin,
+            slider_max=SinusUIParameters.PhaseSliderMax,
+            slider=self.window.horizontalSliderPhase,
+            update_slider_func=self.update_phase_slider,
+            update_line_edit_func=self.update_phase_line_edit
+        )
 
-    def SetPhase(self, text):
+    def update_phase_slider(self):
         try:
-            if(type(text) is str):
-                text = text.replace(',', '.')
-                self.Model.phase = float(text)
+            self.update_slider(
+                line_edit=self.window.PhaselineEdit,
+                slider=self.window.horizontalSliderPhase,
+                calc_constant=SinusUIParameters.PhaseCalcConstant
+            )
         except:
-            print(sys.exc_info())
+            print(exc_info())
+
+    def update_phase_line_edit(self):
+        try:
+            self.update_line_edit(
+                line_edit=self.window.PhaselineEdit,
+                slider=self.window.horizontalSliderPhase,
+                calc_constant=SinusUIParameters.PhaseCalcConstant,
+                update_model_func=self.update_phase
+            )
+        except:
+            print(exc_info())
+
+    def update_phase(self, val):
+        self.model.phase = val

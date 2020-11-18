@@ -3,8 +3,9 @@ from PyQt5.QtGui import QDoubleValidator
 
 
 class CallBackOperator(ABC):
-    def __init__(self):
+    def __init__(self, model):
         self.window = None
+        self.model = model
 
     @abstractmethod
     def ConnectCallBack(self, window):

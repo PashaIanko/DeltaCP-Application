@@ -22,5 +22,5 @@ class SignalSendingModule(ApplicationModule):
 
     def ConnectAllCallBacks(self):
         for conn in self.callback_operators:
-            conn.ConnectCallBack(self.UserInterface)
+            conn.ConnectCallBack(self.UserInterface)  # TODO: В родителя!!! и убрать из дочерних классов этот код
 

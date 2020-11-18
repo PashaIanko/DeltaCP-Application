@@ -17,7 +17,10 @@ class SignalTypeOperator(CallBackOperator):
     def StartSignalGeneration(self):
         signal_text = self.UserInterface.SignalTypecomboBox.currentText()
         if signal_text == 'sin':
-            self.SignalController = SinusSignalController()
+            try:
+                self.SignalController = SinusSignalController()
+            except:
+                print(sys.exc_info())
         elif signal_text == 'user signal':
             self.SignalController = UserSignalController()
         elif signal_text == 'dynamic points density':
