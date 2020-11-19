@@ -4,11 +4,10 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIPa
 
 class HighLevelFrequencyCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -40,4 +39,4 @@ class HighLevelFrequencyCallBackOperator(CallBackOperator):
         )
 
     def update_high_level_freq(self, val):
-        self.Model.HighLevelFrequency = val
+        self.model.HighLevelFrequency = val

@@ -9,6 +9,10 @@ class SignalObserver(metaclass=ABCMeta):
         self.model.AddObserver(self)
         self.plot_canvas = plot_canvas
 
-    @abstractmethod
     def UpdateModel(self):
-        pass
+        self.plot_canvas.plot(
+            self.model.x,
+            self.model.y,
+            color='blue',
+            marker='.'
+        )

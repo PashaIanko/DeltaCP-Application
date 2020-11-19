@@ -9,21 +9,25 @@ from SignalGenerationPackage.Sinus.SinusPhaseCallBackOperator import SinusPhaseC
 from SignalGenerationPackage.Sinus.SinusOmegaCallBackOperator import SinusOmegaCallBackOperator
 from SignalGenerationPackage.Sinus.SinusMainWindow import SinusMainWindow
 
+
 class SinusSignalController(SignalController):
 
     def __init__(self):
         super().__init__()
 
-
+    # overridden
     def init_model(self):
         self.model = SinusSignal()
 
+    # overridden
     def init_observer(self):
         self.observer = SinusObserver(self.model, self.main_window.plot)
 
+    # overridden
     def init_main_window(self):
         self.main_window = SinusMainWindow()
 
+    # overridden
     def init_callback_operators(self):
         self.callback_operators = \
             [

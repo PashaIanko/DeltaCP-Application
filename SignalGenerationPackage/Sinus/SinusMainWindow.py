@@ -1,5 +1,3 @@
-
-from PlotCanvas import PlotCanvas
 from SignalGenerationPackage.Sinus.Ui_SinusMainWindow import Ui_SinusMainWindow
 from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
 from SignalGenerationPackage.SignalMainWindow import SignalMainWindow

@@ -3,12 +3,10 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIPa
 
 class VerticalOffsetCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -40,4 +38,4 @@ class VerticalOffsetCallBackOperator(CallBackOperator):
         )
 
     def update_vertical_offset(self, val):
-        self.Model.VerticalOffset = val
+        self.model.VerticalOffset = val
