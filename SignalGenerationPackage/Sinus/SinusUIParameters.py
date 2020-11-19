@@ -30,7 +30,7 @@ class SinusUIParameters:
     # TIME TO
     TimeToCalcConstant = 10
     TimeToSliderMin = 0.0
-    TimeToSliderMax = 2 * 3.14
+    TimeToSliderMax = 60
     TimeToLineEditAccuracy = 2
     TimeToSliderMin = TimeToSliderMin * TimeToCalcConstant
     TimeToSliderMax = TimeToSliderMax * TimeToCalcConstant
@@ -38,7 +38,7 @@ class SinusUIParameters:
     # TIME FROM
     TimeFromCalcConstant = 10
     TimeFromSliderMin = 0.0
-    TimeFromSliderMax = 2 * 3.14
+    TimeFromSliderMax = 60
     TimeFromLineEditAccuracy = 2
     TimeFromSliderMin = TimeFromSliderMin * TimeFromCalcConstant
     TimeFromSliderMax = TimeFromSliderMax * TimeFromCalcConstant

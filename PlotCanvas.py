@@ -29,3 +29,6 @@ class PlotCanvas(FigureCanvas):
 
     def clear(self):
         self.axes.clear()
+
+    def set_xlim(self, left, right):
+        self.axes.set_xlim(left, right)

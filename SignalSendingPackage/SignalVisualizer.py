@@ -52,7 +52,8 @@ class SignalVisualizer:
         self.Graph = self.main_window.VisualizerPlot
         self.x = x_arr
         self.y = y_arr
-        self.IfRestarted = False
+        self.IfRestarted = True
+        self.Offset = 0.3
 
 
     def init_main_window(self):
@@ -61,10 +62,11 @@ class SignalVisualizer:
 
 
     def UpdateSetFrequency(self, x_val, y_val):
-        self.Graph.plot(x_val, y_val, color='red', markersize=15)
+        #self.Graph.plot(self.x, self.y, color='blue', marker='.', markersize=15)
+        self.Graph.plot(x_val, y_val, color='red', marker='.', markersize=15)
         if self.IfRestarted:
             self.IfRestarted = False
-            self.Graph.plot(self.x, self.y, color='b', marker='.')
+            self.Graph.plot(self.x, self.y, color='b', marker='.', markersize=15)
         #self.Figure.show()
 
 
