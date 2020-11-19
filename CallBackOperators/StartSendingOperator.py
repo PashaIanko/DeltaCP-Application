@@ -19,7 +19,10 @@ class StartSendingOperator(CallBackOperator):
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
         self.SendingThread = None  # Поток, в котором отправляем данные сигнала
-        self.SignalVisualizer = SignalVisualizer()
+
+        self.SignalVisualizer = None #SignalVisualizer()
+        self.SignalVisualizerConstructed = False
+
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
         self.SendingOnPause = False
         self.SendingStopped = False
@@ -158,6 +161,8 @@ class StartSendingOperator(CallBackOperator):
     def StartSendingSignal(self):
         if self.SendingThread is None:
             print(f'launching thread')
+            if not self.SignalVisualizerConstructed:
+                self.SignalVisualizer = SignalVisualizer()
             self.DeltaCPClient.SendStart()
             self.LaunchSendingThread()
         else:

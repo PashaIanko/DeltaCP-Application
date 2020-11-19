@@ -17,12 +17,15 @@ class PlotCanvas(FigureCanvas):
             self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
-    def plot(self, x, y, title='', labels=['', '']):
+    def plot(self, x, y, title='', labels=['', ''], **kwargs):
         self.axes.cla()
         self.axes.grid(True, which='both', axis='both')
         self.axes.set_xscale('linear')
         self.axes.set_yscale('linear')
         self.axes.set_title(title)
         self.axes.set(xlabel=labels[0], ylabel=labels[1])
-        self.axes.plot(x, y, marker='.')
+        self.axes.plot(x, y, **kwargs)
         self.fig.canvas.draw_idle()
+
+    def clear(self):
+        self.axes.clear()

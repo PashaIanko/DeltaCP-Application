@@ -11,7 +11,9 @@ class SinusObserver(SignalObserver):
             self.model.x,
             self.model.y,
             title='Sinus',
-            labels=['x', 'y']
+            labels=['x', 'y'],
+            color='blue',
+            marker='.'
         )
 
 
