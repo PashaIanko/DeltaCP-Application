@@ -60,6 +60,7 @@ class SignalVisualizer:
         self.main_window.show()
 
     def UpdateSetFrequency(self, x_val, y_val):
+        print(f'UpdateSetFreq = {x_val, y_val}')
         if self.IfRestarted:
             self.IfRestarted = False
             self.Graph.plot(self.x, self.y, color='b', marker='.', markersize=7)
