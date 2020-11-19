@@ -1,5 +1,5 @@
 from SignalGenerationPackage.SignalObserver import SignalObserver
-import matplotlib.pyplot as plt
+
 
 class UserSignalObserver(SignalObserver):
 
