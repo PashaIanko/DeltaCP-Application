@@ -21,7 +21,7 @@ class SignalController(ABC):
 
     def connect_all_callbacks(self):
         for conn in self.callback_operators:
-            conn.ConnectCallBack(self.main_window)
+            conn.ConnectCallBack(self.main_window.user_interface)
 
     @abstractmethod
     def init_model(self):

@@ -19,7 +19,7 @@ class SinusSignalController(SignalController):
         self.model = SinusSignal()
 
     def init_observer(self):
-        self.observer = SinusObserver(self.model, self.main_window.SinPlot)
+        self.observer = SinusObserver(self.model, self.main_window.plot)
 
     def init_main_window(self):
         self.main_window = SinusMainWindow()
