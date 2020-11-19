@@ -55,27 +55,20 @@ class SignalVisualizer:
         self.IfRestarted = True
         self.Offset = 0.3
 
-
     def init_main_window(self):
         self.main_window = VisualizerMainWindow()
         self.main_window.show()
 
-
     def UpdateSetFrequency(self, x_val, y_val):
-        #self.Graph.plot(self.x, self.y, color='blue', marker='.', markersize=15)
-        self.Graph.plot(x_val, y_val, color='red', marker='.', markersize=15)
+        self.Graph.add_point(x_val, y_val, color='red', marker='+', markersize=10)
         if self.IfRestarted:
             self.IfRestarted = False
-            self.Graph.plot(self.x, self.y, color='b', marker='.', markersize=15)
-        #self.Figure.show()
-
+            self.Graph.plot(self.x, self.y, color='b', marker='.', markersize=7)
+            self.Graph.add_point(x_val, y_val, color='red', marker='+', markersize=10)
 
     def UpdateCurrentFrequency(self, x_val, y_val):
         if x_val is not None and y_val is not None:
             self.Graph.plot(x_val, y_val, color='black', marker='x', markersize=7)
-
-    # def HandleCloseEvent(self, evt):
-    #     self.Figure = plt.figure()
 
     def Restart(self, TimeArray):
         self.Graph.clear()

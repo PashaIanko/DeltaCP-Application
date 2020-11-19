@@ -10,8 +10,8 @@ class SinusObserver(SignalObserver):
         self.plot_canvas.plot(
             self.model.x,
             self.model.y,
-            title='Sinus',
-            labels=['x', 'y'],
+            #title='Sinus',
+            #labels=['x', 'y'],
             color='blue',
             marker='.'
         )
