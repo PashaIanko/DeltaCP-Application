@@ -94,8 +94,7 @@ class DynamicPointsDensityUIParameters:
     PlotHeight = 5
     PlotWidth = 5
     PlotXPosition = 0
-    PlotYPosition = 0
+    PlotYPosition = 320
     
-
     def __init__(self):
         pass
