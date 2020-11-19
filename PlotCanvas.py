@@ -4,7 +4,7 @@ from matplotlib.figure import Figure
 
 
 class PlotCanvas(FigureCanvas):
-    def __init__(self, parent=None,  width=3.8, height=3.5, dpi=100):
+    def __init__(self, parent=None,  width=8.8, height=10.5, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         FigureCanvas.__init__(self, self.fig)
         self.setStyleSheet("background-color:rgb(240,240,240);")
@@ -35,7 +35,8 @@ class PlotCanvas(FigureCanvas):
         self.fig.canvas.draw_idle()
 
     def clear(self):
-        self.axes.clear()
+        self.axes.cla()
+        #self.axes.clear()
 
     def set_xlim(self, left, right):
         self.axes.set_xlim(left, right)

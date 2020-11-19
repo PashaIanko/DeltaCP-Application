@@ -7,6 +7,6 @@ class VisualizerMainWindow(QtWidgets.QMainWindow, Ui_VisualizerMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.VisualizerPlot = PlotCanvas(parent=self)
-        self.VisualizerPlot.move(0, 30) # (SinusUIParameters.SinusPlotXPosition, SinusUIParameters.SinusPlotYPosition)
+        self.VisualizerPlot = PlotCanvas(parent=self, width=8, height=7)
+        self.VisualizerPlot.move(20, 29) # TODO: Вывести константы в отдельный класс
         self.setupUi(self)
