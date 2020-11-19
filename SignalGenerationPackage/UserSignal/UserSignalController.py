@@ -1,5 +1,4 @@
 from SignalGenerationPackage.SignalController import  SignalController
-from SignalGenerationPackage.UserSignal.Ui_UserSignalWindow import Ui_UserSignalWindow
 from SignalGenerationPackage.UserSignal.UserSignal import UserSignal
 from SignalGenerationPackage.UserSignal.UserSignalObserver import UserSignalObserver
 from SignalGenerationPackage.UserSignal.AccelerationTimeCallBackOperator import AccelerationTimeCallBackOperator
@@ -12,7 +11,7 @@ from SignalGenerationPackage.UserSignal.EndTimeCallBackOperator import EndTimeCa
 from SignalGenerationPackage.UserSignal.StartTimeCallBackOperator import StartTimeCallBackOperator
 from SignalGenerationPackage.UserSignal.VerticalOffsetCallBackOperator import VerticalOffsetCallBackOperator
 from SignalGenerationPackage.UserSignal.AutoFillCallBackOperator import AutoFillCallBackOperator
-
+from SignalGenerationPackage.UserSignal.UserSignalMainWindow import UserSignalMainWindow
 
 class UserSignalController(SignalController):
 
@@ -20,35 +19,26 @@ class UserSignalController(SignalController):
         super().__init__()
 
 
-    def InitModel(self):
-        # creating MVC model
-        self.Model = UserSignal()
+    def init_model(self):
+        self.model = UserSignal()
 
-    def InitView(self):
-        # creating MVC view
-        self.View = UserSignalObserver(self, self.Model)
+    def init_observer(self):
+        self.observer = UserSignalObserver(self.model, self.main_window.plot)
 
-    # overriden method - here you define personal Graphical Interface
-    # (Ui) and show the window
-    def InitSignalUI(self):
-        self.UserInterface = Ui_UserSignalWindow()
+    def init_main_window(self):
+        self.main_window = UserSignalMainWindow()
 
-    def InitCallBackOperators(self):
-        self.CallbackOperators = \
+    def init_callback_operators(self):
+        self.callback_operators = \
             [
-                StartTimeCallBackOperator(self.Model),
-                AccelerationTimeCallBackOperator(self.Model),
-                PlateauTimeCallBackOperator(self.Model),
-                DecelerationTimeCallBackOperator(self.Model),
-                EndTimeCallBackOperator(self.Model),
-                VerticalOffsetCallBackOperator(self.Model),
-                HighLevelFrequencyCallBackOperator(self.Model),
-                LowLevelFrequencyCallBackOperator(self.Model),
-                PointsNumberCallBackOperator(self.Model),
-                AutoFillCallBackOperator()
+                StartTimeCallBackOperator(self.model),
+                AccelerationTimeCallBackOperator(self.model),
+                PlateauTimeCallBackOperator(self.model),
+                DecelerationTimeCallBackOperator(self.model),
+                EndTimeCallBackOperator(self.model),
+                VerticalOffsetCallBackOperator(self.model),
+                HighLevelFrequencyCallBackOperator(self.model),
+                LowLevelFrequencyCallBackOperator(self.model),
+                PointsNumberCallBackOperator(self.model),
+                AutoFillCallBackOperator(model=None)
             ]
-
-    # overriden
-    def ConnectCallBacks(self):
-        for operator in self.CallbackOperators:
-            operator.ConnectCallBack(self.UserInterface)

@@ -88,7 +88,13 @@ class UserSignalUIParameters:
     VerticalOffsetCalcConstant = 10
     VerticalOffsetSliderMin = VerticalOffsetMin * VerticalOffsetCalcConstant
     VerticalOffsetSliderMax = VerticalOffsetMax * VerticalOffsetCalcConstant
-    
+
+
+    # PLOTTING
+    PlotHeight = 5
+    PlotWidth = 5
+    PlotXPosition = 0
+    PlotYPosition = 0
 
     def __init__(self):
         pass

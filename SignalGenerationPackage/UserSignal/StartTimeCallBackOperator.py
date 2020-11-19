@@ -4,11 +4,10 @@ from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignal
 
 class StartTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -44,4 +43,4 @@ class StartTimeCallBackOperator(CallBackOperator):
             print(sys.exc_info())
 
     def update_start_time(self, val):
-        self.Model.StartTime = val
+        self.model.StartTime = val

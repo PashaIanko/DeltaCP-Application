@@ -5,11 +5,10 @@ import sys
 
 class DecelerationTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -41,4 +40,4 @@ class DecelerationTimeCallBackOperator(CallBackOperator):
         )
 
     def update_deceleration_time(self, val):
-        self.Model.DecelerationTime = val
+        self.model.DecelerationTime = val
