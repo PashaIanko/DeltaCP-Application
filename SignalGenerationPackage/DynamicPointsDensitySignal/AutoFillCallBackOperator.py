@@ -5,8 +5,8 @@ import sys
 
 
 class AutoFillCallBackOperator(CallBackOperator):
-    def __init__(self):
-        super().__init__()  # TODO: Выделить интерфейс AutoFill Operator
+    def __init__(self, model):
+        super().__init__(model)  # TODO: Выделить интерфейс AutoFill Operator
         self.configs_path = ".\\SignalGenerationConfigs\\DynamicPointsDensitySignalConfigs\\SignalConfigs.xlsx"
         self.configs_data = pd.read_excel(self.configs_path)
         self.configs_data.index = self.configs_data['Config Name']
@@ -36,18 +36,6 @@ class AutoFillCallBackOperator(CallBackOperator):
             )
         except:
             print(sys.exc_info())
-
-
-    # def all_widgets_are_ready(self, values_and_widgets):
-    #     for v in values_and_widgets:
-    #         value_to_set = v[0]
-    #         constant = v[1]
-    #         slider = v[2]
-    #
-    #         if slider.value() != value_to_set:
-    #             return False
-    #     return True
-
 
     def set_signal_parameters(self, value_widgets):
         # TODO: Не может за один цикл синхронизировать слайдеры и текстовые поля, Не знаю что за баг

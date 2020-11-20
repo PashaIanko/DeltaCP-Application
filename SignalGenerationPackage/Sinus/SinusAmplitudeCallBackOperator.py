@@ -1,26 +1,47 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator
-import sys
+from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
+from sys import exc_info
 
 class SinusAmplitudeCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        print(sys.exc_info())
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
     def ConnectCallBack(self, window):
-        # window.TestpushButton1.clicked.connect(self.SetAmplitude)
+        self.window = window
 
-        window.lineEditAmplitude.setValidator(QDoubleValidator(0.99,99.99,2))
-        window.lineEditAmplitude.textChanged.connect(self.SetAmplitude)
+        self.setup_callback_and_synchronize_slider(
+            validator_min=SinusUIParameters.AmplitudeSliderMin,
+            validator_max=SinusUIParameters.AmplitudeSliderMax,
+            validator_accuracy=SinusUIParameters.AmplitudeLineEditAccuracy,
+            line_edit=self.window.AmplitudelineEdit,
+            slider_min=SinusUIParameters.AmplitudeSliderMin,
+            slider_max=SinusUIParameters.AmplitudeSliderMax,
+            slider=self.window.horizontalSliderAmplitude,
+            update_slider_func=self.update_amplitude_slider,
+            update_line_edit_func=self.update_amplitude_line_edit
+        )
 
-
-    def SetAmplitude(self, text):
+    def update_amplitude_slider(self):
         try:
-            if(type(text) is str):
-                text = text.replace(',', '.')
-                self.Model.amplitude = float(text)
+            self.update_slider(
+                line_edit=self.window.AmplitudelineEdit,
+                slider=self.window.horizontalSliderAmplitude,
+                calc_constant=SinusUIParameters.AmplitudeCalcConstant
+            )
         except:
-            print(sys.exc_info())
+            print(exc_info())
+
+    def update_amplitude_line_edit(self):
+        try:
+            self.update_line_edit(
+                line_edit=self.window.AmplitudelineEdit,
+                slider=self.window.horizontalSliderAmplitude,
+                calc_constant=SinusUIParameters.AmplitudeCalcConstant,
+                update_model_func=self.update_amplitude
+            )
+        except:
+            print(exc_info())
+
+    def update_amplitude(self, val):
+        self.model.amplitude = val

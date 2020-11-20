@@ -12,6 +12,7 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.EndTimeCallBackOperator 
 from SignalGenerationPackage.DynamicPointsDensitySignal.StartTimeCallBackOperator import StartTimeCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.VerticalOffsetCallBackOperator import VerticalOffsetCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.AutoFillCallBackOperator import AutoFillCallBackOperator
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityMainWindow import DynamicPointsDensityMainWindow
 
 
 class DynamicPointsDensitySignalController(SignalController):
@@ -19,33 +20,30 @@ class DynamicPointsDensitySignalController(SignalController):
     def __init__(self):
         super().__init__()
 
+    # overridden
+    def init_model(self):
+        self.model = DynamicPointsDensitySignal()
 
-    def InitModel(self):
-        # creating MVC model
-        self.Model = DynamicPointsDensitySignal()
+    # overridden
+    def init_observer(self):
+        self.observer = DynamicPointsDensitySignalObserver(self.model, self.main_window.plot)  # TODO: Посмотри, этот метод везде одинаков, можно в родителя
 
-    def InitView(self):
-        self.View = DynamicPointsDensitySignalObserver(self, self.Model)
+    # overridden
+    def init_main_window(self):
+        self.main_window = DynamicPointsDensityMainWindow()
 
-    def InitSignalUI(self):
-        self.UserInterface = Ui_DynamicPointsDensitySignalWindow()
-
-    def InitCallBackOperators(self):
-        self.CallbackOperators = \
+    # overridden
+    def init_callback_operators(self):
+        self.callback_operators = \
             [
-                StartTimeCallBackOperator(self.Model),
-                AccelerationTimeCallBackOperator(self.Model),
-                PlateauTimeCallBackOperator(self.Model),
-                DecelerationTimeCallBackOperator(self.Model),
-                EndTimeCallBackOperator(self.Model),
-                VerticalOffsetCallBackOperator(self.Model),
-                HighLevelFrequencyCallBackOperator(self.Model),
-                LowLevelFrequencyCallBackOperator(self.Model),
-                PointsDensityCallBackOperator(self.Model),
-                AutoFillCallBackOperator()
+                StartTimeCallBackOperator(self.model),
+                AccelerationTimeCallBackOperator(self.model),
+                PlateauTimeCallBackOperator(self.model),
+                DecelerationTimeCallBackOperator(self.model),
+                EndTimeCallBackOperator(self.model),
+                VerticalOffsetCallBackOperator(self.model),
+                HighLevelFrequencyCallBackOperator(self.model),
+                LowLevelFrequencyCallBackOperator(self.model),
+                PointsDensityCallBackOperator(self.model),
+                AutoFillCallBackOperator(model=None)
             ]
-
-    # overriden
-    def ConnectCallBacks(self):
-        for operator in self.CallbackOperators:
-            operator.ConnectCallBack(self.UserInterface)

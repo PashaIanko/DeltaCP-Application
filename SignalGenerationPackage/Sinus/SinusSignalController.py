@@ -1,4 +1,3 @@
-from SignalGenerationPackage.Sinus.Ui_SinWindow import Ui_SinWindow
 from SignalGenerationPackage.SignalController import SignalController
 from SignalGenerationPackage.Sinus.SinusSignal import SinusSignal
 from SignalGenerationPackage.Sinus.SinusObserver import SinusObserver
@@ -8,39 +7,34 @@ from SignalGenerationPackage.Sinus.SinusTimeToCallBackOperator import SinusTimeT
 from SignalGenerationPackage.Sinus.SinusPointsNumberCallBackOperator import SinusPointsNumberCallBackOperator
 from SignalGenerationPackage.Sinus.SinusPhaseCallBackOperator import SinusPhaseCallBackOperator
 from SignalGenerationPackage.Sinus.SinusOmegaCallBackOperator import SinusOmegaCallBackOperator
-import sys
+from SignalGenerationPackage.Sinus.SinusMainWindow import SinusMainWindow
+
 
 class SinusSignalController(SignalController):
 
     def __init__(self):
         super().__init__()
 
+    # overridden
+    def init_model(self):
+        self.model = SinusSignal()
 
-    def InitModel(self):
-        # creating MVC model
-        self.Model = SinusSignal()
+    # overridden
+    def init_observer(self):
+        self.observer = SinusObserver(self.model, self.main_window.plot)
 
-    def InitView(self):
-        # creating MVC view
-        self.View = SinusObserver(self, self.Model)
+    # overridden
+    def init_main_window(self):
+        self.main_window = SinusMainWindow()
 
-    # overriden method - here you define personal Graphical Interface
-    # (Ui) and show the window
-    def InitSignalUI(self):
-        self.UserInterface = Ui_SinWindow()
-
-    def InitCallBackOperators(self):
-        self.CallbackOperators = \
+    # overridden
+    def init_callback_operators(self):
+        self.callback_operators = \
             [
-                SinusAmplitudeCallBackOperator(self.Model),
-                SinusTimeFromCallBackOperator(self.Model),
-                SinusTimeToCallBackOperator(self.Model),
-                SinusPointsNumberCallBackOperator(self.Model),
-                SinusPhaseCallBackOperator(self.Model),
-                SinusOmegaCallBackOperator(self.Model)
+                SinusAmplitudeCallBackOperator(self.model),
+                SinusTimeFromCallBackOperator(self.model),
+                SinusTimeToCallBackOperator(self.model),
+                SinusPointsNumberCallBackOperator(self.model),
+                SinusPhaseCallBackOperator(self.model),
+                SinusOmegaCallBackOperator(self.model)
             ]
-
-    # overriden
-    def ConnectCallBacks(self):
-        for operator in self.CallbackOperators:
-            operator.ConnectCallBack(self.UserInterface)

@@ -6,6 +6,9 @@ if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = ApplicationManager()
+    try:
+        MainWindow = ApplicationManager()
+    except:
+        print(sys.exc_info())
     MainWindow.show()
     sys.exit(app.exec_())

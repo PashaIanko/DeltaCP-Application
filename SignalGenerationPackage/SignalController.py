@@ -1,48 +1,43 @@
-from abc import ABCMeta, abstractmethod
-from PyQt5 import QtWidgets
+from abc import ABC, abstractmethod
 
-class SignalController(metaclass=ABCMeta):
 
-    '''
-    In MVC pattern - this is the core that aggregates Model and View
-    '''
+class SignalController(ABC):
 
     def __init__(self):
-        self.CallbackOperators = []
-        self.Signal = None  # Model
-        self.SignalObserver = None  # View
+        self.main_window = None
+        self.model = None
+        self.observer = None
+        self.callback_operators = None
 
-        # defining customized user interface
-        self.UserInterface = None
-        self.MainWindow = QtWidgets.QMainWindow()  # new window with graphical interface
-        self.InitSignalUI()  # overridden method - each class implements own User Interface
+        # Процедура конструктора - надо переопределить все методы
+        self.init_model()
+        self.init_main_window()
+        self.init_observer()
+        self.init_callback_operators()
+        self.connect_all_callbacks()
+        self.show_gui()
 
-        self.UserInterface.setupUi(self.MainWindow)
-        self.MainWindow.show()
-        self.InitModel()  # overriden
-        self.InitView()  # overriden
-        self.InitCallBackOperators()  # overriden
-        self.ConnectCallBacks()  # overriden
+
+
+    def connect_all_callbacks(self):
+        for conn in self.callback_operators:
+            conn.ConnectCallBack(self.main_window.user_interface)
 
     @abstractmethod
-    def InitSignalUI(self):
+    def init_model(self):
         pass
 
     @abstractmethod
-    def InitModel(self):
-        # creating MVC model
+    def init_observer(self):
         pass
 
     @abstractmethod
-    def InitView(self):
-        # creating MVC view
+    def init_callback_operators(self):
         pass
 
     @abstractmethod
-    def InitCallBackOperators(self):
+    def init_main_window(self):
         pass
 
-    @abstractmethod
-    def ConnectCallBacks(self):
-        pass
-
+    def show_gui(self):
+        self.main_window.show()

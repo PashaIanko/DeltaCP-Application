@@ -3,11 +3,10 @@ from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignal
 
 class PointsNumberCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -39,4 +38,4 @@ class PointsNumberCallBackOperator(CallBackOperator):
         )
 
     def update_points_number(self, val):
-        self.Model.PointsNumber = int(val)
+        self.model.PointsNumber = int(val)

@@ -3,11 +3,10 @@ from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignal
 
 class AccelerationTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -39,4 +38,4 @@ class AccelerationTimeCallBackOperator(CallBackOperator):
         )
 
     def update_acceleration_time(self, val):
-        self.Model.AccelerationTime = val
+        self.model.AccelerationTime = val

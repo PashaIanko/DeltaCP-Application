@@ -3,11 +3,10 @@ from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignal
 
 class EndTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -39,4 +38,4 @@ class EndTimeCallBackOperator(CallBackOperator):
         )
 
     def update_end_time(self, val):
-        self.Model.EndTime = val
+        self.model.EndTime = val

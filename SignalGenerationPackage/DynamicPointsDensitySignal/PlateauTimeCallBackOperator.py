@@ -4,11 +4,10 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIPa
 
 class PlateauTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, Model):
-        super().__init__()
-        self.Model = Model
+    def __init__(self, model):
+        super().__init__(model)
 
-    # overriden
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
 
@@ -40,4 +39,4 @@ class PlateauTimeCallBackOperator(CallBackOperator):
         )
 
     def update_plateau_time(self, val):
-        self.Model.PlateauTime = val
+        self.model.PlateauTime = val
