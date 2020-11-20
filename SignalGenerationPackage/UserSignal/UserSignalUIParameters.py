@@ -79,7 +79,6 @@ class UserSignalUIParameters:
     PointsNumberSliderMin = PointsNumberMin * PointsNumberCalcConstant
     PointsNumberSliderMax = PointsNumberMax * PointsNumberCalcConstant
 
-
     # VERTICAL OFFSET
     VerticalOffsetMin = 0
     VerticalOffsetMax = 20
