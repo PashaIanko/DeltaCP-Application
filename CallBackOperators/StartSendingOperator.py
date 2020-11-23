@@ -4,7 +4,7 @@ from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from threading import Thread
 from DeltaCPClient import DeltaCPClient
-import time
+from time import sleep
 import sys
 
 
@@ -27,11 +27,13 @@ class StartSendingOperator(CallBackOperator):
         self.SendingOnPause = False
         self.SendingStopped = False
         self.EndlessSendingEnabled = False
+        self.IsFirstCycle = True
         self.CycleFinishedSuccessfully = False
         self.CommandExecutionTime = 0.23  # Часть времени уходит на исполнение команды (отправку частоты на
                                         # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                         # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                         # на исполнение команды
+        self.DebugMode = True
 
 
 
@@ -69,9 +71,15 @@ class StartSendingOperator(CallBackOperator):
         N = len(DeltaTimes)
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
-        self.PointsIterator = 0
-        self.TimeStamp = Time[self.PointsIterator]
-        self.ValueToSend = SignalData.y[self.PointsIterator]
+        self.PointsIterator = 1
+        self.TimeStamp = Time[self.PointsIterator - 1]
+        self.ValueToSend = SignalData.y[self.PointsIterator]  # Сигнал опережает теперь
+        preset_value = SignalData.y[0]
+
+        if self.IsFirstCycle == True:
+            # На первом прогоне надо предварительно выставить начальную частоту
+            self.IsFirstCycle = False
+            self.PresetFrequency(preset_value)
 
         if self.Timer.if_started == True:  # Если уже дали старт таймеру на предудущем цикле
             self.Timer.reset(DeltaTimes[0] - self.CommandExecutionTime)
@@ -82,21 +90,23 @@ class StartSendingOperator(CallBackOperator):
         if N != 1:  # If the Time array has only one point, then we've already accomplished it in
                     # the method self.Timer.run()
             i = 0
-            i_limit = N - 1
+            i_limit = N - 2
             while i < i_limit:
-                #print(f'inside while')
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
                     i += 1
                     self.PointsIterator += 1
+
                     self.ValueToSend = SignalData.y[self.PointsIterator]
-                    self.TimeStamp = Time[self.PointsIterator]
-                    self.Timer.reset(DeltaTimes[i] - self.CommandExecutionTime)
+                    self.TimeStamp = Time[self.PointsIterator - 1]
+
+                    self.Timer.reset(DeltaTimes[i-1] - self.CommandExecutionTime)
+
 
                 if self.SendingStopped:
                     print('Stop push button --> finishing thread execution')
                     return
-        while True: # Дожидаемся отправки последней команды (на краю сэмпла, чтобы на визуализации тоже это увидеть)
+        while True:  # Дожидаемся отправки последней команды (на краю сэмпла, чтобы на визуализации тоже это увидеть)
             if self.FunctionWasCalled == True:
                 self.FunctionWasCalled = False
                 self.CycleFinishedSuccessfully = True
@@ -128,10 +138,6 @@ class StartSendingOperator(CallBackOperator):
                 self.SignalVisualizer.Restart(Time)
                 self.ExecuteSending(Time)
 
-                #self.RestartSignalIterator()
-                #self.RestartVisualization(Time)
-                #self.ExecuteSending(Time)
-
     def Restart(self, Time):
         self.CycleFinishedSuccessfully = False
         upd_val = SignalData.x[-1]
@@ -145,10 +151,6 @@ class StartSendingOperator(CallBackOperator):
     def RestartVisualization(self, TimeArray):
         print(f'Restarting Visualization!!')
         self.SignalVisualizer.Restart(TimeArray)
-
-
-
-
 
 
     def LaunchSendingThread(self):
@@ -191,6 +193,23 @@ class StartSendingOperator(CallBackOperator):
         self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
 
         self.FunctionWasCalled = True
+
+    def PresetFrequency(self, value):
+        # Перед запуском, если частота ненулевая - убедиться, предварительно задать требуемую начальную частоту
+        value_to_send = int(value * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+        self.DeltaCPClient.SetFrequency(value_to_send)
+        accuracy = 0.05
+
+        if self.DebugMode:
+            return
+        else:
+            while True:
+                # мониторим, достигли ли требуемой начальной частоты
+                sleep(1)
+                current_freq = self.DeltaCPClient.RequestCurrentFrequency()
+                if abs(current_freq - value_to_send) <= accuracy:
+                    return
+
 
 
 
