@@ -44,5 +44,4 @@ class SinusPointsNumberCallBackOperator(CallBackOperator):
             print(exc_info())
 
     def update_points_number(self, val):
-        print(f'pts number = {val}')
         self.model.PointsNumber = int(val)
