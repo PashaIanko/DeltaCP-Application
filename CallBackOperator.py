@@ -3,7 +3,7 @@ from PyQt5.QtGui import QDoubleValidator
 
 
 class CallBackOperator(ABC):
-    def __init__(self, model):
+    def __init__(self, model=None):
         self.window = None
         self.model = model
 

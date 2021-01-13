@@ -1,12 +1,14 @@
 from ApplicationModule import ApplicationModule
-from CallBackOperators.StartSendingOperator import StartSendingOperator
+from CallBackOperators.NaiveSendingOperator import NaiveSendingOperator
+from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 
 
 class SignalSendingModule(ApplicationModule):
 
     callback_operators = \
         [
-            StartSendingOperator()
+            NaiveSendingOperator()
+            #ForwardSendingOperator(DebugMode=True)
         ]
 
     def __init__(self):
