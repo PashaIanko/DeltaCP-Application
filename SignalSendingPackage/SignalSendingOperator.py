@@ -1,9 +1,10 @@
 from CallBackOperator import CallBackOperator
-from SignalSendingPackage.SignalTimer import SignalTimer
 from DeltaCPClient import DeltaCPClient
 from abc import abstractmethod
 from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from threading import Thread
+from SignalSendingPackage.SignalTimer import SignalTimer
+from SignalGenerationPackage.SignalData import SignalData
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -35,8 +36,11 @@ class SignalSendingOperator(CallBackOperator):
                                             # на исполнение команды
 
 
-
     @abstractmethod
+    def ExecuteSending(self, Time):
+        pass
+
+    # overridden
     def ConnectCallBack(self, window):
         self.window = window
         window.pushButtonStartSignalSending.clicked.connect(self.StartSendingSignal)
@@ -108,6 +112,59 @@ class SignalSendingOperator(CallBackOperator):
     def LaunchSendingThread(self):
         self.SendingThread = Thread(target=self.ThreadFunc)
         self.SendingThread.start()
+
+
+    # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
+    def StartSendingSignal(self):
+        if self.SendingThread is None:
+            print(f'launching thread')
+            if not self.SignalVisualizerConstructed:
+                self.SignalVisualizer = SignalVisualizer()
+            self.DeltaCPClient.SendStart()
+            self.LaunchSendingThread()
+        else:
+            if not self.SendingThread.is_alive():
+                print(f'launching thread')
+                self.SignalVisualizer.Restart(TimeArray=[])
+                self.RestartSignalIterator()
+                self.SendingStopped = False  # Надо почистить этот флаг
+                self.LaunchSendingThread()
+            else:
+                print(f'Prev sending thread is executing, cant launch one')
+
+    def ThreadFunc(self):
+        self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
+        # TODO: Check that TimeFrom <= TimeTo
+        Time = SignalData.x.copy()
+        self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
+        self.ExecuteSending(Time)
+
+
+        while True:
+            if self.SendingStopped == True:
+                self.SendingStopped = False  # Reset the flag
+                return
+            elif self.EndlessSendingEnabled and self.CycleFinishedSuccessfully:
+                # update Time array and restart the cycle
+                self.CycleFinishedSuccessfully = False
+                upd_val = SignalData.x[-1]
+                for i in range(len(Time)):
+                    Time[i] += upd_val + SignalData.dx[i]
+
+                # restarting points Iterator, Visualisation and Sending Thread
+                self.PointsIterator = 0
+                self.SignalVisualizer.Restart(Time)
+                self.ExecuteSending(Time)
+
+
+    def Restart(self, Time):
+        self.CycleFinishedSuccessfully = False
+        upd_val = SignalData.x[-1]
+        for i in range(len(Time)):
+            Time[i] += upd_val + SignalData.dx[i]
+        self.RestartSignalIterator()
+        self.RestartVisualization(Time)
+        self.ExecuteSending(Time)
 
 
 
