@@ -41,7 +41,8 @@ class Signal(metaclass=ABCMeta):
                 for dt_next_idx, dt_prev_idx
                 in zip(range(1, N), range(0, N - 1))
             ]
-            SignalData.dx.insert(0, statistics.mean(SignalData.dx))  # Начальная точка отсчёта по времени, 0.00
+            # TODO: В строке ниже - я не помню, с какой целью я вставлял лишнее dx в начало массива
+            # SignalData.dx.insert(0, statistics.mean(SignalData.dx))  # Начальная точка отсчёта по времени, 0.00
 
 
 

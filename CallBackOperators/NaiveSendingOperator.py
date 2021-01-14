@@ -25,11 +25,10 @@ class NaiveSendingOperator(SignalSendingOperator):
 
 
         print(f'INITIAL SEND: val={self.ValueToSend} at t={self.TimeStamp}')
-        dt_to_wait = DeltaTimes[0] - self.CommandExecutionTime
         if self.Timer.if_started:  # Если уже дали старт таймеру на предудущем цикле
-            self.Timer.reset(dt_to_wait)
+            self.Timer.reset(self.CycleGap)  # Время ожидания перед отправкой (так же перерыв между циклами)
         else:
-            self.Timer.interval = dt_to_wait
+            self.Timer.interval = self.CycleGap
             self.Timer.run()  # Подождали DeltaTimes[0] и отправили 0ую точку
 
 
@@ -38,7 +37,7 @@ class NaiveSendingOperator(SignalSendingOperator):
         if Dts_len != 0:  # If the Time array has only one point, then we've already accomplished it in
                           # the method self.Timer.run()
             i = 0
-            while i < Dts_len - 1:
+            while i < Dts_len:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
 
