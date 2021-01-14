@@ -24,7 +24,7 @@ class UserSignal(Signal):
     def prepare_arr(self, time_from, time_to, subtract=False):
         x_arr = SignalData.x[
              (SignalData.x >= time_from) &
-             (SignalData.x <= time_to)]
+             (SignalData.x < time_to)]
 
         if subtract:
             if len(x_arr) > 2:
@@ -59,7 +59,7 @@ class UserSignal(Signal):
                                         subtract=True)
 
             DecelerationX = self.prepare_arr(time_from=StartTime + AccTime + PlateauTime,
-                                        time_to=StartTime + AccTime + PlateauTime + DecTime)
+                                             time_to=StartTime + AccTime + PlateauTime + DecTime)
 
             EndX = self.prepare_arr(time_from=StartTime + AccTime + PlateauTime + DecTime,
                                     time_to=StartTime + AccTime + PlateauTime + DecTime + EndTime,

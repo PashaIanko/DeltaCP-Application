@@ -11,25 +11,26 @@ class SignalSendingOperator(CallBackOperator):
     def __init__(self):
         super().__init__()
 
-
         # Ниже - Набор параметров для обоих способов отправки сигнала -
         # наперёд (Как Сергей сказал), и более наивный способ
         self.TimeStamp = 0
         self.ValueToSend = 0
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         self.DeltaCPClient = DeltaCPClient()
+
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
-        self.SendingThread = None
-
-        self.SignalVisualizer = None
         self.SignalVisualizerConstructed = False
-
-        self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
         self.SendingOnPause = False
         self.SendingStopped = False
         self.EndlessSendingEnabled = False
         self.CycleFinishedSuccessfully = False
+
+        self.SendingThread = None
+        self.SignalVisualizer = None
+        self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
+
+        self.CycleGap = 1.0  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
         self.CommandExecutionTime = 0.23  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
@@ -149,7 +150,7 @@ class SignalSendingOperator(CallBackOperator):
                 self.CycleFinishedSuccessfully = False
                 upd_val = SignalData.x[-1]
                 for i in range(len(Time)):
-                    Time[i] += upd_val + SignalData.dx[i]
+                    Time[i] += upd_val  # + SignalData.dx[i]
 
                 # restarting points Iterator, Visualisation and Sending Thread
                 self.PointsIterator = 0

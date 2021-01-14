@@ -16,35 +16,44 @@ class NaiveSendingOperator(SignalSendingOperator):
     # overridden
     def ExecuteSending(self, Time):
         DeltaTimes = SignalData.dx
-        N = len(DeltaTimes)
+        Dts_len = len(DeltaTimes)
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 0
         self.TimeStamp = Time[self.PointsIterator]
         self.ValueToSend = SignalData.y[self.PointsIterator]
 
-        if self.Timer.if_started:  # Если уже дали старт таймеру на предудущем цикле
-            self.Timer.reset(DeltaTimes[0] - self.CommandExecutionTime)
-        else:
-            self.Timer.interval = DeltaTimes[0] - self.CommandExecutionTime
-            self.Timer.run()
 
-        if N != 1:  # If the Time array has only one point, then we've already accomplished it in
-                    # the method self.Timer.run()
+        print(f'INITIAL SEND: val={self.ValueToSend} at t={self.TimeStamp}')
+        if self.Timer.if_started:  # Если уже дали старт таймеру на предудущем цикле
+            self.Timer.reset(self.CycleGap)  # Время ожидания перед отправкой (так же перерыв между циклами)
+        else:
+            self.Timer.interval = self.CycleGap
+            self.Timer.run()  # Подождали DeltaTimes[0] и отправили 0ую точку
+
+
+        # После отправки нулевой точки - увеличиваем итератор
+        self.PointsIterator += 1
+        if Dts_len != 0:  # If the Time array has only one point, then we've already accomplished it in
+                          # the method self.Timer.run()
             i = 0
-            i_limit = N - 1
-            while i < i_limit:
+            while i < Dts_len:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
-                    i += 1
-                    self.PointsIterator += 1
+
                     self.ValueToSend = SignalData.y[self.PointsIterator]
                     self.TimeStamp = Time[self.PointsIterator]
-                    self.Timer.reset(DeltaTimes[i] - self.CommandExecutionTime)
+                    dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
+                    print(f'SEND {self.ValueToSend} at the t={self.TimeStamp} after waiting for {dt_to_wait}')
+                    self.Timer.reset(dt_to_wait)
+
+                    i += 1
+                    self.PointsIterator += 1
 
                 if self.SendingStopped:
                     print('Stop push button --> finishing thread execution')
                     return
+
         while True: # Дожидаемся отправки последней команды (на краю сэмпла, чтобы на визуализации тоже это увидеть)
             if self.FunctionWasCalled == True:
                 self.FunctionWasCalled = False

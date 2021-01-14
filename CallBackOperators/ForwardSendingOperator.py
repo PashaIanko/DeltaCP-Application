@@ -22,7 +22,7 @@ class ForwardSendingOperator(SignalSendingOperator):
     # overridden
     def ExecuteSending(self, Time):
         DeltaTimes = SignalData.dx
-        N = len(DeltaTimes)
+        Dts_len = len(DeltaTimes)
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 1
@@ -30,28 +30,30 @@ class ForwardSendingOperator(SignalSendingOperator):
         self.ValueToSend = SignalData.y[self.PointsIterator]  # Сигнал опережает теперь
 
 
+        # На первом прогоне надо предварительно выставить начальную частоту
         if self.IsFirstCycle == True:
-            # На первом прогоне надо предварительно выставить начальную частоту
             preset_value = SignalData.y[0]
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
 
+        # После выставления начальной частоты - Ждём cycle gap и выставляем следующую точку
         if self.Timer.if_started == True:  # Если уже дали старт таймеру на предудущем цикле
-            self.Timer.reset(DeltaTimes[0] - self.CommandExecutionTime)
+            self.Timer.reset(self.CycleGap)
         else:
-            self.Timer.interval = DeltaTimes[0] - self.CommandExecutionTime
+            self.Timer.interval = self.CycleGap
             self.Timer.run()
 
-        if N != 1:  # If the Time array has only one point, then we've already accomplished it in
-                    # the method self.Timer.run()
+        # После этого - ждём delta_t[i] и выставляем следующие точки, i = 0, 1, ...
+        if Dts_len != 1:  # If the Time array has only one point, then we've already accomplished it in
+                          # the method self.Timer.run()
 
-            i = 1
+            i = 0
             self.PointsIterator += 1
-            while i < N:
+            while i < Dts_len:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
 
-                    if i == N - 1:
+                    if i == Dts_len - 1:
                         # Это значит, мы достигли конца отправляемого сигнала.
                         # Поскольку отправляем наперёд - надо отправить начальную точку сигнала,
                         # При этом подождав detaT[-1] (Последний временной отрезок)
