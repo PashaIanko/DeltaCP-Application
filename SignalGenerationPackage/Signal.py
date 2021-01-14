@@ -29,7 +29,6 @@ class Signal(metaclass=ABCMeta):
         pass
 
     def UpdateDeltaTimes(self):
-        #print(f'Updating Delta Times (UpdateDeltaTimes method)')
         N = len(SignalData.x)
         if N == 0:
             return  # No points at all

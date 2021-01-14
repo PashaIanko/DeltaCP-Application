@@ -7,8 +7,8 @@ class SignalSendingModule(ApplicationModule):
 
     callback_operators = \
         [
-            NaiveSendingOperator()
-            #ForwardSendingOperator(DebugMode=True)
+            #NaiveSendingOperator()
+            ForwardSendingOperator(DebugMode=True)
         ]
 
     def __init__(self):
