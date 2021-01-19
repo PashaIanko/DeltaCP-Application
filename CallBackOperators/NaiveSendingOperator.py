@@ -1,5 +1,6 @@
 from SignalGenerationPackage.SignalData import SignalData
 from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
+from LoggersConfig import loggers
 
 
 class NaiveSendingOperator(SignalSendingOperator):

@@ -48,7 +48,8 @@ class AutoConnectOperator(CallBackOperator):
 
             if_connected = self.DeltaCPClient.Connect()
             if if_connected:
-                print(f'Auto Connection successful') # TODO: Вместо print сделать предупредительное pop up окно
+                loggers['Application'].info(f'Auto Connection successful')
+                # TODO: Вместо print сделать предупредительное pop up окно
                 return
 
 

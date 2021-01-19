@@ -5,6 +5,7 @@ from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
+from LoggersConfig import loggers
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -57,7 +58,9 @@ class SignalSendingOperator(CallBackOperator):
 
     def PauseSending(self):
         if self.window.PauseSendingradioButton.isChecked():
-            print('Paused')
+            loggers['Application'].info('Sending Paused')
+            loggers['SignalSending'].info('Sending Paused')
+
             self.SendingOnPause = True
             self.window.ResumeSendingradioButton.setChecked(False)
         else:
@@ -65,7 +68,9 @@ class SignalSendingOperator(CallBackOperator):
 
     def ResumeSending(self):
         if self.window.ResumeSendingradioButton.isChecked():
-            print('Resumed')
+            loggers['Application'].info('Sending Paused')
+            loggers['SignalSending'].info('Sending Paused')
+
             self.SendingOnPause = False
             self.window.PauseSendingradioButton.setChecked(False)
         else:
