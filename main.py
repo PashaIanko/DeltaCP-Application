@@ -1,18 +1,23 @@
 from ApplicationManager import ApplicationManager
-from Logger import Logger
-import logging
 from PyQt5 import QtWidgets
+import Loggers
+from Loggers import loggers
+
 
 if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
+    Loggers.init_loggers()
     try:
         MainWindow = ApplicationManager()
     except:
         print(sys.exc_info())
 
-    AppLogger = Logger('TestLogger', logging.INFO)
-    AppLogger.Info('Abc')
+
     MainWindow.show()
+    loggers['Application'].info('Exiting application!')
+    loggers['Debug'].debug('SHIT')
+    loggers['SignalSending'].info('Signal Sending finished!')
+
     sys.exit(app.exec_())
