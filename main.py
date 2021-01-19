@@ -1,14 +1,14 @@
 from ApplicationManager import ApplicationManager
 from PyQt5 import QtWidgets
-import Loggers
-from Loggers import loggers
+import LoggersConfig
+from LoggersConfig import loggers
 
 
 if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    Loggers.init_loggers()
+    LoggersConfig.init_loggers()
     try:
         MainWindow = ApplicationManager()
     except:
@@ -16,6 +16,7 @@ if __name__ == "__main__":
 
 
     MainWindow.show()
+
     loggers['Application'].info('Exiting application!')
     loggers['Debug'].debug('SHIT')
     loggers['SignalSending'].info('Signal Sending finished!')

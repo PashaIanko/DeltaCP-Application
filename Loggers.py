@@ -1,12 +1,40 @@
-from Logger import Logger
 import logging
 
-loggers = {}
+
+class Logger:
+    def __init__(self, LoggerName, LogLevel, FileName=None):
+        self.Logger = logging.getLogger(LoggerName)
+        self.Logger.setLevel(LogLevel)
+
+        if FileName is not None:
+            self.Handler = logging.FileHandler(FileName + '.log')
+        else:
+            import sys
+            self.Handler = logging.StreamHandler(sys.stdout)
+
+        self.Formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        self.Handler.setFormatter(self.Formatter)
+        self.Logger.addHandler(self.Handler)
+
+    def info(self, msg):
+        self.Logger.info(msg)
+
+    def debug(self, msg):
+        self.Logger.debug(msg)
+
+    def warning(self, msg):
+        self.Logger.warning(msg)
 
 
+class SilentLogger():
+    def __init__(self):
+        pass
 
-def init_loggers():
-    global loggers
-    loggers['Application'] = Logger('Application', logging.INFO)
-    loggers['SignalSending'] = Logger('SignalSenging', logging.INFO, FileName='SignalSending')
-    loggers['Debug'] = Logger('Debug', logging.DEBUG)
+    def info(self, msg):
+        pass
+
+    def warning(self, msg):
+        pass
+
+    def debug(self, msg):
+        pass
