@@ -2,7 +2,9 @@ import logging
 
 
 class Logger:
-    def __init__(self, LoggerName, LogLevel, FileName=None):
+    def __init__(self, LoggerName, LogLevel,
+                 FileName=None,
+                 format_str=None):
         self.Logger = logging.getLogger(LoggerName)
         self.Logger.setLevel(LogLevel)
 
@@ -12,7 +14,11 @@ class Logger:
             import sys
             self.Handler = logging.StreamHandler(sys.stdout)
 
-        self.Formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        if format_str is None:
+            self.Formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        else:
+            self.Formatter = logging.Formatter(format_str)
+
         self.Handler.setFormatter(self.Formatter)
         self.Logger.addHandler(self.Handler)
 
