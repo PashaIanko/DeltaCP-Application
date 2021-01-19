@@ -119,6 +119,33 @@ class DeltaCPClient(ModbusClient):
         if res is not None:
             return res / 100
 
+    def SetRegime1(self):
+        # Set regime - Acceleration time1, DecelerationTime1
+        mask_bit_and = np.uint16(65343)  # 0x1111 1111 0011 1111
+        mask_bit_or = np.uint16(0)  # 0x0000 0000 0000 0000
+        self.AdjustRegister(mask_bit_and, mask_bit_or)
+
+    def SetRegime2(self):
+        # Set regime - Acceleration time2, DecelerationTime2
+        mask_bit_and = np.uint16(65407)  # 0x1111 1111 0111 1111
+        mask_bit_or = np.uint16(64)  # 0x0000 0000 0100 0000
+        self.AdjustRegister(mask_bit_and, mask_bit_or)
+
+    def SetRegime3(self):
+        # Set regime - Acceleration time3, DecelerationTime3
+        mask_bit_and = np.uint16(65471)  # 0x1111 1111 1011 1111
+        mask_bit_or = np.uint16(128)  # 0x0000 0000 1000 0000
+        self.AdjustRegister(mask_bit_and, mask_bit_or)
+
+    def SetRegime4(self):
+        # Set regime - Acceleration time4, DecelerationTime4
+        mask_bit_and = np.uint16(65535)  # 0x1111 1111 1111 1111
+        mask_bit_or = np.uint16(192)  # 0x0000 0000 1100 0000
+        self.AdjustRegister(mask_bit_and, mask_bit_or)
+
+
+
+
 
 # TODO: Переделать визуализацию (чтоб два графика в едином окошке)
 # TODO: Исправить баг (когда закрываешь окошко с визуализацией, вылезает баг)
