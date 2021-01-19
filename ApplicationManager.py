@@ -4,7 +4,7 @@ from ConnectionPackage.ConnectionModule import ConnectionModule
 from SignalGenerationPackage.SignalGenerationModule import SignalGenerationModule
 from SignalSendingPackage.SignalSendingModule import SignalSendingModule
 from FrequencySettingPackage.FrequencySettingModule import FrequencySettingModule
-from Singleton import Singleton
+from AccelerDecelerTimePackage.AccelerDecelerTimeModule import AccelerDecelerTimeModule
 
 
 class ApplicationManager(QtWidgets.QMainWindow):
@@ -15,6 +15,7 @@ class ApplicationManager(QtWidgets.QMainWindow):
             [
                 ConnectionModule(),
                 FrequencySettingModule(),
+                AccelerDecelerTimeModule(),
                 SignalGenerationModule(),
                 SignalSendingModule()
             ]
