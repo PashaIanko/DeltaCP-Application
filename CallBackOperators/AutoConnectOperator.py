@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 from ConnectionPackage.ConnectionParameters import ConnectionParameters
 from DeltaCPClient import DeltaCPClient
+from LoggersConfig import loggers
 import pandas as pd
 
 
@@ -50,8 +51,12 @@ class AutoConnectOperator(CallBackOperator):
                 print(f'Auto Connection successful') # TODO: Вместо print сделать предупредительное pop up окно
                 return
 
-        print(f'Auto Connection was not successful. Please write other configs into'
-              f' Connection_Configs.xlsx file or set parameters manually')  # TODO: Вместо print сделать предупредительное pop up окно
+
+        loggers['Application'].info(
+            f'Auto Connect unsuccessful. Please write other configs into'
+              f' Connection_Configs.xlsx file or set parameters manually'
+        )
+        # TODO: Вместо print сделать предупредительное pop up окно
 
 
 

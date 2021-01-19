@@ -18,7 +18,4 @@ if __name__ == "__main__":
     MainWindow.show()
 
     loggers['Application'].info('Exiting application!')
-    loggers['Debug'].debug('SHIT')
-    loggers['SignalSending'].info('Signal Sending finished!')
-
     sys.exit(app.exec_())
