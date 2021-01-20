@@ -1,7 +1,7 @@
 from CallBackOperator import CallBackOperator
 from DeltaCPClient import DeltaCPClient
 from DeltaCPRegisters import DeltaCPRegisters
-import time
+from LoggersConfig import loggers
 import sys
 
 
@@ -37,7 +37,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
             res = self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                       value_to_send)
         except:
-            print(sys.exc_info())
+            loggers['Debug'].debug(f'SetFrequency: {sys.exc_info()}')
 
 
     def SendStopCommand(self):
@@ -49,7 +49,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         try:
             CurrentFreq = self.client.RequestCurrentFrequency()
         except:
-            print(sys.exc_info())
+            loggers['Debug'].debug(f'RequestCurrentFrequency: {sys.exc_info()}')
 
 
     def RequestSetFrequency(self):
@@ -57,4 +57,4 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         try:
             SetFreq = self.client.RequestSetFrequency()
         except:
-            print(sys.exc_info())
+            loggers['Debug'].debug(f'RequestSetFrequency: {sys.exc_info()}')

@@ -4,7 +4,7 @@ from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from pymodbus.constants import Defaults
 from DeltaCPRegisters import DeltaCPRegisters
 import numpy as np
-import time
+from LoggersConfig import loggers
 import sys
 
 Defaults.RetryOnEmpty = True
@@ -35,8 +35,14 @@ class DeltaCPClient(ModbusClient):
     def CreateClient(self,
             Protocol, COMPort, Timeout, StopBits, ByteSize, Parity, BaudRate ):
 
-        print(
-            Protocol, COMPort, Timeout, StopBits, ByteSize, Parity, BaudRate)
+        loggers['Debug'].debug(f'CreateClient: Client params:\n'
+                               f'{Protocol}, '
+                               f'Port = {COMPort}, '
+                               f'Timeout = {Timeout},\n'
+                               f'StopBits = {StopBits}, '
+                               f'ByteSize = {ByteSize}, '
+                               f'Parity = {Parity}, '
+                               f'BaudRate = {BaudRate}')
         try:
             self.Client = ModbusClient\
                 (
@@ -50,17 +56,16 @@ class DeltaCPClient(ModbusClient):
                 )
             self.if_created = True
         except ParameterException:
-            print('parameter exception')
+            loggers['Debug'].debug('CreateClient: Parameter Exception')
         except:
-            print('exception')
-
+            loggers['Debug'].debug('CreateClient: Parameter Exception')
 
     def Connect(self):
         if(self.Client is not None):
             try:
                 self.if_connected = self.Client.connect()
             except ValueError:
-                print('value error')
+                loggers['Debug'].debug('Connect: value error')
                 self.if_connected = False
             return self.if_connected
 
@@ -69,15 +74,15 @@ class DeltaCPClient(ModbusClient):
         try:
             self.Client.write_register(address, value)
         except:
-            print(sys.exc_info())
+            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: {sys.exc_info()}')
 
     def ReadRegister(self, address):
         try:
             hh = self.Client.read_holding_registers(address, count=1, unit=1)
-            print('Результат считывания = ', hh.registers[0])
+            loggers['Debug'].debug(f"Register value = {hh.registers[0]}")
             return hh.registers[0]
         except:
-            print(sys.exc_info())
+            loggers['Debug'].debug(f'DeltaCP Client: ReadRegister: {sys.exc_info()}')
 
     def AdjustRegister(self, mask_bit_AND, mask_bit_OR):
         try:
@@ -87,13 +92,12 @@ class DeltaCPClient(ModbusClient):
             # Старший бит должен быть 1
             # Младший бит должен быть 0
             # Чтобы отправить Stop - должно быть наоборот
-            print(f'type is {type(value)}, value is {value}')
             value_16bit = np.uint16(value)
             value_16bit &= mask_bit_AND
             value_16bit |= mask_bit_OR
             self.WriteRegister(DeltaCPRegisters.StartStopRegister, value_16bit)
         except:
-            print(sys.exc_info())
+            loggers['Debug'].debug(f'DeltaCP Client: AdjustRegister: {sys.exc_info()}')
 
     def SendStart(self):
         mask_bit_AND = np.uint16(65534)  # 0x1111 1111 1111 1110
@@ -146,6 +150,8 @@ class DeltaCPClient(ModbusClient):
 
 
 
+# TODO: Acceleration Deceleration time по умолчанию стоит в режиме 1 (в окошке GUI). Надо
+# это учесть, преднастройка режима при запуске приложения должна быть
 
 # TODO: Переделать визуализацию (чтоб два графика в едином окошке)
 # TODO: Исправить баг (когда закрываешь окошко с визуализацией, вылезает баг)

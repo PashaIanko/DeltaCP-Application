@@ -1,5 +1,6 @@
 from CallBackOperator import CallBackOperator
 from DeltaCPClient import DeltaCPClient
+from LoggersConfig import loggers
 
 
 class TimeRegimeOperator(CallBackOperator):
@@ -16,22 +17,22 @@ class TimeRegimeOperator(CallBackOperator):
 
     def set_regime_1(self):
         if self.window.AccDec1radioButton.isChecked():
-            print(f'Setting regime 1')
+            loggers['Debug'].debug(f'Setting regime 1')
             self.DeltaCPClient.SetRegime1()
 
     def set_regime_2(self):
         if self.window.AccDec2radioButton.isChecked():
-            print(f'Setting regime 2')
+            loggers['Debug'].debug(f'Setting regime 2')
             self.DeltaCPClient.SetRegime2()
 
     def set_regime_3(self):
         if self.window.AccDec3radioButton.isChecked():
-            print(f'Setting regime 3')
+            loggers['Debug'].debug(f'Setting regime 3')
             self.DeltaCPClient.SetRegime3()
 
     def set_regime_4(self):
         if self.window.AccDec4radioButton.isChecked():
-            print(f'Setting regime 4')
+            loggers['Debug'].debug(f'Setting regime 4')
             self.DeltaCPClient.SetRegime4()
 
 

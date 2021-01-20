@@ -1,6 +1,5 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
-from sys import exc_info
 
 class SinusOmegaCallBackOperator(CallBackOperator):
 
@@ -30,7 +29,9 @@ class SinusOmegaCallBackOperator(CallBackOperator):
                 calc_constant=SinusUIParameters.OmegaCalcConstant
             )
         except:
-            print(exc_info())
+            import sys
+            from LoggersConfig import loggers
+            loggers['Debug'].debug(f'SinusOmegaCallBackOperator: {sys.exc_info()}')
 
     def update_omega_line_edit(self):
         try:
@@ -41,7 +42,9 @@ class SinusOmegaCallBackOperator(CallBackOperator):
                 update_model_func=self.update_omega
             )
         except:
-            print(exc_info())
+            import sys
+            from LoggersConfig import loggers
+            loggers['Debug'].debug(f'SinusOmegaCallBackOperator: {sys.exc_info()}')
 
     def update_omega(self, val):
         self.model.omega = val

@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 from ConnectionPackage.ConnectionParameters import ConnectionParameters
 from DeltaCPClient import DeltaCPClient
+from LoggersConfig import loggers
 
 class ConnectionOperator(CallBackOperator):
     def __init__(self):
@@ -17,7 +18,7 @@ class ConnectionOperator(CallBackOperator):
     def Connect(self):
         already_connected = self.DeltaCPClient.if_connected
         if already_connected:
-            print(f'Client is already connected!')  # TODO: Pop Up window here
+            #print(f'Client is already connected!')  # TODO: Pop Up window here
             return
 
         ConnectionParameters = self.ConnectionParameters.GetConnectionParameters()
@@ -34,10 +35,10 @@ class ConnectionOperator(CallBackOperator):
             )
             repr(self.DeltaCPClient)
         except:
-            print('exception')
+            loggers['Debug'].debug(f'Exception while creating DeltaCP Client')
             return
         if_connected = self.DeltaCPClient.Connect()
-        print(if_connected)
+        loggers['Debug'].debug(f'If client connected: {if_connected}')
 
         # TODO: Есть Баг - Жмёшь Connect, считываешь частоту, ещё раз жмёшь Connect (уже False). Ещё раз считываешь /
         # частоту - exception (failed to connect)

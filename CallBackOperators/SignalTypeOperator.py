@@ -17,16 +17,10 @@ class SignalTypeOperator(CallBackOperator):
     def StartSignalGeneration(self):
         signal_text = self.UserInterface.SignalTypecomboBox.currentText()
         if signal_text == 'sin':
-            try:
-                self.SignalController = SinusSignalController()
-            except:
-                print(sys.exc_info())
+            self.SignalController = SinusSignalController()
         elif signal_text == 'user signal':
             self.SignalController = UserSignalController()
         elif signal_text == 'dynamic points density':
-            try:
-                self.SignalController = DynamicPointsDensitySignalController()
-            except:
-                print(sys.exc_info())
+            self.SignalController = DynamicPointsDensitySignalController()
         # TODO: для меандра и пользовательского сигнала здесь контроллеры добавить
         # TODO: убрать ветвление, вставить словарь

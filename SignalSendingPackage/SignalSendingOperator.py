@@ -5,6 +5,7 @@ from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
+from LoggersConfig import loggers
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -57,7 +58,9 @@ class SignalSendingOperator(CallBackOperator):
 
     def PauseSending(self):
         if self.window.PauseSendingradioButton.isChecked():
-            print('Paused')
+            loggers['Application'].info('Sending Paused')
+            loggers['SignalSending'].info('Sending Paused')
+
             self.SendingOnPause = True
             self.window.ResumeSendingradioButton.setChecked(False)
         else:
@@ -65,7 +68,9 @@ class SignalSendingOperator(CallBackOperator):
 
     def ResumeSending(self):
         if self.window.ResumeSendingradioButton.isChecked():
-            print('Resumed')
+            loggers['Application'].info('Sending Paused')
+            loggers['SignalSending'].info('Sending Paused')
+
             self.SendingOnPause = False
             self.window.PauseSendingradioButton.setChecked(False)
         else:
@@ -76,23 +81,23 @@ class SignalSendingOperator(CallBackOperator):
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
 
-        # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
-        def StartSendingSignal(self):
-            if self.SendingThread is None:
-                print(f'launching thread')
-                if not self.SignalVisualizerConstructed:
-                    self.SignalVisualizer = SignalVisualizer()
-                self.DeltaCPClient.SendStart()
-                self.LaunchSendingThread()
-            else:
-                if not self.SendingThread.is_alive():
-                    print(f'launching thread')
-                    self.SignalVisualizer.Restart(TimeArray=[])
-                    self.RestartSignalIterator()
-                    self.SendingStopped = False  # Надо почистить этот флаг
-                    self.LaunchSendingThread()
-                else:
-                    print(f'Prev sending thread is executing, cant launch one')
+        # # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
+        # def StartSendingSignal(self):
+        #     if self.SendingThread is None:
+        #         print(f'launching thread')
+        #         if not self.SignalVisualizerConstructed:
+        #             self.SignalVisualizer = SignalVisualizer()
+        #         self.DeltaCPClient.SendStart()
+        #         self.LaunchSendingThread()
+        #     else:
+        #         if not self.SendingThread.is_alive():
+        #             print(f'launching thread')
+        #             self.SignalVisualizer.Restart(TimeArray=[])
+        #             self.RestartSignalIterator()
+        #             self.SendingStopped = False  # Надо почистить этот флаг
+        #             self.LaunchSendingThread()
+        #         else:
+        #             print(f'Prev sending thread is executing, cant launch one')
 
 
     def TestTimer(self):
@@ -118,20 +123,20 @@ class SignalSendingOperator(CallBackOperator):
     # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
     def StartSendingSignal(self):
         if self.SendingThread is None:
-            print(f'launching thread')
+            loggers['Debug'].debug(f'Launching thread')
             if not self.SignalVisualizerConstructed:
                 self.SignalVisualizer = SignalVisualizer()
             self.DeltaCPClient.SendStart()
             self.LaunchSendingThread()
         else:
             if not self.SendingThread.is_alive():
-                print(f'launching thread')
+                loggers['Debug'].debug(f'Launching thread')
                 self.SignalVisualizer.Restart(TimeArray=[])
                 self.RestartSignalIterator()
                 self.SendingStopped = False  # Надо почистить этот флаг
                 self.LaunchSendingThread()
             else:
-                print(f'Prev sending thread is executing, cant launch one')
+                loggers['Debug'].debug(f'Prev sending thread is executing, cant launch one')
 
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)

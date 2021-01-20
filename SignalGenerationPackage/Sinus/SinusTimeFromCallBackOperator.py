@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
 from sys import exc_info
+from LoggersConfig import loggers
 
 
 class SinusTimeFromCallBackOperator(CallBackOperator):
@@ -31,7 +32,7 @@ class SinusTimeFromCallBackOperator(CallBackOperator):
                 calc_constant=SinusUIParameters.TimeFromCalcConstant
             )
         except:
-            print(exc_info())
+            loggers['Debug'].debug(f'Exception in SinusTimeFromCallBackOperator: {exc_info()}')
 
     def update_time_from_line_edit(self):
         try:
@@ -42,7 +43,7 @@ class SinusTimeFromCallBackOperator(CallBackOperator):
                 update_model_func=self.update_time_from
             )
         except:
-            print(exc_info())
+            loggers['Debug'].debug(f'Exception in SinusTimeFromCallBackOperator: {exc_info()}')
 
     def update_time_from(self, val):
         self.model.X_from = val

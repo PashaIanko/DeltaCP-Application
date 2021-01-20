@@ -1,5 +1,6 @@
 from SignalGenerationPackage.SignalData import SignalData
 from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
+from LoggersConfig import loggers
 
 
 class NaiveSendingOperator(SignalSendingOperator):
@@ -24,7 +25,7 @@ class NaiveSendingOperator(SignalSendingOperator):
         self.ValueToSend = SignalData.y[self.PointsIterator]
 
 
-        print(f'INITIAL SEND: val={self.ValueToSend} at t={self.TimeStamp}')
+        loggers['SignalSending'].info(f'Now t={self.TimeStamp}. After dt={self.CycleGap} will send {self.ValueToSend}')
         if self.Timer.if_started:  # Если уже дали старт таймеру на предудущем цикле
             self.Timer.reset(self.CycleGap)  # Время ожидания перед отправкой (так же перерыв между циклами)
         else:
@@ -44,21 +45,24 @@ class NaiveSendingOperator(SignalSendingOperator):
                     self.ValueToSend = SignalData.y[self.PointsIterator]
                     self.TimeStamp = Time[self.PointsIterator]
                     dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
-                    print(f'SEND {self.ValueToSend} at the t={self.TimeStamp} after waiting for {dt_to_wait}')
+                    loggers['SignalSending'].info(
+                        f'Now t={self.TimeStamp}. After dt={dt_to_wait} will send {self.ValueToSend}')
                     self.Timer.reset(dt_to_wait)
 
                     i += 1
                     self.PointsIterator += 1
 
                 if self.SendingStopped:
-                    print('Stop push button --> finishing thread execution')
+                    loggers['Application'].info(f'Sending stopped. Finish execution')
+                    loggers['Debug'].debug(f'Sending stopped. Finish execution')
                     return
 
         while True: # Дожидаемся отправки последней команды (на краю сэмпла, чтобы на визуализации тоже это увидеть)
             if self.FunctionWasCalled == True:
                 self.FunctionWasCalled = False
                 self.CycleFinishedSuccessfully = True
-                print(f'Finished CYCLE!')
+                loggers['SignalSending'].info(f'Finished cycle')
+                loggers['Debug'].debug(f'Finished cycle')
                 return
 
 

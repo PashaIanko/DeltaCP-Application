@@ -1,5 +1,6 @@
 from SignalGenerationPackage.SignalData import SignalData
 from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
+from LoggersConfig import loggers
 from time import sleep
 
 class ForwardSendingOperator(SignalSendingOperator):
@@ -61,14 +62,15 @@ class ForwardSendingOperator(SignalSendingOperator):
                         # Этом коде. Поэтому в новом цикле начинаем отправку не с 0й, а с 1ой точки.
                         self.ValueToSend = SignalData.y[0]
                         self.TimeStamp = Time[self.PointsIterator - 1]
-                        print(f'SENDING {self.ValueToSend} after DT = {dt_to_wait}')
+                        loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
                         self.Timer.reset(DeltaTimes[-1] - self.CommandExecutionTime)
 
                     else:
                         self.ValueToSend = SignalData.y[self.PointsIterator]
                         self.TimeStamp = Time[self.PointsIterator - 1]
                         dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
-                        print(f'SENDING {self.ValueToSend} after DT = {dt_to_wait}')
+
+                        loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
                         self.Timer.reset(dt_to_wait)
 
                     i += 1
@@ -81,7 +83,7 @@ class ForwardSendingOperator(SignalSendingOperator):
             if self.FunctionWasCalled == True:
                 self.FunctionWasCalled = False
                 self.CycleFinishedSuccessfully = True
-                print(f'Finished CYCLE!')
+                loggers['SignalSending'].info(f'Finished Cycle')
                 return
 
 
