@@ -40,7 +40,8 @@ class StartTimeCallBackOperator(CallBackOperator):
             )
         except:
             import sys
-            print(sys.exc_info())
+            from LoggersConfig import loggers
+            loggers['Debug'].debug(f'StartTimeCallBackOperator: {sys.exc_info()}')
 
     def update_start_time(self, val):
         self.model.StartTime = val

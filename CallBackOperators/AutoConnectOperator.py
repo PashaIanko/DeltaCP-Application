@@ -20,7 +20,7 @@ class AutoConnectOperator(CallBackOperator):
     def AutoConnect(self):
         already_connected = self.DeltaCPClient.if_connected
         if already_connected:
-            print(f'Client already Connected!')  # TODO: Pop up window here!
+            # print(f'Client already Connected!')  # TODO: Pop up window here!
             return
 
         for index, config in self.ConnectionConfigs.iterrows():

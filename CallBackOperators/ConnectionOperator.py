@@ -18,7 +18,7 @@ class ConnectionOperator(CallBackOperator):
     def Connect(self):
         already_connected = self.DeltaCPClient.if_connected
         if already_connected:
-            print(f'Client is already connected!')  # TODO: Pop Up window here
+            #print(f'Client is already connected!')  # TODO: Pop Up window here
             return
 
         ConnectionParameters = self.ConnectionParameters.GetConnectionParameters()

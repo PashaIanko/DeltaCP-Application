@@ -2,6 +2,7 @@ from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
 from sys import exc_info
 
+
 class SinusAmplitudeCallBackOperator(CallBackOperator):
 
     def __init__(self, model):

@@ -2,6 +2,7 @@ from CallBackOperator import CallBackOperator
 from PyQt5.QtGui import QIntValidator
 from FrequencySettingPackage.FrequencySettingGUIParameters import FrequencySettingGUIParameters
 import sys
+from LoggersConfig import loggers
 
 
 class FrequencySliderLimitsOperator(CallBackOperator):
@@ -24,8 +25,8 @@ class FrequencySliderLimitsOperator(CallBackOperator):
                 text = text.replace(',', '.')
                 FrequencySettingGUIParameters.FrequencySliderMin = float(text)
         except:
-            print(sys.exc_info())
-
+            from LoggersConfig import loggers
+            loggers['Debug'].debug(f'FrequencySliderLimitsOperator: {sys.exc_info()}')
 
     def SetFrequencyMax(self, text):
         try:
@@ -33,11 +34,4 @@ class FrequencySliderLimitsOperator(CallBackOperator):
                 text = text.replace(',', '.')
                 FrequencySettingGUIParameters.FrequencySliderMax = float(text)
         except:
-            print(sys.exc_info())
-
-
-
-
-
-
-
+            loggers['Debug'].debug(f'SetFrequencyMax: {sys.exc_info()}')

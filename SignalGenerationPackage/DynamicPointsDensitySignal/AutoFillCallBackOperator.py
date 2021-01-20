@@ -1,7 +1,7 @@
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 from CallBackOperator import CallBackOperator
 import pandas as pd
-import sys
+
 
 
 class AutoFillCallBackOperator(CallBackOperator):
@@ -35,7 +35,9 @@ class AutoFillCallBackOperator(CallBackOperator):
                 ]
             )
         except:
-            print(sys.exc_info())
+            import sys
+            from LoggersConfig import loggers
+            loggers['Debug'].debug(f'AutoFillCallBackOperator: AutoFill: {sys.exc_info()}')
 
     def set_signal_parameters(self, value_widgets):
         # TODO: Не может за один цикл синхронизировать слайдеры и текстовые поля, Не знаю что за баг
