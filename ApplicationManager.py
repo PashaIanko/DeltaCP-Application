@@ -7,7 +7,7 @@ from FrequencySettingPackage.FrequencySettingModule import FrequencySettingModul
 from AccelerDecelerTimePackage.AccelerDecelerTimeModule import AccelerDecelerTimeModule
 
 
-class ApplicationManager(QtWidgets.QMainWindow):
+class ApplicationManager:
 
     def __init__(self):
 
@@ -20,11 +20,13 @@ class ApplicationManager(QtWidgets.QMainWindow):
                 SignalSendingModule()
             ]
 
-        super(ApplicationManager, self).__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        self.MainWindow = QtWidgets.QMainWindow()
+        self.UserInterface = Ui_MainWindow()
+        self.UserInterface.setupUi(self.MainWindow)
         self.RunAllModules()
 
     def RunAllModules(self):
         for module in self.ApplicationModules:
-            module.Run(self)
+            module.Run(self.UserInterface)
+
+

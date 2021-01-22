@@ -4,14 +4,12 @@ from LoggersConfig import loggers
 class ApplicationModule(ABC):
 
     def __init(self):
-        self.MainWindow = None  # a class inherited from QMainWindow
         self.UserInterface = None
         self.CallBackOperators = []
 
-    def Run(self, MainWindow):
+    def Run(self, UserInterface):
         self.InitCallBackOperators()
-        self.MainWindow = MainWindow
-        self.UserInterface = MainWindow.ui
+        self.UserInterface = UserInterface
         self.ConnectAllCallBacks()
 
     @abstractmethod
