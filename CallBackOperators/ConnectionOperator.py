@@ -2,11 +2,13 @@ from CallBackOperator import CallBackOperator
 from ConnectionPackage.ConnectionParameters import ConnectionParameters
 from DeltaCPClient import DeltaCPClient
 from LoggersConfig import loggers
+from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class ConnectionOperator(CallBackOperator):
     def __init__(self):
         self.window = None
-        # SINGLETON!
+
+        # Singletons:
         self.ConnectionParameters = ConnectionParameters()
         self.DeltaCPClient = DeltaCPClient()
 
@@ -18,7 +20,7 @@ class ConnectionOperator(CallBackOperator):
     def Connect(self):
         already_connected = self.DeltaCPClient.if_connected
         if already_connected:
-            #print(f'Client is already connected!')  # TODO: Pop Up window here
+            PopUpNotifier.Info(f'Client is already connected!')
             return
 
         ConnectionParameters = self.ConnectionParameters.GetConnectionParameters()
