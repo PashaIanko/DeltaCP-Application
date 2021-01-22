@@ -2,7 +2,9 @@ from CallBackOperator import CallBackOperator
 from ConnectionPackage.ConnectionParameters import ConnectionParameters
 from DeltaCPClient import DeltaCPClient
 from LoggersConfig import loggers
+from PopUpNotifier.PopUpNotifier import PopUpNotifier
 import pandas as pd
+
 
 
 class AutoConnectOperator(CallBackOperator):
@@ -20,7 +22,7 @@ class AutoConnectOperator(CallBackOperator):
     def AutoConnect(self):
         already_connected = self.DeltaCPClient.if_connected
         if already_connected:
-            # print(f'Client already Connected!')  # TODO: Pop up window here!
+            PopUpNotifier.Info('Client already connected!')
             return
 
         for index, config in self.ConnectionConfigs.iterrows():
@@ -48,19 +50,15 @@ class AutoConnectOperator(CallBackOperator):
 
             if_connected = self.DeltaCPClient.Connect()
             if if_connected:
-                loggers['Application'].info(f'Auto Connection successful')
-                # TODO: Вместо print сделать предупредительное pop up окно
+                msg_success = 'Auto connection successful!'
+                loggers['Application'].info(msg_success)
+                PopUpNotifier.Info(msg_success)
                 return
 
-
-        loggers['Application'].info(
-            f'Auto Connect unsuccessful. Please write other configs into'
-              f' Connection_Configs.xlsx file or set parameters manually'
-        )
-        # TODO: Вместо print сделать предупредительное pop up окно
-
-
-
+        msg = f'Auto Connect unsuccessful. Please write other configs into Connection_Configs.xlsx' \
+              f' file or set parameters manually'
+        loggers['Application'].info(msg)
+        PopUpNotifier.Warning(msg)
 
     def set_config_into_comboboxes(self, *param_combobox_pairs):
         for pair in param_combobox_pairs:

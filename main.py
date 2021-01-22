@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 import LoggersConfig
 from LoggersConfig import loggers
 
+
 if __name__ == "__main__":
     import sys
 
@@ -17,3 +18,5 @@ if __name__ == "__main__":
     AppManager.MainWindow.show()
     sys.exit(app.exec_())
     loggers['Application'].info('Exiting application!')
+
+
