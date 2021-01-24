@@ -40,7 +40,6 @@ class AutoFillCallBackOperator(CallBackOperator):
             loggers['Debug'].debug(f'AutoFillCallBackOperator: AutoFill: {sys.exc_info()}')
 
     def set_signal_parameters(self, value_widgets):
-        # TODO: Не может за один цикл синхронизировать слайдеры и текстовые поля, Не знаю что за баг
         for v in value_widgets:
             value_to_set = v[0]
             constant = v[1]
