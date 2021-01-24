@@ -1,51 +1,30 @@
 from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
-from CallBackOperator import CallBackOperator
-import pandas as pd
-import sys
+from AutoFillOperator import AutoFillOperator
 
 
-class AutoFillCallBackOperator(CallBackOperator):
+class AutoFillCallBackOperator(AutoFillOperator):
     def __init__(self, model):
-        super().__init__(model)
-        self.configs_path = ".\\SignalGenerationConfigs\\UserSignalConfigs\\SignalConfigs.xlsx"
-        self.configs_data = pd.read_excel(self.configs_path)
-        self.configs_data.index = self.configs_data['Config Name']
+        super().__init__(model,
+                         configs_path=".\\SignalGenerationConfigs\\UserSignalConfigs\\SignalConfigs.xlsx")
 
     def ConnectCallBack(self, window):
         self.window = window
         window.AutoFillpushButton.clicked.connect(self.AutoFill)
 
+    def get_config_name(self):
+        return self.window.ConfigFileNamelineEdit.text()
 
-    def AutoFill(self):
-        config_name = self.window.ConfigFileNamelineEdit.text()
-        try:
-            config_params = self.configs_data.loc[config_name]
-            window = self.window
-            self.set_signal_parameters(
-                [
-                    [config_params['Start Time'],           UserSignalUIParameters.StartTimeCalcConstant,           window.StartTimehorizontalSlider],
-                    [config_params['Acceleration Time'],    UserSignalUIParameters.AccelerationTimeCalcConstant,    window.AccelerationTimehorizontalSlider],
-                    [config_params['Plateau Time'],         UserSignalUIParameters.PlateauTimeCalcConstant,         window.PlateauTimehorizontalSlider],
-                    [config_params['Deceleration Time'],    UserSignalUIParameters.DecelerationTimeCalcConstant,    window.DecelerationTimehorizontalSlider],
-                    [config_params['Low Level Frequency'],  UserSignalUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
-                    [config_params['High Level Frequency'], UserSignalUIParameters.HighLevelFrequencyCalcConstant,  window.HighLevelFrequencyhorizontalSlider],
-                    [config_params['Vertical Offset'],      UserSignalUIParameters.VerticalOffsetCalcConstant,      window.VerticalOffsethorizontalSlider],
-                    [config_params['Points Number'],        UserSignalUIParameters.PointsNumberCalcConstant,        window.PointsNumberhorizontalSlider],
-                    [config_params['End Time'],             UserSignalUIParameters.EndTimeCalcConstant,             window.EndTimehorizontalSlider]
-                ]
-            )
-        except:
-            print(sys.exc_info())
+    def init_autofill_parameters(self):
+        window = self.window
 
-
-    def set_signal_parameters(self, value_widgets):
-        for v in value_widgets:
-            value_to_set = v[0]
-            constant = v[1]
-            slider = v[2]
-            slider.setValue(value_to_set * constant)
-
-
-            
-
-
+        self.autofill_parameters = [
+            [self.config_params['Start Time'], UserSignalUIParameters.StartTimeCalcConstant,                    window.StartTimehorizontalSlider],
+            [self.config_params['Acceleration Time'], UserSignalUIParameters.AccelerationTimeCalcConstant,      window.AccelerationTimehorizontalSlider],
+            [self.config_params['Plateau Time'], UserSignalUIParameters.PlateauTimeCalcConstant,                window.PlateauTimehorizontalSlider],
+            [self.config_params['Deceleration Time'], UserSignalUIParameters.DecelerationTimeCalcConstant,      window.DecelerationTimehorizontalSlider],
+            [self.config_params['Low Level Frequency'], UserSignalUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
+            [self.config_params['High Level Frequency'], UserSignalUIParameters.HighLevelFrequencyCalcConstant, window.HighLevelFrequencyhorizontalSlider],
+            [self.config_params['Vertical Offset'], UserSignalUIParameters.VerticalOffsetCalcConstant,          window.VerticalOffsethorizontalSlider],
+            [self.config_params['Points Number'], UserSignalUIParameters.PointsNumberCalcConstant,              window.PointsNumberhorizontalSlider],
+            [self.config_params['End Time'], UserSignalUIParameters.EndTimeCalcConstant,                        window.EndTimehorizontalSlider]
+        ]
