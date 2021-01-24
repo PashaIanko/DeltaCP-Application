@@ -6,7 +6,6 @@ class AutoFillCallBackOperator(AutoFillOperator):
     def __init__(self, model):
         super().__init__(model,
                          configs_path=".\\SignalGenerationConfigs\\DynamicPointsDensitySignalConfigs\\SignalConfigs.xlsx")
-        # TODO: Выделить интерфейс AutoFill Operator
 
     def ConnectCallBack(self, window):
         self.window = window

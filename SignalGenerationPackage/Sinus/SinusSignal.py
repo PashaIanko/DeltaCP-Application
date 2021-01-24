@@ -58,14 +58,6 @@ class SinusSignal(Signal):
         self.NotifyObservers()
 
     @property
-    def x(self):
-        return SignalData.x #self.SignalData.x # Возвращаются глобальные перем (class attributes) - x и y
-
-    @property
-    def y(self):
-        return SignalData.y # self.SignalData.y # Возвращаются глобальные перем (class attributes) - x и y
-
-    @property
     def X_from(self):
         return self.SignalData.X_from
 

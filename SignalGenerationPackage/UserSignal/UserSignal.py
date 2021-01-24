@@ -2,7 +2,6 @@ from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.UserSignal.UserSignalData import UserSignalData
 from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
-import sys
 
 
 class UserSignal(Signal):
@@ -19,7 +18,6 @@ class UserSignal(Signal):
 
     def Func(self, x):
         pass
-        #return abs(self.SignalData.Amplitude * np.sin(self.SignalData.Omega * x + self.SignalData.Phase))
 
     def prepare_arr(self, time_from, time_to, subtract=False):
         x_arr = SignalData.x[
@@ -189,12 +187,3 @@ class UserSignal(Signal):
         self.SignalData.VerticalOffset = val
         self.RecalcData()
         self.NotifyObservers()
-
-    @property
-    def x(self):
-        return SignalData.x  # TODO: В родительский класс переместить это!!
-
-    @property
-    def y(self):
-        return SignalData.y
-
