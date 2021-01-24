@@ -82,23 +82,6 @@ class SignalSendingOperator(CallBackOperator):
         self.SendingStopped = True
 
         # # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
-        # def StartSendingSignal(self):
-        #     if self.SendingThread is None:
-        #         print(f'launching thread')
-        #         if not self.SignalVisualizerConstructed:
-        #             self.SignalVisualizer = SignalVisualizer()
-        #         self.DeltaCPClient.SendStart()
-        #         self.LaunchSendingThread()
-        #     else:
-        #         if not self.SendingThread.is_alive():
-        #             print(f'launching thread')
-        #             self.SignalVisualizer.Restart(TimeArray=[])
-        #             self.RestartSignalIterator()
-        #             self.SendingStopped = False  # Надо почистить этот флаг
-        #             self.LaunchSendingThread()
-        #         else:
-        #             print(f'Prev sending thread is executing, cant launch one')
-
 
     def TestTimer(self):
         value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
