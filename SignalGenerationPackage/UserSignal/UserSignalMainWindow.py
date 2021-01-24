@@ -8,6 +8,10 @@ class UserSignalMainWindow(SignalMainWindow):
         super().__init__()
 
     # overridden
+    def init_plot_title(self):
+        self.plot_title = 'Trapezoid (constant points density)'
+
+    # overridden
     def init_plot_sizes(self):
         self.plot_height = UserSignalUIParameters.PlotHeight
         self.plot_width = UserSignalUIParameters.PlotWidth

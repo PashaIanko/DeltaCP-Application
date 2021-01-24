@@ -18,7 +18,6 @@ class UserSignalController(SignalController):
     def __init__(self):
         super().__init__()
 
-
     def init_model(self):
         self.model = UserSignal()
 
