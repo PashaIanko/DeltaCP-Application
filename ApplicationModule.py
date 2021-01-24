@@ -17,6 +17,6 @@ class ApplicationModule(ABC):
         pass
 
     def ConnectAllCallBacks(self):
-        loggers['Debug'].debug(f'ApplicationModule: ConnectAllCallBacks: operators={self.CallBackOperators}')
+        #loggers['Debug'].debug(f'ApplicationModule: ConnectAllCallBacks: operators={self.CallBackOperators}')
         for conn in self.CallBackOperators:
             conn.ConnectCallBack(self.UserInterface)

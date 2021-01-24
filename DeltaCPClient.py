@@ -20,14 +20,6 @@ class DeltaCPClient(ModbusClient):
         self.if_created = False
         self.Client = None
 
-        # Default connection settings
-        self.DefaultAccelerationRegime = 1
-        self.AccelerationRegimesDict = {
-            1: self.SetRegime1(),
-            2: self.SetRegime2(),
-            3: self.SetRegime3(),
-            4: self.SetRegime4()
-        }
 
     def CreateClient(self,
             Protocol, COMPort, Timeout, StopBits, ByteSize, Parity, BaudRate ):
