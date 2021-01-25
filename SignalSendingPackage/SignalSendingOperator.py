@@ -51,6 +51,7 @@ class SignalSendingOperator(CallBackOperator):
         window.pushButtonStopSignalSending.clicked.connect(self.StopSendingSignal)
         window.EndlessSendingcheckBox.stateChanged.connect(lambda: self.EnableEndlessSending())
 
+    # TODO: на нажатие кнопки Stop Signal Sending надо сделать реакцию - закрытие окошка визуализации
 
     def EnableEndlessSending(self):
         self.EndlessSendingEnabled = \
@@ -80,6 +81,11 @@ class SignalSendingOperator(CallBackOperator):
         self.DeltaCPClient.SetFrequency(0.0)
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
+
+        loggers['Debug'].debug(f'Stopping sending thread')
+        if not (self.SendingThread is None):
+            self.SendingThread.join()
+            self.SendingThread = None
         # # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
 
     def TestTimer(self):
