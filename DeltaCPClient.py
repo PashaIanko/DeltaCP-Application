@@ -20,17 +20,6 @@ class DeltaCPClient(ModbusClient):
         self.if_created = False
         self.Client = None
 
-    def __repr__(self):
-        if self.if_created == True:
-            return f'method = {self.Client.method},' \
-                   f'port = {self.Client.port},' \
-                   f'stopbits = {self.Client.stopbits},' \
-                   f'bytesize = {self.Client.bytesize},' \
-                   f'parity = {self.Client.parity},' \
-                   f'baudrate = {self.Client.baudrate},' \
-                   f'timeout = {self.Client.timeout}'
-        else:
-            return 'Client is not created'
 
     def CreateClient(self,
             Protocol, COMPort, Timeout, StopBits, ByteSize, Parity, BaudRate ):
@@ -56,16 +45,22 @@ class DeltaCPClient(ModbusClient):
                 )
             self.if_created = True
         except ParameterException:
-            loggers['Debug'].debug('CreateClient: Parameter Exception')
+            loggers['Debug'].debug('DeltaCPClient: CreateClient: Parameter Exception')
         except:
-            loggers['Debug'].debug('CreateClient: Parameter Exception')
+            loggers['Debug'].debug('DeltaCPClient: CreateClient: Exception')
 
     def Connect(self):
         if(self.Client is not None):
             try:
                 self.if_connected = self.Client.connect()
-            except ValueError:
-                loggers['Debug'].debug('Connect: value error')
+
+                # If connected successfully - we need to preset some default settings. For example, there is a
+                # Radio Button, predefined regime #1 for Acceleration Deceleration time. We need to preset it after
+                # connection
+                if self.if_connected:
+                    self.preset_parameters()
+            except:
+                loggers['Debug'].debug(f'DeltaCPClient: Connect: Exception {sys.exc_info()}')
                 self.if_connected = False
             return self.if_connected
 
@@ -73,16 +68,18 @@ class DeltaCPClient(ModbusClient):
     def WriteRegister(self, address, value):
         try:
             self.Client.write_register(address, value)
-        except:
-            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: {sys.exc_info()}')
+        except AttributeError:
+            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: Client is None (not constructed)')
+        except TypeError:
+            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: Type error (value is None)')
 
     def ReadRegister(self, address):
         try:
             hh = self.Client.read_holding_registers(address, count=1, unit=1)
             loggers['Debug'].debug(f"Register value = {hh.registers[0]}")
             return hh.registers[0]
-        except:
-            loggers['Debug'].debug(f'DeltaCP Client: ReadRegister: {sys.exc_info()}')
+        except AttributeError:
+            loggers['Debug'].debug(f'DeltaCP Client: ReadRegister: Client is None (not constructed)')
 
     def AdjustRegister(self, mask_bit_AND, mask_bit_OR):
         try:
@@ -96,14 +93,13 @@ class DeltaCPClient(ModbusClient):
             value_16bit &= mask_bit_AND
             value_16bit |= mask_bit_OR
             self.WriteRegister(DeltaCPRegisters.StartStopRegister, value_16bit)
-        except:
-            loggers['Debug'].debug(f'DeltaCP Client: AdjustRegister: {sys.exc_info()}')
+        except TypeError:
+            loggers['Debug'].debug(f'DeltaCP Client: AdjustRegister: smth is None Type {type(value)}')
 
     def SendStart(self):
         mask_bit_AND = np.uint16(65534)  # 0x1111 1111 1111 1110
         mask_bit_OR = np.uint16(2)   # 0x0000 0000 0000 0010
         self.AdjustRegister(mask_bit_AND, mask_bit_OR)
-
 
     def SendStop(self):
         mask_bit_AND = np.uint16(65533)  # 0x1111 1111 1111 1101
@@ -147,11 +143,11 @@ class DeltaCPClient(ModbusClient):
         mask_bit_or = np.uint16(192)  # 0x0000 0000 1100 0000
         self.AdjustRegister(mask_bit_and, mask_bit_or)
 
+    def preset_parameters(self):
+        loggers['Debug'].debug(f'DeltaCPClient: preset_parameters: Setting regime1')
+        loggers['Application'].debug(f'Presetting initial parameters: Acceleration time #1, Deceleration time #1')
+        self.SetRegime1()
 
-
-
-# TODO: Acceleration Deceleration time по умолчанию стоит в режиме 1 (в окошке GUI). Надо
-# это учесть, преднастройка режима при запуске приложения должна быть
 
 # TODO: Переделать визуализацию (чтоб два графика в едином окошке)
 # TODO: Исправить баг (когда закрываешь окошко с визуализацией, вылезает баг)

@@ -2,7 +2,7 @@ from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.Sinus.SinusSignalController import SinusSignalController
 from SignalGenerationPackage.UserSignal.UserSignalController import UserSignalController
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalController import DynamicPointsDensitySignalController
-import sys
+
 
 class SignalTypeOperator(CallBackOperator):
     def __init__(self):
@@ -22,5 +22,4 @@ class SignalTypeOperator(CallBackOperator):
             self.SignalController = UserSignalController()
         elif signal_text == 'dynamic points density':
             self.SignalController = DynamicPointsDensitySignalController()
-        # TODO: для меандра и пользовательского сигнала здесь контроллеры добавить
         # TODO: убрать ветвление, вставить словарь

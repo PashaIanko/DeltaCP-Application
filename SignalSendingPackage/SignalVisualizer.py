@@ -39,3 +39,6 @@ class SignalVisualizer:
     def RefreshData(self, x, y):
         self.x = x
         self.y = y
+
+    def check_if_window_closed(self):
+        return self.main_window.window_is_closed

@@ -1,53 +1,29 @@
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
-from CallBackOperator import CallBackOperator
-import pandas as pd
+from AutoFillOperator import AutoFillOperator
 
 
-
-class AutoFillCallBackOperator(CallBackOperator):
+class AutoFillCallBackOperator(AutoFillOperator):
     def __init__(self, model):
-        super().__init__(model)  # TODO: Выделить интерфейс AutoFill Operator
-        self.configs_path = ".\\SignalGenerationConfigs\\DynamicPointsDensitySignalConfigs\\SignalConfigs.xlsx"
-        self.configs_data = pd.read_excel(self.configs_path)
-        self.configs_data.index = self.configs_data['Config Name']
+        super().__init__(model,
+                         configs_path=".\\SignalGenerationConfigs\\DynamicPointsDensitySignalConfigs\\SignalConfigs.xlsx")
 
     def ConnectCallBack(self, window):
         self.window = window
         window.AutoFillpushButton.clicked.connect(self.AutoFill)
 
+    def get_config_name(self):
+        return self.window.ConfigFileNamelineEdit.text()
 
-    def AutoFill(self):
-        config_name = self.window.ConfigFileNamelineEdit.text()
-        try:
-            config_params = self.configs_data.loc[config_name]
-            window = self.window
-            self.set_signal_parameters(
-                [
-                    [config_params['Start Time'],           DynamicPointsDensityUIParameters.StartTimeCalcConstant,           window.StartTimehorizontalSlider],
-                    [config_params['Acceleration Time'],    DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant,    window.AccelerationTimehorizontalSlider],
-                    [config_params['Plateau Time'],         DynamicPointsDensityUIParameters.PlateauTimeCalcConstant,         window.PlateauTimehorizontalSlider],
-                    [config_params['Deceleration Time'],    DynamicPointsDensityUIParameters.DecelerationTimeCalcConstant,    window.DecelerationTimehorizontalSlider],
-                    [config_params['Low Level Frequency'],  DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
-                    [config_params['High Level Frequency'], DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,  window.HighLevelFrequencyhorizontalSlider],
-                    [config_params['Vertical Offset'],      DynamicPointsDensityUIParameters.VerticalOffsetCalcConstant,      window.VerticalOffsethorizontalSlider],
-                    [config_params['Points Density'],       DynamicPointsDensityUIParameters.PointsDensityCalcConstant,        window.PointsDensityhorizontalSlider],
-                    [config_params['End Time'],             DynamicPointsDensityUIParameters.EndTimeCalcConstant,             window.EndTimehorizontalSlider]
+    def init_autofill_parameters(self):
+        window = self.window
+        self.autofill_parameters = [
+                    [self.config_params['Start Time'],           DynamicPointsDensityUIParameters.StartTimeCalcConstant,           window.StartTimehorizontalSlider],
+                    [self.config_params['Acceleration Time'],    DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant,    window.AccelerationTimehorizontalSlider],
+                    [self.config_params['Plateau Time'],         DynamicPointsDensityUIParameters.PlateauTimeCalcConstant,         window.PlateauTimehorizontalSlider],
+                    [self.config_params['Deceleration Time'],    DynamicPointsDensityUIParameters.DecelerationTimeCalcConstant,    window.DecelerationTimehorizontalSlider],
+                    [self.config_params['Low Level Frequency'],  DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
+                    [self.config_params['High Level Frequency'], DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,  window.HighLevelFrequencyhorizontalSlider],
+                    [self.config_params['Vertical Offset'],      DynamicPointsDensityUIParameters.VerticalOffsetCalcConstant,      window.VerticalOffsethorizontalSlider],
+                    [self.config_params['Points Density'],       DynamicPointsDensityUIParameters.PointsDensityCalcConstant,       window.PointsDensityhorizontalSlider],
+                    [self.config_params['End Time'],             DynamicPointsDensityUIParameters.EndTimeCalcConstant,             window.EndTimehorizontalSlider]
                 ]
-            )
-        except:
-            import sys
-            from LoggersConfig import loggers
-            loggers['Debug'].debug(f'AutoFillCallBackOperator: AutoFill: {sys.exc_info()}')
-
-    def set_signal_parameters(self, value_widgets):
-        # TODO: Не может за один цикл синхронизировать слайдеры и текстовые поля, Не знаю что за баг
-        for v in value_widgets:
-            value_to_set = v[0]
-            constant = v[1]
-            slider = v[2]
-            slider.setValue(value_to_set * constant)
-
-
-            
-
-

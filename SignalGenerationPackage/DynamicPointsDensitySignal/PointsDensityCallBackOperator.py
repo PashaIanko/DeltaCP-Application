@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
+
 class PointsDensityCallBackOperator(CallBackOperator):
 
     def __init__(self, model):

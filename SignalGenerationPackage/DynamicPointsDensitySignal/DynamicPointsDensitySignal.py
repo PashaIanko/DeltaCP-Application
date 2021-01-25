@@ -221,14 +221,6 @@ class DynamicPointsDensitySignal(Signal):
         self.NotifyObservers()
 
     @property
-    def x(self):
-        return SignalData.x  # TODO: В родительский класс переместить это!!
-
-    @property
-    def y(self):
-        return SignalData.y
-
-    @property
     def PointsDensity(self):
         return self.SignalData.PointsDensity
 

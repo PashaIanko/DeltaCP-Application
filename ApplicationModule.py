@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from LoggersConfig import loggers
+
 
 class ApplicationModule(ABC):
 
@@ -17,6 +17,5 @@ class ApplicationModule(ABC):
         pass
 
     def ConnectAllCallBacks(self):
-        loggers['Debug'].debug(f'ApplicationModule: ConnectAllCallBacks: operators={self.CallBackOperators}')
         for conn in self.CallBackOperators:
             conn.ConnectCallBack(self.UserInterface)

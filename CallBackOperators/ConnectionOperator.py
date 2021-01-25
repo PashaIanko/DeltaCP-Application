@@ -35,13 +35,20 @@ class ConnectionOperator(CallBackOperator):
                 Parity=ConnectionParameters['Parity'],
                 BaudRate=ConnectionParameters['BaudRate']
             )
-            repr(self.DeltaCPClient)
         except:
             loggers['Debug'].debug(f'Exception while creating DeltaCP Client')
             return
         if_connected = self.DeltaCPClient.Connect()
+        self.notify_connection_success(if_connected)
+        loggers['Application'].info(f'Connection successful? {if_connected}')
         loggers['Debug'].debug(f'If client connected: {if_connected}')
 
         # TODO: Есть Баг - Жмёшь Connect, считываешь частоту, ещё раз жмёшь Connect (уже False). Ещё раз считываешь /
         # частоту - exception (failed to connect)
         #
+
+    def notify_connection_success(self, if_connected):
+        if if_connected:
+            PopUpNotifier.Info(f'Client connection successful!')
+        else:
+            PopUpNotifier.Error(f'Client connection failed!')

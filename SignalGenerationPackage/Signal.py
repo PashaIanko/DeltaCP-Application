@@ -60,4 +60,12 @@ class Signal(metaclass=ABCMeta):
         for observer in self.Observers:
             observer.UpdateModel()
 
+    @property
+    def x(self):
+        return SignalData.x
+
+    @property
+    def y(self):
+        return SignalData.y
+
 

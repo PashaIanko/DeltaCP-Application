@@ -80,33 +80,25 @@ class SignalSendingOperator(CallBackOperator):
         self.DeltaCPClient.SetFrequency(0.0)
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
-
         # # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
-        # def StartSendingSignal(self):
-        #     if self.SendingThread is None:
-        #         print(f'launching thread')
-        #         if not self.SignalVisualizerConstructed:
-        #             self.SignalVisualizer = SignalVisualizer()
-        #         self.DeltaCPClient.SendStart()
-        #         self.LaunchSendingThread()
-        #     else:
-        #         if not self.SendingThread.is_alive():
-        #             print(f'launching thread')
-        #             self.SignalVisualizer.Restart(TimeArray=[])
-        #             self.RestartSignalIterator()
-        #             self.SendingStopped = False  # Надо почистить этот флаг
-        #             self.LaunchSendingThread()
-        #         else:
-        #             print(f'Prev sending thread is executing, cant launch one')
-
 
     def TestTimer(self):
-        value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-        self.DeltaCPClient.SetFrequency(value_to_send)
-        CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-        self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
-        self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
-        self.FunctionWasCalled = True
+        # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
+        # окошко с визуализацией. Если закрыл - то мы ничего уже не отправляем. Тогда выставляем частоту 0Гц
+        # SetFrequency(0) и посылаем STOP
+
+        window_is_closed = self.SignalVisualizer.check_if_window_closed()
+        if window_is_closed:
+            loggers['Application'].info(f'Visualization window was closed --> Application Stop Signal Sending')
+            self.StopSendingSignal()
+        else:
+            # Если окошко не закрыто - продолжаем визуализацию и отправку
+            value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+            self.DeltaCPClient.SetFrequency(value_to_send)
+            CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+            self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
+            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+            self.FunctionWasCalled = True
 
     def RestartSignalIterator(self):
         self.PointsIterator = 0

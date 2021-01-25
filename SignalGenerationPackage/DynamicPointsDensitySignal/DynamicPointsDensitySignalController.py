@@ -34,16 +34,20 @@ class DynamicPointsDensitySignalController(SignalController):
 
     # overridden
     def init_callback_operators(self):
-        self.callback_operators = \
-            [
-                StartTimeCallBackOperator(self.model),
-                AccelerationTimeCallBackOperator(self.model),
-                PlateauTimeCallBackOperator(self.model),
-                DecelerationTimeCallBackOperator(self.model),
-                EndTimeCallBackOperator(self.model),
-                VerticalOffsetCallBackOperator(self.model),
-                HighLevelFrequencyCallBackOperator(self.model),
-                LowLevelFrequencyCallBackOperator(self.model),
-                PointsDensityCallBackOperator(self.model),
-                AutoFillCallBackOperator(model=None)
-            ]
+        import sys
+        try:
+            self.callback_operators = \
+                [
+                    StartTimeCallBackOperator(self.model),
+                    AccelerationTimeCallBackOperator(self.model),
+                    PlateauTimeCallBackOperator(self.model),
+                    DecelerationTimeCallBackOperator(self.model),
+                    EndTimeCallBackOperator(self.model),
+                    VerticalOffsetCallBackOperator(self.model),
+                    HighLevelFrequencyCallBackOperator(self.model),
+                    LowLevelFrequencyCallBackOperator(self.model),
+                    PointsDensityCallBackOperator(self.model),
+                    AutoFillCallBackOperator(model=None)
+                ]
+        except:
+            print(sys.exc_info())

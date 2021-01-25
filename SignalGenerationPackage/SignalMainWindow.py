@@ -1,26 +1,33 @@
 from PyQt5 import QtWidgets
-from abc import ABCMeta, ABC, abstractmethod
+from abc import ABC, abstractmethod
 from PlotCanvas import PlotCanvas
-from SignalGenerationPackage.Sinus.Ui_SinusMainWindow import Ui_SinusMainWindow
-from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
+
 
 class SignalMainWindow(ABC):
     def __init__(self):
         super().__init__()
         self.main_window = QtWidgets.QMainWindow()
+
+        # plot parameters
         self.plot = None
         self.plot_width = 0
         self.plot_height = 0
         self.plot_pos_x = 0
         self.plot_pos_y = 0
         self.user_interface = None
+        self.plot_title = 'No title'
 
         # Процедура конструктора
         self.init_plot_positions()
         self.init_plot_sizes()
+        self.init_plot_title()
         self.init_plot()
         self.init_user_interface()
         self.setup_user_interface()
+
+    @abstractmethod
+    def init_plot_title(self):
+        pass
 
     @abstractmethod
     def init_plot_sizes(self):
@@ -37,7 +44,9 @@ class SignalMainWindow(ABC):
     def init_plot(self):
         self.plot = PlotCanvas(parent=self.main_window,
                                width=self.plot_width,
-                               height=self.plot_height)
+                               height=self.plot_height,
+                               title=self.plot_title)
+
         self.plot.move(self.plot_pos_x,
                        self.plot_pos_y)
 

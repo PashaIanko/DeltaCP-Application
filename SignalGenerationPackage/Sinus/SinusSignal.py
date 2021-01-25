@@ -1,7 +1,6 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.Sinus.SinusData import SinusData
 from SignalGenerationPackage.SignalData import SignalData
-import statistics
 import numpy as np
 
 
@@ -12,9 +11,6 @@ class SinusSignal(Signal):
         print(f'ampl = {self.amplitude}, phase = {self.phase}, N = {self.PointsNumber}, '
               f'X_from = {self.X_from}, X_to = {self.X_to}, '
               f'omega = {self.omega}, x = {self.x}, y = {self.y}')
-
-
-
 
     def __init__(self):
         super().__init__()
@@ -28,7 +24,7 @@ class SinusSignal(Signal):
     def UpdateSignalData(self):
         SignalData.x = np.linspace(self.SignalData.X_from, self.SignalData.X_to, self.SignalData.PointsNumber,
                                    endpoint=True)  # Пересчёт ГЛОБАЛЬНЫХ Переменных
-        SignalData.y = [self.Func(x) for x in SignalData.x]  # TODO: X_From, X_To запихать в родителя
+        SignalData.y = [self.Func(x) for x in SignalData.x]
 
 
     @property
@@ -60,14 +56,6 @@ class SinusSignal(Signal):
         self.SignalData.Phase = value
         self.RecalcData()
         self.NotifyObservers()
-
-    @property
-    def x(self):
-        return SignalData.x #self.SignalData.x # Возвращаются глобальные перем (class attributes) - x и y
-
-    @property
-    def y(self):
-        return SignalData.y # self.SignalData.y # Возвращаются глобальные перем (class attributes) - x и y
 
     @property
     def X_from(self):
