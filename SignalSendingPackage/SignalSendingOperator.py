@@ -51,8 +51,6 @@ class SignalSendingOperator(CallBackOperator):
         window.pushButtonStopSignalSending.clicked.connect(self.StopSendingSignal)
         window.EndlessSendingcheckBox.stateChanged.connect(lambda: self.EnableEndlessSending())
 
-    # TODO: на нажатие кнопки Stop Signal Sending надо сделать реакцию - закрытие окошка визуализации
-
     def EnableEndlessSending(self):
         self.EndlessSendingEnabled = \
             self.window.EndlessSendingcheckBox.isChecked()
@@ -87,7 +85,10 @@ class SignalSendingOperator(CallBackOperator):
         if not (self.SendingThread is None):
             self.SendingThread.join()
             self.SendingThread = None
-        # # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
+
+        # Закроем окошко с визуализацией
+        if not (self.SignalVisualizer.check_if_window_closed()):
+            self.SignalVisualizer.close_visualization_window()
 
     def TestTimer(self):
         # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
@@ -118,8 +119,6 @@ class SignalSendingOperator(CallBackOperator):
         self.SendingThread = Thread(target=self.ThreadFunc)
         self.SendingThread.start()
 
-
-    # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
     def StartSendingSignal(self):
         if self.SendingThread is None:
             self.SendingStopped = False  # Надо почистить флаг - иначе неверно работает при последовательности:

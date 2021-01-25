@@ -11,6 +11,11 @@ class SignalVisualizer:
         self.IfRestarted = True
         self.Offset = 0.3
 
+    def close_visualization_window(self):
+        if self.main_window is not None:
+            self.main_window.close()
+            self.main_window = None
+
     def init_main_window(self):
         self.main_window = VisualizerMainWindow()
         self.main_window.show()
@@ -41,4 +46,6 @@ class SignalVisualizer:
         self.y = y
 
     def check_if_window_closed(self):
+        if self.main_window is None:
+            return True
         return self.main_window.window_is_closed
