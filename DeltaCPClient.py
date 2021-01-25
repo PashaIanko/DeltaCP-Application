@@ -68,16 +68,18 @@ class DeltaCPClient(ModbusClient):
     def WriteRegister(self, address, value):
         try:
             self.Client.write_register(address, value)
-        except:
-            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: {sys.exc_info()}')
+        except AttributeError:
+            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: Client is None (not constructed)')
+        except TypeError:
+            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: Type error (value is None)')
 
     def ReadRegister(self, address):
         try:
             hh = self.Client.read_holding_registers(address, count=1, unit=1)
             loggers['Debug'].debug(f"Register value = {hh.registers[0]}")
             return hh.registers[0]
-        except:
-            loggers['Debug'].debug(f'DeltaCP Client: ReadRegister: {sys.exc_info()}')
+        except AttributeError:
+            loggers['Debug'].debug(f'DeltaCP Client: ReadRegister: Client is None (not constructed)')
 
     def AdjustRegister(self, mask_bit_AND, mask_bit_OR):
         try:
@@ -91,8 +93,8 @@ class DeltaCPClient(ModbusClient):
             value_16bit &= mask_bit_AND
             value_16bit |= mask_bit_OR
             self.WriteRegister(DeltaCPRegisters.StartStopRegister, value_16bit)
-        except:
-            loggers['Debug'].debug(f'DeltaCP Client: AdjustRegister: {sys.exc_info()}')
+        except TypeError:
+            loggers['Debug'].debug(f'DeltaCP Client: AdjustRegister: smth is None Type {type(value)}')
 
     def SendStart(self):
         mask_bit_AND = np.uint16(65534)  # 0x1111 1111 1111 1110
