@@ -78,6 +78,7 @@ class SignalSendingOperator(CallBackOperator):
             self.window.PauseSendingradioButton.setChecked(True)
 
     def StopSendingSignal(self):
+        loggers['Debug'].debug(f'Setting freq = 0 & sending stop')
         self.DeltaCPClient.SetFrequency(0.0)
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
@@ -121,14 +122,17 @@ class SignalSendingOperator(CallBackOperator):
     # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
     def StartSendingSignal(self):
         if self.SendingThread is None:
-            loggers['Debug'].debug(f'Launching thread')
+            self.SendingStopped = False  # Надо почистить флаг - иначе неверно работает при последовательности:
+            # Закрыть визуализацию - Нажать Stop - Нажать Start
+
+            loggers['Debug'].debug(f'Launching thread, thread is None')
             if not self.SignalVisualizerConstructed:
                 self.SignalVisualizer = SignalVisualizer()
             self.DeltaCPClient.SendStart()
             self.LaunchSendingThread()
         else:
             if not self.SendingThread.is_alive():
-                loggers['Debug'].debug(f'Launching thread')
+                loggers['Debug'].debug(f'Launching thread, thread is not alive')
                 self.SignalVisualizer.Restart(TimeArray=[])
                 self.RestartSignalIterator()
                 self.SendingStopped = False  # Надо почистить этот флаг
