@@ -51,7 +51,6 @@ class SignalSendingOperator(CallBackOperator):
         window.pushButtonStopSignalSending.clicked.connect(self.StopSendingSignal)
         window.EndlessSendingcheckBox.stateChanged.connect(lambda: self.EnableEndlessSending())
 
-
     def EnableEndlessSending(self):
         self.EndlessSendingEnabled = \
             self.window.EndlessSendingcheckBox.isChecked()
@@ -77,10 +76,19 @@ class SignalSendingOperator(CallBackOperator):
             self.window.PauseSendingradioButton.setChecked(True)
 
     def StopSendingSignal(self):
+        loggers['Debug'].debug(f'Setting freq = 0 & sending stop')
         self.DeltaCPClient.SetFrequency(0.0)
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
-        # # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
+
+        loggers['Debug'].debug(f'Stopping sending thread')
+        if not (self.SendingThread is None):
+            self.SendingThread.join()
+            self.SendingThread = None
+
+        # Закроем окошко с визуализацией
+        if not (self.SignalVisualizer.check_if_window_closed()):
+            self.SignalVisualizer.close_visualization_window()
 
     def TestTimer(self):
         # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
@@ -111,18 +119,19 @@ class SignalSendingOperator(CallBackOperator):
         self.SendingThread = Thread(target=self.ThreadFunc)
         self.SendingThread.start()
 
-
-    # TODO: Исправить баг, когда StopSignalSending, потом рестарт - не отрисовывается визуализация
     def StartSendingSignal(self):
         if self.SendingThread is None:
-            loggers['Debug'].debug(f'Launching thread')
+            self.SendingStopped = False  # Надо почистить флаг - иначе неверно работает при последовательности:
+            # Закрыть визуализацию - Нажать Stop - Нажать Start
+
+            loggers['Debug'].debug(f'Launching thread, thread is None')
             if not self.SignalVisualizerConstructed:
                 self.SignalVisualizer = SignalVisualizer()
             self.DeltaCPClient.SendStart()
             self.LaunchSendingThread()
         else:
             if not self.SendingThread.is_alive():
-                loggers['Debug'].debug(f'Launching thread')
+                loggers['Debug'].debug(f'Launching thread, thread is not alive')
                 self.SignalVisualizer.Restart(TimeArray=[])
                 self.RestartSignalIterator()
                 self.SendingStopped = False  # Надо почистить этот флаг

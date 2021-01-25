@@ -3,3 +3,7 @@
 2021-01-19 16:59:02,047 - SignalSenging - INFO - Signal Sending finished!
 2021-01-19 17:00:13,057 - SignalSenging - INFO - Signal Sending finished!
 2021-01-19 17:00:35,807 - SignalSenging - INFO - Signal Sending finished!
+2021-01-25 13:05:27,614 - SignalSenging - INFO - After dt=1.77 sec, I will send 6.666666666666667 Hz
+2021-01-25 13:05:29,439 - SignalSenging - INFO - After dt=0.77 sec, I will send 13.333333333333334 Hz
+2021-01-25 13:05:30,232 - SignalSenging - INFO - After dt=0.77 sec, I will send 20.0 Hz
+2021-01-25 13:05:31,039 - SignalSenging - INFO - After dt=0.77 sec, I will send 20.0 Hz
