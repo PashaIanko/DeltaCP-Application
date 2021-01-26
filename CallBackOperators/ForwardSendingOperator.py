@@ -100,5 +100,6 @@ class ForwardSendingOperator(SignalSendingOperator):
                 # мониторим, достигли ли требуемой начальной частоты
                 sleep(1)
                 current_freq = self.DeltaCPClient.RequestCurrentFrequency()
-                if abs(current_freq - value_to_send) <= accuracy:
+                loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
+                if abs(current_freq - value) <= accuracy:
                     return
