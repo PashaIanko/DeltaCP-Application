@@ -104,7 +104,7 @@ class SignalSendingOperator(CallBackOperator):
             # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
             # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
             CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, 0)
 
             if np.isnan(self.ValueToSend):
                 loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
@@ -131,7 +131,8 @@ class SignalSendingOperator(CallBackOperator):
     def StartSendingSignal(self):
 
         # Сначала надо наладить частоту опроса - Это небольной костыль.
-        #self.AddRequestData(request_freq=1.0)
+        self.AddRequestData(request_freq=1.0)  # TODO: Переместить Этот метод в метод класса Signal
+
 
         if self.SendingThread is None:
             self.SendingStopped = False  # Надо почистить флаг - иначе неверно работает при последовательности:
@@ -214,7 +215,7 @@ class SignalSendingOperator(CallBackOperator):
                 x_new = np.linspace(x_from, x_to, N, endpoint=True)[1:-1]  # Нулевую и последнюю точку не берём,
                                                                             # Они были в исходном массиве
                 # Массив y для вставки:
-                y_new = [None] * len(x_new)
+                y_new = [0] * len(x_new)
 
                 # Вставляем x_new и y_new
                 loggers['Debug'].debug(f'inserting x_new, y_new')
