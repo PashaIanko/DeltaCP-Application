@@ -101,9 +101,9 @@ class SignalSendingOperator(CallBackOperator):
             self.StopSendingSignal()
         else:
             # Если окошко не закрыто - продолжаем визуализацию и отправку
+            CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
             value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
             self.DeltaCPClient.SetFrequency(value_to_send)
-            CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
             self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
             self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
             self.FunctionWasCalled = True
