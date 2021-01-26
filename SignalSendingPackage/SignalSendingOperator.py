@@ -6,7 +6,7 @@ from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
-
+import numpy as np
 
 class SignalSendingOperator(CallBackOperator):
     def __init__(self):
@@ -100,12 +100,21 @@ class SignalSendingOperator(CallBackOperator):
             loggers['Application'].info(f'Visualization window was closed --> Application Stop Signal Sending')
             self.StopSendingSignal()
         else:
-            # Если окошко не закрыто - продолжаем визуализацию и отправку
+            # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
+            # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
+            # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
             CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-            value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-            self.DeltaCPClient.SetFrequency(value_to_send)
-            self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
             self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+
+            if np.isnan(self.ValueToSend):
+                loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
+                loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
+            else:
+                loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
+                # Если окошко не закрыто - продолжаем визуализацию и отправку
+                value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                self.DeltaCPClient.SetFrequency(value_to_send)
+                self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
             self.FunctionWasCalled = True
 
     def RestartSignalIterator(self):
@@ -120,6 +129,10 @@ class SignalSendingOperator(CallBackOperator):
         self.SendingThread.start()
 
     def StartSendingSignal(self):
+
+        # Сначала надо наладить частоту опроса - Это небольной костыль.
+        #self.AddRequestData(request_freq=1.0)
+
         if self.SendingThread is None:
             self.SendingStopped = False  # Надо почистить флаг - иначе неверно работает при последовательности:
             # Закрыть визуализацию - Нажать Stop - Нажать Start
@@ -173,6 +186,44 @@ class SignalSendingOperator(CallBackOperator):
         self.RestartVisualization(Time)
         self.ExecuteSending(Time)
 
+    def AddRequestData(self, request_freq):
+        # Исходные данные - сам сигнал, SignalData.x, SignalData.y
+        # Надо - зная частоту опроса, идём по всему массиву времени
+        # dt = SignalData.x[i+1] - SignalData.x[i].
+        # Если dt > 1 / request_freq --> Надо добавить "фиктивные точки" по времени
+        # В этой точке, по прерыванию, будет только опрос, без отправки значения
+        # на частотник
 
+        loggers['Debug'].debug(f'SignalSendingOperator: AddRequestData: Adding x_new, y_new for request')
+        dx = 1 / request_freq
+        for prev_idx in range(0, len(SignalData.x) - 1):
+            next_idx = prev_idx + 1
+            x_prev = SignalData.x[prev_idx]
+            x_next = SignalData.x[next_idx]
+            dx_current = abs(x_next - x_prev)
 
+            if dx_current > dx:
+                # Значит, надо вставить точки для опроса
+                x_from = x_prev
+                x_to = x_next
 
+                # Сколько точек вставить:
+                N = int(dx_current * request_freq)
+
+                # Массив x для вставки:
+                x_new = np.linspace(x_from, x_to, N, endpoint=True)[1:-1]  # Нулевую и последнюю точку не берём,
+                                                                            # Они были в исходном массиве
+                # Массив y для вставки:
+                y_new = [None] * len(x_new)
+
+                # Вставляем x_new и y_new
+                loggers['Debug'].debug(f'inserting x_new, y_new')
+
+                try:
+                    SignalData.x = np.insert(SignalData.x, next_idx, x_new)
+                    SignalData.y = np.insert(SignalData.y, next_idx, y_new)
+                    #SignalData.x.insert(next_idx, x_new)
+                    #SignalData.y.insert(next_idx, y_new)
+                except:
+                    import sys
+                    loggers['Debug'].debug(f'{sys.exc_info()}')
