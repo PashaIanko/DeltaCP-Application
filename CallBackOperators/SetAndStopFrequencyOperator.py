@@ -41,6 +41,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
 
     def SendStopCommand(self):
+        self.client.SetFrequency(0)
         self.client.SendStop()
 
 
