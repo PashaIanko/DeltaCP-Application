@@ -69,17 +69,21 @@ class DeltaCPClient(ModbusClient):
         try:
             self.Client.write_register(address, value)
         except AttributeError:
-            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: Client is None (not constructed)')
+            loggers['Debug'].debug(f'DeltaCPClient: WriteRegister: Client is None (not constructed)')
         except TypeError:
-            loggers['Debug'].debug(f'DeltaCP Client: WriteRegister: Type error (value is None)')
+            loggers['Debug'].debug(f'DeltaCPClient: WriteRegister: Type error (value is None)')
+        except:
+            loggers['Debug'].debug(f'DeltaCPClient: WriteRegister: Exception {sys.exc_info()}')
 
     def ReadRegister(self, address):
         try:
             hh = self.Client.read_holding_registers(address, count=1, unit=1)
-            loggers['Debug'].debug(f"Register value = {hh.registers[0]}")
+            loggers['Debug'].debug(f"DeltaCPClient: ReadRedister: Register value = {hh.registers[0]}")
             return hh.registers[0]
         except AttributeError:
-            loggers['Debug'].debug(f'DeltaCP Client: ReadRegister: Client is None (not constructed)')
+            loggers['Debug'].debug(f'DeltaCPClient: ReadRegister: Client is None (not constructed)')
+        except:
+            loggers['Debug'].debug(f'DeltaCPClient: ReadRegister: {sys.exc_info()}')
 
     def AdjustRegister(self, mask_bit_AND, mask_bit_OR):
         try:
