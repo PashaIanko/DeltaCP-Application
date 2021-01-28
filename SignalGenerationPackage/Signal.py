@@ -45,9 +45,13 @@ class Signal(metaclass=ABCMeta):
             # SignalData.dx.insert(0, statistics.mean(SignalData.dx))  # Начальная точка отсчёта по времени, 0.00
 
 
+    def ClearRequestData(self):
+        SignalData.x_with_requests.clear()
+        SignalData.y_with_requests.clear()
 
     def RecalcData(self):
         self.UpdateSignalData()
+        self.ClearRequestData()
         self.AddRequestData(self.RequestFreq)
 
         # Теперь обновить dt для x, y, x_with_requests, y_with_requests
