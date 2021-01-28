@@ -22,18 +22,18 @@ class ForwardSendingOperator(SignalSendingOperator):
 
     # overridden
     def ExecuteSending(self, Time):
-        DeltaTimes = SignalData.dx
+        DeltaTimes = SignalData.dx_with_requests
         Dts_len = len(DeltaTimes)
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 1
         self.TimeStamp = Time[self.PointsIterator - 1]  # В какой момент времени на графике мы выставим ValueToSend
-        self.ValueToSend = SignalData.y[self.PointsIterator]  # Сигнал опережает теперь
+        self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]  # Сигнал опережает теперь
 
 
         # На первом прогоне надо предварительно выставить начальную частоту
         if self.IsFirstCycle == True:
-            preset_value = SignalData.y[0]
+            preset_value = SignalData.y_with_requests[0]
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
 
@@ -60,13 +60,13 @@ class ForwardSendingOperator(SignalSendingOperator):
                         # При этом подождав detaT[-1] (Последний временной отрезок)
                         # Тогда, когда цикл отправки возобновится - начальная точка уже была отправлена в
                         # Этом коде. Поэтому в новом цикле начинаем отправку не с 0й, а с 1ой точки.
-                        self.ValueToSend = SignalData.y[0]
+                        self.ValueToSend = SignalData.y_with_requests[0]
                         self.TimeStamp = Time[self.PointsIterator - 1]
                         loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
                         self.Timer.reset(DeltaTimes[-1] - self.CommandExecutionTime)
 
                     else:
-                        self.ValueToSend = SignalData.y[self.PointsIterator]
+                        self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]
                         self.TimeStamp = Time[self.PointsIterator - 1]
                         dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
 

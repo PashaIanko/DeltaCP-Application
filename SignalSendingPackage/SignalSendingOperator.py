@@ -106,7 +106,7 @@ class SignalSendingOperator(CallBackOperator):
             CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
             self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, 0)
 
-            if np.isnan(self.ValueToSend):
+            if self.ValueToSend is None:
                 loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
                 loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
             else:
@@ -154,7 +154,7 @@ class SignalSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
-        Time = SignalData.x.copy()
+        Time = SignalData.x_with_requests.copy()
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
         self.ExecuteSending(Time)
 

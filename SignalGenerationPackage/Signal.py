@@ -13,7 +13,7 @@ class Signal(metaclass=ABCMeta):
         self.SignalData = None  # abstract class
         self.Observers = []
         self.InitSignalData()
-        self.RequestFreq = 2.0
+        self.RequestFreq = 1.0
 
     @abstractmethod
     def InitSignalData(self):
