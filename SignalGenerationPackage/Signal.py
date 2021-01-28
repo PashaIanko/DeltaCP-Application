@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
+from LoggersConfig import loggers
 
 
 class Signal(metaclass=ABCMeta):
@@ -54,6 +55,11 @@ class Signal(metaclass=ABCMeta):
                                                                         # Signal Sending Module
         SignalData.dx_with_requests = self.UpdateDeltaTimes(input=SignalData.x_with_requests, output=SignalData.dx_with_requests)
 
+    @staticmethod
+    def extend_edge_points(list_x, list_y):
+        SignalData.x_with_requests.extend(list_x)
+        SignalData.y_with_requests.extend(list_y)
+
     def AddRequestData(self, request_freq = 1.0):
         # Исходные данные - сам сигнал, SignalData.x, SignalData.y
         # Надо - зная частоту опроса, идём по всему массиву времени
@@ -67,35 +73,52 @@ class Signal(metaclass=ABCMeta):
             next_idx = prev_idx + 1
             x_prev = SignalData.x[prev_idx]
             x_next = SignalData.x[next_idx]
+            y_prev = SignalData.y[prev_idx]
+            y_next = SignalData.y[next_idx]
             dx_current = abs(x_next - x_prev)
 
-            if dx_current > dx:
+            if dx_current <= dx:
+                # Значит, нет необходимости вставлять точки для опроса - текущий dx_current и так достаточно мал
+                self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+            else:
                 # Значит, надо вставить точки для опроса
-                x_from = x_prev
-                x_to = x_next
-
                 # Сколько точек вставить:
                 N = int(dx_current * request_freq)
 
-                # Массив x для вставки:
-                x_new = np.linspace(x_from, x_to, N, endpoint=True)[1:-1]  # Нулевую и последнюю точку не берём,
-                                                                            # Они были в исходном массиве
-                # Массив y для вставки:
-                y_new = [None] * len(x_new)  # Да, None это костыль. При отправке (SignalSendingOperator),
-                                                # если значение 'y' == None, то не отправляем, а только запрашиваем
-                                                # частоту
-                # Вставляем x_new и y_new
-                try:
-                    SignalData.x_with_requests.append(x_prev)
-                    SignalData.x_with_requests.extend(x_new)
+                if N == 0:
+                    # Так совпало - тогда только крайние точки вставляем
+                    self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+                else:
+                    # Тогда вставим несколько промежуточных точек:
+                    # Массив x для вставки:
+                    # N + 2 в linspace - т.к. N - только промежуточные, а тут linspace c учётом крайних
+                    x_new = np.linspace(x_prev, x_next, N + 2, endpoint=True)
 
-                    SignalData.y_with_requests.append(None)
-                    SignalData.y_with_requests.extend(y_new)
+                    # Если не последняя итерация - то необходимо исключить последнюю точку
+                    # А если последняя - то она включится
+                    if next_idx != len(SignalData.x) - 1:
+                        x_new = x_new[0:-1]
 
-                    #SignalData.x = np.insert(SignalData.x, next_idx, x_new)
-                    #SignalData.y = np.insert(SignalData.y, next_idx, y_new)
-                except:
-                    import sys
+                    # Массив y для вставки:
+                    # Да, None это костыль. При отправке (SignalSendingOperator),
+                    # если значение 'y' == None, то не отправляем, а только запрашиваем
+                    # частоту TODO: Исправить этот костыль
+                    y_new = [y_prev] + [None] * (len(x_new) - 2) + [y_next]
+
+                    # Вставляем x_new и y_new
+                    try:
+                        SignalData.x_with_requests.extend(x_new)
+                        SignalData.y_with_requests.extend(y_new)
+                    except:
+                        import sys
+
+                        loggers['Debug'].debug(f'Signal: AddRequestData: exception: {sys.exc_info()}')
+        self.test_adding_requests()
+
+    def test_adding_requests(self):
+        l_y = [i in SignalData.y_with_requests for i in SignalData.y]
+        l_x = [i in SignalData.x_with_requests for i in SignalData.x]
+        loggers['Debug'].debug(f'Added Requests correctly?: for y: {not (False in l_y)}, for x: {not (False in l_x)}')
 
     def AddObserver(self, Observer):
         self.Observers.append(Observer)
