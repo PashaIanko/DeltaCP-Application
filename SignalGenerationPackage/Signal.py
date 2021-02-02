@@ -107,7 +107,7 @@ class Signal(metaclass=ABCMeta):
                     # Да, None это костыль. При отправке (SignalSendingOperator),
                     # если значение 'y' == None, то не отправляем, а только запрашиваем
                     # частоту TODO: Исправить этот костыль
-                    y_new = [y_prev] + [y_next] * (len(x_new) - 2) + [y_next]
+                    y_new = [y_prev] + [y_next] + [None] * (len(x_new) - 2) # + [y_next]
 
                     # Вставляем x_new и y_new
                     try:

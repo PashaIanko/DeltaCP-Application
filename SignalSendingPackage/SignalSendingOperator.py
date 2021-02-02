@@ -171,9 +171,6 @@ class SignalSendingOperator(CallBackOperator):
                 Time = self.update_time_array(Time, upd_val)
                 updated_x = self.update_time_array(updated_x, upd_val)
 
-                #for i in range(len(Time)):
-                #    Time[i] += upd_val  # + SignalData.dx[i]
-                #    updated_x[i] += upd_val
 
                 # restarting points Iterator, Visualisation and Sending Thread
                 self.PointsIterator = 0
