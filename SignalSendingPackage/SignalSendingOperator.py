@@ -155,6 +155,7 @@ class SignalSendingOperator(CallBackOperator):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
         Time = SignalData.x_with_requests.copy()
+        updated_x = SignalData.x.copy()
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
         self.ExecuteSending(Time)
 
@@ -167,14 +168,24 @@ class SignalSendingOperator(CallBackOperator):
                 # update Time array and restart the cycle
                 self.CycleFinishedSuccessfully = False
                 upd_val = SignalData.x[-1]
-                for i in range(len(Time)):
-                    Time[i] += upd_val  # + SignalData.dx[i]
+                Time = self.update_time_array(Time, upd_val)
+                updated_x = self.update_time_array(updated_x, upd_val)
+
+                #for i in range(len(Time)):
+                #    Time[i] += upd_val  # + SignalData.dx[i]
+                #    updated_x[i] += upd_val
 
                 # restarting points Iterator, Visualisation and Sending Thread
                 self.PointsIterator = 0
-                self.SignalVisualizer.Restart(Time)
+                self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
                 self.ExecuteSending(Time)
 
+
+    @staticmethod
+    def update_time_array(arr, upd_val):
+        for val in arr:
+            val += upd_val
+        return arr
 
     def Restart(self, Time):
         self.CycleFinishedSuccessfully = False
