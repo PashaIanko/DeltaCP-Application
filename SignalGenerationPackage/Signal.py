@@ -73,7 +73,8 @@ class Signal(metaclass=ABCMeta):
         # на частотник
 
         dx = 1 / request_freq
-        for prev_idx in range(0, len(SignalData.x) - 1):
+        len_x = len(SignalData.x)
+        for prev_idx in range(0, len_x - 1):
             next_idx = prev_idx + 1
             x_prev = SignalData.x[prev_idx]
             x_next = SignalData.x[next_idx]
@@ -81,17 +82,27 @@ class Signal(metaclass=ABCMeta):
             y_next = SignalData.y[next_idx]
             dx_current = abs(x_next - x_prev)
 
-            if dx_current <= dx:
+            if dx_current <= dx and next_idx == len_x - 1:
                 # Значит, нет необходимости вставлять точки для опроса - текущий dx_current и так достаточно мал
+                #self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+                # На последней итерации вставляем крайние точки
                 self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
-            else:
+            elif dx_current <= dx and next_idx < len_x - 1:
+                # Итерация не последняя - только левые крайние точки добавляем
+                self.extend_edge_points([x_prev], [y_prev])
+            elif dx_current > dx:
                 # Значит, надо вставить точки для опроса
                 # Сколько точек вставить:
                 N = int(dx_current * request_freq)
 
                 if N == 0:
                     # Так совпало - тогда только крайние точки вставляем
-                    self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+                    if next_idx < len_x - 1:
+                        # итерация не последняя
+                        self.extend_edge_points([x_prev], [y_prev])
+                    else:
+                        # итерация последняя - добавляем края
+                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
                 else:
                     # Тогда вставим несколько промежуточных точек:
                     # Массив x для вставки:
@@ -100,7 +111,7 @@ class Signal(metaclass=ABCMeta):
 
                     # Если не последняя итерация - то необходимо исключить последнюю точку
                     # А если последняя - то она включится
-                    if next_idx != len(SignalData.x) - 1:
+                    if next_idx != len_x - 1:
                         x_new = x_new[0:-1]
 
                     # Массив y для вставки:
@@ -108,6 +119,11 @@ class Signal(metaclass=ABCMeta):
                     # если значение 'y' == None, то не отправляем, а только запрашиваем
                     # частоту TODO: Исправить этот костыль
                     y_new = [y_prev] + [y_next] + [None] * (len(x_new) - 2) # + [y_next]
+
+                    # Ещё костыль, чтобы не было дублирования точек - если не первая итерация -
+                    # заменить начальную точку на None
+                    if prev_idx > 0:
+                        y_new[0] = None
 
                     # Вставляем x_new и y_new
                     try:
