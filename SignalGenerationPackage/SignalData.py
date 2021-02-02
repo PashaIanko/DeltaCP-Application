@@ -8,6 +8,10 @@ class SignalData(metaclass=ABCMeta):
     y = []
     dx = []  # Array of dx values, for optimization sakes in the SignalSendingModule
 
+    x_with_requests = []
+    y_with_requests = []
+    dx_with_requests = []
+
     def __init__(self):
         pass
 

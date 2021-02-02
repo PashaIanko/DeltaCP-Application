@@ -6,7 +6,7 @@ from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
-
+import numpy as np
 
 class SignalSendingOperator(CallBackOperator):
     def __init__(self):
@@ -100,12 +100,21 @@ class SignalSendingOperator(CallBackOperator):
             loggers['Application'].info(f'Visualization window was closed --> Application Stop Signal Sending')
             self.StopSendingSignal()
         else:
-            # Если окошко не закрыто - продолжаем визуализацию и отправку
+            # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
+            # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
+            # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
             CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-            value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-            self.DeltaCPClient.SetFrequency(value_to_send)
-            self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
-            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, 0)
+
+            if self.ValueToSend is None:
+                loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
+                loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
+            else:
+                loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
+                # Если окошко не закрыто - продолжаем визуализацию и отправку
+                value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                self.DeltaCPClient.SetFrequency(value_to_send)
+                self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
             self.FunctionWasCalled = True
 
     def RestartSignalIterator(self):
@@ -120,6 +129,9 @@ class SignalSendingOperator(CallBackOperator):
         self.SendingThread.start()
 
     def StartSendingSignal(self):
+
+        # Сначала надо наладить частоту опроса - Это небольной костыль.
+
         if self.SendingThread is None:
             self.SendingStopped = False  # Надо почистить флаг - иначе неверно работает при последовательности:
             # Закрыть визуализацию - Нажать Stop - Нажать Start
@@ -142,7 +154,8 @@ class SignalSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
-        Time = SignalData.x.copy()
+        Time = SignalData.x_with_requests.copy()
+        updated_x = SignalData.x.copy()
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
         self.ExecuteSending(Time)
 
@@ -155,14 +168,21 @@ class SignalSendingOperator(CallBackOperator):
                 # update Time array and restart the cycle
                 self.CycleFinishedSuccessfully = False
                 upd_val = SignalData.x[-1]
-                for i in range(len(Time)):
-                    Time[i] += upd_val  # + SignalData.dx[i]
+                Time = self.update_time_array(Time, upd_val)
+                updated_x = self.update_time_array(updated_x, upd_val)
+
 
                 # restarting points Iterator, Visualisation and Sending Thread
                 self.PointsIterator = 0
-                self.SignalVisualizer.Restart(Time)
+                self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
                 self.ExecuteSending(Time)
 
+
+    @staticmethod
+    def update_time_array(arr, upd_val):
+        for i in range(len(arr)):
+            arr[i] += upd_val
+        return arr
 
     def Restart(self, Time):
         self.CycleFinishedSuccessfully = False
@@ -172,7 +192,4 @@ class SignalSendingOperator(CallBackOperator):
         self.RestartSignalIterator()
         self.RestartVisualization(Time)
         self.ExecuteSending(Time)
-
-
-
 

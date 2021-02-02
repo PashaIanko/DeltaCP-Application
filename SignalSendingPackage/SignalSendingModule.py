@@ -12,5 +12,5 @@ class SignalSendingModule(ApplicationModule):
         self.CallBackOperators = \
             [
                 # NaiveSendingOperator()
-                ForwardSendingOperator(DebugMode=False)
+                ForwardSendingOperator(DebugMode=True)
             ]
