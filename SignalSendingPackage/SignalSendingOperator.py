@@ -180,8 +180,8 @@ class SignalSendingOperator(CallBackOperator):
 
     @staticmethod
     def update_time_array(arr, upd_val):
-        for val in arr:
-            val += upd_val
+        for i in range(len(arr)):
+            arr[i] += upd_val
         return arr
 
     def Restart(self, Time):
