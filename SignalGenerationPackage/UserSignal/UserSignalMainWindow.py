@@ -24,3 +24,6 @@ class UserSignalMainWindow(SignalMainWindow):
     # overridden
     def init_user_interface(self):
         self.user_interface = Ui_UserSignalWindow()
+
+    def init_plot(self):
+        self.plot = self.user_interface.plot_widget

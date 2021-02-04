@@ -42,15 +42,9 @@ class SignalMainWindow(ABC):
     def init_user_interface(self):
         pass
 
+    @abstractmethod
     def init_plot(self):
-        self.plot = self.user_interface.frame
-        #self.plot = PlotCanvas(parent=self.main_window,
-        #                       width=self.plot_width,
-        #                       height=self.plot_height,
-        #                       title=self.plot_title)
-        #
-        #self.plot.move(self.plot_pos_x,
-        #               self.plot_pos_y)
+        pass
 
     def setup_user_interface(self):
         self.user_interface.setupUi(self.main_window)
