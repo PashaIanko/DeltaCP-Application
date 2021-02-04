@@ -23,4 +23,8 @@ class SinusMainWindow(SignalMainWindow):
 
     # overridden
     def init_user_interface(self):
-        self.user_interface = Ui_SinusMainWindow()
+        import sys
+        try:
+            self.user_interface = Ui_SinusMainWindow()
+        except:
+            print(sys.exc_info())
