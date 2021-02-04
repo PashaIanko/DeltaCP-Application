@@ -1,10 +1,8 @@
-#from PyQt5 import QtCore
-#from PyQt5 import QtWidgets
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_SinusMainWindow(object):
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(500, 610)
