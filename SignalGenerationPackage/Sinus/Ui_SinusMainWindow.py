@@ -2,7 +2,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_SinusMainWindow(object):
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(500, 610)
@@ -89,8 +88,8 @@ class Ui_SinusMainWindow(object):
         self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
         self.verticalLayout.addWidget(self.frame_2)
         self.frame = PlotCanvas(self.centralwidget)
-        #self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        #self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        #self.frame.setFrameShape(QtWidgets.QFrame.NoFrame)  # TODO: setFrameShape автоматически генерится, но у PlotCanvas нет атрибута Frame Shape.
+                                                                # Сделать что-то, чтобы вручную комментить не пришлось
         self.frame.setObjectName("frame")
         self.verticalLayout.addWidget(self.frame)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -114,6 +113,8 @@ class Ui_SinusMainWindow(object):
         self.labelTimeFrom.setText(_translate("MainWindow", "Time From:"))
         self.labelTimeTo.setText(_translate("MainWindow", "Time To:"))
         self.labelAmplitude.setText(_translate("MainWindow", "Amplitude:"))
+
+
 from PlotCanvas import PlotCanvas
 
 
