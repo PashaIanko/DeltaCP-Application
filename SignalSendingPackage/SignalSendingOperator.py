@@ -9,9 +9,9 @@ from LoggersConfig import loggers
 import numpy as np
 
 class SignalSendingOperator(CallBackOperator):
-    def __init__(self):
+    def __init__(self, DebugMode=True):
         super().__init__()
-
+        self.DebugMode = DebugMode
         # Ниже - Набор параметров для обоих способов отправки сигнала -
         # наперёд (Как Сергей сказал), и более наивный способ
         self.TimeStamp = 0
@@ -103,8 +103,11 @@ class SignalSendingOperator(CallBackOperator):
             # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
             # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
             # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
-            CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, 0)
+            if self.DebugMode:
+                CurrentFreq = 0
+            else:
+                CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
 
             if self.ValueToSend is None:
                 loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')

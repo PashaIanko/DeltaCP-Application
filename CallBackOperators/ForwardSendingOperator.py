@@ -13,8 +13,7 @@ class ForwardSendingOperator(SignalSendingOperator):
     # (А не просто выставлена в этот момент времени)
 
     def __init__(self, DebugMode):
-        super().__init__()
-        self.DebugMode = DebugMode
+        super().__init__(DebugMode)
         self.IsFirstCycle = True
         # На первом цикле исполнение - самую первую частоту задаём и ожидаем, пока не
         # достигнем её. Например, если первое значение = 30 Гц. Зададим и подождём, пока частотник достигнет
