@@ -24,3 +24,10 @@ class SinusMainWindow(SignalMainWindow):
     # overridden
     def init_user_interface(self):
         self.user_interface = Ui_SinusMainWindow()
+
+    def init_plot(self):
+        self.plot = self.user_interface.frame # Это виджет из QtDesigner.
+        # Делал интерфейс с помощью этой программы. Там, если открыть .ui файл
+        # C помощью qt designer - таm будет виджет frame. Можно открыть
+        # класс Ui_SinMainWindow и посмотреть что frame это объект PlotCanvas -
+        # как раз наш график

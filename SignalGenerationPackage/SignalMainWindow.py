@@ -21,9 +21,10 @@ class SignalMainWindow(ABC):
         self.init_plot_positions()
         self.init_plot_sizes()
         self.init_plot_title()
-        self.init_plot()
-        self.init_user_interface()
+        self.init_user_interface()  # TODO: self.UserInterface и прочие атрибуты должны хотя бы None быть объявлены в родителе
         self.setup_user_interface()
+        self.init_plot()
+
 
     @abstractmethod
     def init_plot_title(self):
@@ -41,14 +42,9 @@ class SignalMainWindow(ABC):
     def init_user_interface(self):
         pass
 
+    @abstractmethod
     def init_plot(self):
-        self.plot = PlotCanvas(parent=self.main_window,
-                               width=self.plot_width,
-                               height=self.plot_height,
-                               title=self.plot_title)
-
-        self.plot.move(self.plot_pos_x,
-                       self.plot_pos_y)
+        pass
 
     def setup_user_interface(self):
         self.user_interface.setupUi(self.main_window)

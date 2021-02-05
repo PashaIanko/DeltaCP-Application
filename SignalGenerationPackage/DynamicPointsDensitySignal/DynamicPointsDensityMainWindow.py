@@ -23,3 +23,6 @@ class DynamicPointsDensityMainWindow(SignalMainWindow):
     # overridden
     def init_user_interface(self):
         self.user_interface = Ui_DynamicPointsDensitySignalWindow()
+
+    def init_plot(self):
+        self.plot = self.user_interface.plot_widget
