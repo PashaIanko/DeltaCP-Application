@@ -2,6 +2,7 @@ from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalData import DynamicPointsDensitySignalData
 from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
+import math
 import sys
 
 
@@ -50,14 +51,15 @@ class DynamicPointsDensitySignal(Signal):
     def prepare_acceleration_arr(self, time_from, time_to, tangent, endpoint=False):
         points_density = self.SignalData.PointsDensity * (1 - (tangent / self.SignalData.CriticalAccelerationTangent))
         if points_density <= 0:
-            return np.linspace(time_from, time_to, num=0, endpoint=endpoint)
+            return np.linspace(time_from, time_to, num=2, endpoint=endpoint)  # Значит, никаких внутренних точек не будет
+                                                                                # num=2, потому что это 2 крайние точки (а внутренних нет)
         else:
             return self.prepare_data_arr(time_from, time_to, abs(points_density), endpoint, subtract=False)
 
     def prepare_deceleration_arr(self, time_from, time_to, tangent, endpoint=False):
         points_density = self.SignalData.PointsDensity * (1 - abs(tangent / self.SignalData.CriticalDecelerationTangent))
         if points_density <= 0:
-            return np.linspace(time_from, time_to, num=0, endpoint=endpoint)
+            return np.linspace(time_from, time_to, num=2, endpoint=endpoint)
         else:
             return self.prepare_data_arr(time_from, time_to, points_density, endpoint, subtract=False)
 
@@ -90,7 +92,9 @@ class DynamicPointsDensitySignal(Signal):
                                                               time_to=StartTime + AccTime,
                                                               tangent=AccelerationTangent,
                                                               endpoint=True)
-                AccelerationX = AccelerationX[1: -1]  # Крайние точки убираем, чтоб два раза не учесть
+                if len(StartX) != 0:
+                    # Если на старте уже есть точки - крайнюю точку слева у ускорения убираем, чтоб два раза не учесть
+                    AccelerationX = AccelerationX[1:]
             else: AccelerationX = []
 
 
@@ -106,7 +110,12 @@ class DynamicPointsDensitySignal(Signal):
                                                               time_to=StartTime + AccTime + PlateauTime + DecTime,
                                                               tangent=DecelerationTangent,
                                                               endpoint=True)
-                DecelerationX = DecelerationX[1: -1]  # Крайние точки убираем, чтоб два раза не учесть (и на плато, и на замедлении)
+                if len(PlateauX):
+                    # Значит, плато построено. И включает обе крайние точки, слева и справа (endpoint)
+                    # Тогда надо убрать крайнюю правую точку на ускорении, и крайнюю левую точку у замедления,
+                    # чтоб 2 раза не учесть
+                    AccelerationX = AccelerationX[:-1]
+                    DecelerationX = DecelerationX[1:]
             else: DecelerationX = []
 
             EndX = self.prepare_data_arr(time_from=StartTime + AccTime + PlateauTime + DecTime,
@@ -114,6 +123,17 @@ class DynamicPointsDensitySignal(Signal):
                                          points_density=PointsDensity,
                                          endpoint=True,
                                          subtract=True)
+            if len(EndX):
+                # Значит, конечный отрезок построен, он включает и левую и правую крайние точки,
+                # Так что у deceleration_x надо убрать крайнюю правую точку
+                DecelerationX = DecelerationX[:-1]
+
+
+            ## Проверка на частный случай (меандр)
+            #if len(PlateauX) and len(StartX) == 0 and len(AccelerationX) == 0:
+            #    AccelerationX = [PlateauX[0]]
+            #if len(PlateauX) and len(EndX) == 0 and len(DecelerationX) == 0:
+            #    DecelerationX = [PlateauX[0]]
 
             StartY = [LowLevelFreq for x in StartX]
             EndY = [LowLevelFreq for x in EndX]

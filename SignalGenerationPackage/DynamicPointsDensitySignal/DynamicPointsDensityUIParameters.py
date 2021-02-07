@@ -1,6 +1,6 @@
 class DynamicPointsDensityUIParameters:
     # ACCELERATION TIME
-    AccelerationTimeMin = 0.1
+    AccelerationTimeMin = 0.01
     AccelerationTimeMax = 600.0
     AccelerationTimeLineEditAccuracy = 2
 
@@ -18,7 +18,7 @@ class DynamicPointsDensityUIParameters:
     PlateauTimeSliderMax = PlateauTimeMax * PlateauTimeCalcConstant
 
     # DECELERATION TIME
-    DecelerationTimeMin = 0.1
+    DecelerationTimeMin = 0.01
     DecelerationTimeMax = 600.0
     DecelerationTimeLineEditAccuracy = 2
 
@@ -27,7 +27,7 @@ class DynamicPointsDensityUIParameters:
     DecelerationTimeSliderMax = DecelerationTimeMax * DecelerationTimeCalcConstant
 
     # END TIME
-    EndTimeMin = 0.1
+    EndTimeMin = 0.0
     EndTimeMax = 600.0
     EndTimeLineEditAccuracy = 2
 
@@ -36,7 +36,7 @@ class DynamicPointsDensityUIParameters:
     EndTimeSliderMax = EndTimeMax * EndTimeCalcConstant
 
     # START TIME
-    StartTimeMin = 0.1
+    StartTimeMin = 0.0
     StartTimeMax = 600.0
     StartTimeLineEditAccuracy = 2
 
@@ -45,7 +45,7 @@ class DynamicPointsDensityUIParameters:
     StartTimeSliderMax = StartTimeMax * StartTimeCalcConstant
 
     # LOW LEVEL
-    LowLevelFrequencyMin = 0.1
+    LowLevelFrequencyMin = 0.0
     LowLevelFrequencyMax = 20.0
     LowLevelFrequencyLineEditAccuracy = 2
 
@@ -54,7 +54,7 @@ class DynamicPointsDensityUIParameters:
     LowLevelFrequencySliderMax = LowLevelFrequencyMax * LowLevelFrequencyCalcConstant
 
     # HIGH LEVEL
-    HighLevelFrequencyMin = 0.1
+    HighLevelFrequencyMin = 0.0
     HighLevelFrequencyMax = 80.0
     HighLevelFrequencyLineEditAccuracy = 2
 
