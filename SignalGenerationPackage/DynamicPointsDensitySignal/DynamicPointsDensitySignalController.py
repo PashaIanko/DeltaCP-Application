@@ -43,7 +43,7 @@ class DynamicPointsDensitySignalController(SignalController):
                     PlateauTimeCallBackOperator(self.model),
                     DecelerationTimeCallBackOperator(self.model),
                     EndTimeCallBackOperator(self.model),
-                    VerticalOffsetCallBackOperator(self.model),
+                    #VerticalOffsetCallBackOperator(self.model),
                     HighLevelFrequencyCallBackOperator(self.model),
                     LowLevelFrequencyCallBackOperator(self.model),
                     PointsDensityCallBackOperator(self.model),

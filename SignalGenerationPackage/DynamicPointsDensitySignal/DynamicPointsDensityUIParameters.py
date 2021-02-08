@@ -1,7 +1,7 @@
 class DynamicPointsDensityUIParameters:
     # ACCELERATION TIME
     AccelerationTimeMin = 0.01
-    AccelerationTimeMax = 600.0
+    AccelerationTimeMax = 300.0
     AccelerationTimeLineEditAccuracy = 2
 
     AccelerationTimeCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
@@ -10,7 +10,7 @@ class DynamicPointsDensityUIParameters:
 
     # PLATEAU TIME
     PlateauTimeMin = 0.0
-    PlateauTimeMax = 600.0
+    PlateauTimeMax = 300.0
     PlateauTimeLineEditAccuracy = 2
 
     PlateauTimeCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
@@ -19,25 +19,25 @@ class DynamicPointsDensityUIParameters:
 
     # DECELERATION TIME
     DecelerationTimeMin = 0.01
-    DecelerationTimeMax = 600.0
+    DecelerationTimeMax = 300.0
     DecelerationTimeLineEditAccuracy = 2
 
-    DecelerationTimeCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
+    DecelerationTimeCalcConstant = 300  # Раз 100, значит цифры с точностью до 10**2
     DecelerationTimeSliderMin = DecelerationTimeMin * DecelerationTimeCalcConstant
     DecelerationTimeSliderMax = DecelerationTimeMax * DecelerationTimeCalcConstant
 
     # END TIME
     EndTimeMin = 0.0
-    EndTimeMax = 600.0
+    EndTimeMax = 300.0
     EndTimeLineEditAccuracy = 2
 
-    EndTimeCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
+    EndTimeCalcConstant = 300  # Раз 100, значит цифры с точностью до 10**2
     EndTimeSliderMin = EndTimeMin * EndTimeCalcConstant
     EndTimeSliderMax = EndTimeMax * EndTimeCalcConstant
 
     # START TIME
     StartTimeMin = 0.0
-    StartTimeMax = 600.0
+    StartTimeMax = 300.0
     StartTimeLineEditAccuracy = 2
 
     StartTimeCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
