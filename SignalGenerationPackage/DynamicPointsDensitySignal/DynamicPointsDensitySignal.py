@@ -2,8 +2,7 @@ from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalData import DynamicPointsDensitySignalData
 from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
-import math
-import sys
+from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 
 class DynamicPointsDensitySignal(Signal):
@@ -129,12 +128,6 @@ class DynamicPointsDensitySignal(Signal):
                 DecelerationX = DecelerationX[:-1]
 
 
-            ## Проверка на частный случай (меандр)
-            #if len(PlateauX) and len(StartX) == 0 and len(AccelerationX) == 0:
-            #    AccelerationX = [PlateauX[0]]
-            #if len(PlateauX) and len(EndX) == 0 and len(DecelerationX) == 0:
-            #    DecelerationX = [PlateauX[0]]
-
             StartY = [LowLevelFreq for x in StartX]
             EndY = [LowLevelFreq for x in EndX]
             PlateauY = [HighLevelFreq for x in PlateauX]
@@ -160,6 +153,14 @@ class DynamicPointsDensitySignal(Signal):
 
             SignalData.y = StartY + AccelerationY + PlateauY + DecelerationY + EndY
             SignalData.x = np.concatenate((StartX, AccelerationX, PlateauX, DecelerationX, EndX))
+
+            # проверим, что в SignalData.x после наших построений не попались повторяющиеся точки
+            if not self.all_x_are_unique():
+                PopUpNotifier.Error(f'X array in Signal contains non-unique values!\nThere will be an error during sending')
+
+    @staticmethod
+    def all_x_are_unique():
+        return len(SignalData.x) == len(set(SignalData.x))
 
     @property
     def AccelerationTime(self):
