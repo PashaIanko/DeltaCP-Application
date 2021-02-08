@@ -12,6 +12,6 @@ class SignalSendingModule(ApplicationModule):
         self.CallBackOperators = \
             [
                 #NaiveSendingOperator()
-                ForwardSendingOperator(DebugMode=False)
+                ForwardSendingOperator(DebugMode=True)
             ]
     # TODO: БАГ - когда запускаешь одиночный цикл отправки. Он доходит до конца. График закрываешь. Опять жмёшь Start - он пишет "Thread is executing, can't launch one"
