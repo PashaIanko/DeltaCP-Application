@@ -47,19 +47,25 @@ class DynamicPointsDensitySignal(Signal):
                 x_arr = [x_arr[0], x_arr[-1]]
         return x_arr
 
-    def prepare_acceleration_arr(self, time_from, time_to, tangent, endpoint=False):
-        points_density = self.SignalData.PointsDensity * (1 - (tangent / self.SignalData.CriticalAccelerationTangent))
+    def prepare_acceleration_arr(self, time_from, time_to, tangent, endpoint=False): # TODO: Объединить prepare_acceleration_arr и prepare_deceleration_arr в обобщённую функцию
+        points_density = self.SignalData.FittingConstant * self.SignalData.PointsDensity * (1 - (tangent / self.SignalData.CriticalAccelerationTangent))
         if points_density <= 0:
             return np.linspace(time_from, time_to, num=2, endpoint=endpoint)  # Значит, никаких внутренних точек не будет
                                                                                 # num=2, потому что это 2 крайние точки (а внутренних нет)
         else:
+            # Слишком часто точки подавать тоже нельзя, "сплошняком" - большие лаги
+            if points_density >= self.SignalData.MaxPointsDensity:
+                points_density = self.SignalData.MaxPointsDensity
             return self.prepare_data_arr(time_from, time_to, abs(points_density), endpoint, subtract=False)
 
     def prepare_deceleration_arr(self, time_from, time_to, tangent, endpoint=False):
-        points_density = self.SignalData.PointsDensity * (1 - abs(tangent / self.SignalData.CriticalDecelerationTangent))
+        points_density = self.SignalData.FittingConstant * self.SignalData.PointsDensity * (1 - abs(tangent / self.SignalData.CriticalDecelerationTangent))
         if points_density <= 0:
             return np.linspace(time_from, time_to, num=2, endpoint=endpoint)
         else:
+            # Слишком часто точки подавать тоже нельзя, "сплошняком" - большие лаги
+            if points_density >= self.SignalData.MaxPointsDensity:
+                points_density = self.SignalData.MaxPointsDensity
             return self.prepare_data_arr(time_from, time_to, points_density, endpoint, subtract=False)
 
     def UpdateSignalData(self):

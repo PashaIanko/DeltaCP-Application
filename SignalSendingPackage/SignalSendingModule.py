@@ -11,6 +11,7 @@ class SignalSendingModule(ApplicationModule):
     def InitCallBackOperators(self):
         self.CallBackOperators = \
             [
-                # NaiveSendingOperator()
+                #NaiveSendingOperator()
                 ForwardSendingOperator(DebugMode=False)
             ]
+    # TODO: БАГ - когда запускаешь одиночный цикл отправки. Он доходит до конца. График закрываешь. Опять жмёшь Start - он пишет "Thread is executing, can't launch one"
