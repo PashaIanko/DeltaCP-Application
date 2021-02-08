@@ -123,6 +123,14 @@ class DynamicPointsDensitySignal(Signal):
                     DecelerationX = DecelerationX[1:]
             else: DecelerationX = []
 
+
+            # Ещё был баг - если PlateauX = [], т.е. пустой, тогда края у AccelerationX и DecelerationX совпадают (
+            # края на состыковке содержат одинаковые точки). У одного из массивов надо её убрать
+            if len(PlateauX) == 0:
+                # Допустим, убираем у DecelerationX
+                DecelerationX = DecelerationX[1:]
+
+
             EndX = self.prepare_data_arr(time_from=StartTime + AccTime + PlateauTime + DecTime,
                                          time_to=StartTime + AccTime + PlateauTime + DecTime + EndTime,
                                          points_density=PointsDensity,
