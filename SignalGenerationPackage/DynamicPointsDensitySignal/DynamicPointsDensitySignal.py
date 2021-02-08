@@ -166,7 +166,7 @@ class DynamicPointsDensitySignal(Signal):
 
     @staticmethod
     def all_x_are_unique():
-        return len(SignalData.x) == len(set(SignalData.x))
+        return len(SignalData.x_with_requests) == len(set(SignalData.x_with_requests))
 
     @property
     def AccelerationTime(self):

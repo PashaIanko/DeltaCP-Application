@@ -22,7 +22,7 @@ class DynamicPointsDensitySignalData(SignalData):
         self.CriticalDecelerationTangent = -2.5  # Hz per second
 
         # Это константа для подгонки плотности точек, чтобы ЧП разгонялся не слишком быстро и не слишком медленно
-        self.FittingConstant = 8.0
+        self.FittingConstant = 10.0
 
         # Ограничение на максимальную плотность точек, чтоб сплошняком не подавать,
         # слишком часто мы не можем
