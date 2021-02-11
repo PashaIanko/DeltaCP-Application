@@ -49,6 +49,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         #  Узнать истинную частоту в данный момент времени
         try:
             CurrentFreq = self.client.RequestCurrentFrequency()
+            loggers['Debug'].debug(f'CurrentFreq = {CurrentFreq}')
         except:
             loggers['Debug'].debug(f'RequestCurrentFrequency: {sys.exc_info()}')
 
