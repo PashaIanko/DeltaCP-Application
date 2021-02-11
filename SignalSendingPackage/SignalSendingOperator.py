@@ -6,7 +6,7 @@ from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
-import numpy as np
+
 
 class SignalSendingOperator(CallBackOperator):
     def __init__(self, DebugMode=True):

@@ -21,14 +21,14 @@ class AccDecTimeOperator(CallBackOperator):
     def RequestTimes2(self):
         AccTime = self.DeltaCPClient.RequestAccelerationTime2()
         DecTime = self.DeltaCPClient.RequestDecelerationTime2()
-        loggers['Debug'].debug(f'AccelerationTime1 = {AccTime}, DecelerationTime1 = {DecTime}')
+        loggers['Debug'].debug(f'AccelerationTime2 = {AccTime}, DecelerationTime2 = {DecTime}')
 
     def RequestTimes3(self):
         AccTime = self.DeltaCPClient.RequestAccelerationTime3()
         DecTime = self.DeltaCPClient.RequestDecelerationTime3()
-        loggers['Debug'].debug(f'AccelerationTime1 = {AccTime}, DecelerationTime1 = {DecTime}')
+        loggers['Debug'].debug(f'AccelerationTime3 = {AccTime}, DecelerationTime3 = {DecTime}')
 
     def RequestTimes4(self):
         AccTime = self.DeltaCPClient.RequestAccelerationTime4()
         DecTime = self.DeltaCPClient.RequestDecelerationTime4()
-        loggers['Debug'].debug(f'AccelerationTime1 = {AccTime}, DecelerationTime1 = {DecTime}')
+        loggers['Debug'].debug(f'AccelerationTime4 = {AccTime}, DecelerationTime4 = {DecTime}')

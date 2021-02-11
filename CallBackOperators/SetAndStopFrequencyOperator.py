@@ -34,8 +34,19 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         #  Отправлять int число == 1000 (Два нуля приписали)
         value_to_send = int(float(lineEditText) * 100)
         try:
-            res = self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
+            self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                       value_to_send)
+
+            # TODO: Ниже представлен код по записи времён разгона / замедления. Вынести на интерфейс, добавить слайдеры, сделать удобно
+            #AccDecTime = 37.54
+            #self.client.WriteRegister(DeltaCPRegisters.AccelerationTime_1Reg, int(float(AccDecTime) * 100))
+            #self.client.WriteRegister(DeltaCPRegisters.DecelerationTime_1Reg, int(float(AccDecTime) * 100))
+            #self.client.WriteRegister(DeltaCPRegisters.AccelerationTime_2Reg, int(float(AccDecTime) * 100))
+            #self.client.WriteRegister(DeltaCPRegisters.DecelerationTime_2Reg, int(float(AccDecTime) * 100))
+            #self.client.WriteRegister(DeltaCPRegisters.AccelerationTime_3Reg, int(float(AccDecTime) * 100))
+            #self.client.WriteRegister(DeltaCPRegisters.DecelerationTime_3Reg, int(float(AccDecTime) * 100))
+            #self.client.WriteRegister(DeltaCPRegisters.AccelerationTime_4Reg, int(float(AccDecTime) * 100))
+            #self.client.WriteRegister(DeltaCPRegisters.DecelerationTime_4Reg, int(float(AccDecTime) * 100))
         except:
             loggers['Debug'].debug(f'SetFrequency: {sys.exc_info()}')
 
