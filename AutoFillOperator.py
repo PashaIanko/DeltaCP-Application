@@ -26,7 +26,7 @@ class AutoFillOperator(ABC):
 
 
     @abstractmethod
-    def ConnectCallBack(self, window):
+    def ConnectCallBack(self, window):  # TODO: Для autoFill кнопочку delete preset
         pass
 
     def init_autofill_parameters(self):
@@ -71,6 +71,7 @@ class AutoFillOperator(ABC):
 
     def DeletePreset(self, config_name):
         self.configs_data.drop([config_name], axis='index', inplace=True)
+        self.configs_data.to_excel(self.configs_path, index=False)
 
     def WriteNewPreset(self, preset_name):
         values_to_add = self.read_values_from_gui()
@@ -78,6 +79,7 @@ class AutoFillOperator(ABC):
                                  columns=['Config Name'] + self.param_names)
         df_to_add.index = df_to_add['Config Name']
         self.configs_data = self.configs_data.append(df_to_add)
+        self.configs_data.to_excel(self.configs_path, index=False)
 
     def read_values_from_gui(self):
         return [slider.value() / normalize_const for slider, normalize_const in zip(self.sliders, self.constants)]
