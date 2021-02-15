@@ -10,5 +10,19 @@ class DeltaCPRegisters:
                                     # и выставит в 0x2103 то, что считает нужным)
     StartStopRegister = 0x2000  # Выставляем два последних (младших) бита, чтобы отправить RUN, STOP (Page 514/868 Manual)
 
+    AccelerationTime_1Reg = 0x010C
+    DecelerationTime_1Reg = 0x010D
+
+    AccelerationTime_2Reg = 0x010E
+    DecelerationTime_2Reg = 0x010F
+
+    AccelerationTime_3Reg = 0x0110
+    DecelerationTime_3Reg = 0x0111
+
+    AccelerationTime_4Reg = 0x0112
+    DecelerationTime_4Reg = 0x0113
+
+
+
     def __init__(self):
         pass

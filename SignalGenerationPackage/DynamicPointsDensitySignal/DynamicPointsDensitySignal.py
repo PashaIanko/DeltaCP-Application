@@ -2,7 +2,7 @@ from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalData import DynamicPointsDensitySignalData
 from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
-import sys
+from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 
 class DynamicPointsDensitySignal(Signal):
@@ -32,25 +32,40 @@ class DynamicPointsDensitySignal(Signal):
         return x_arr
 
     def prepare_data_arr(self, time_from, time_to, points_density, endpoint=False, subtract=False):
+
+        # Эта функция чисто для X_start, X_end, X_plateau. Для X_acceleration, X_deceleration
+        # подход немного другой
         N = int(points_density * (time_to - time_from))
+        if N == 1:
+            # Нельзя, чтоб точка была одна, т.к. предполагается, что X_start, X_end, X_plateau
+            # будут включать крайние точки (промежутки с включением, []), а X_acceleration, X_deceleration
+            # не будут, т.е. состоят только из внутренних точек (промежуток типа ())
+            N += 1
         x_arr = np.linspace(time_from, time_to, N, endpoint=endpoint)
         if subtract:
             if len(x_arr) > 2:
                 x_arr = [x_arr[0], x_arr[-1]]
         return x_arr
 
-    def prepare_acceleration_arr(self, time_from, time_to, tangent, endpoint=False):
-        points_density = self.SignalData.PointsDensity * (1 - (tangent / self.SignalData.CriticalAccelerationTangent))
+    def prepare_acceleration_arr(self, time_from, time_to, tangent, endpoint=False): # TODO: Объединить prepare_acceleration_arr и prepare_deceleration_arr в обобщённую функцию
+        points_density = self.SignalData.FittingConstant * self.SignalData.PointsDensity * (1 - (tangent / self.SignalData.CriticalAccelerationTangent))
         if points_density <= 0:
-            return np.linspace(time_from, time_to, num=0, endpoint=endpoint)
+            return np.linspace(time_from, time_to, num=2, endpoint=endpoint)  # Значит, никаких внутренних точек не будет
+                                                                                # num=2, потому что это 2 крайние точки (а внутренних нет)
         else:
+            # Слишком часто точки подавать тоже нельзя, "сплошняком" - большие лаги
+            if points_density >= self.SignalData.MaxPointsDensity:
+                points_density = self.SignalData.MaxPointsDensity
             return self.prepare_data_arr(time_from, time_to, abs(points_density), endpoint, subtract=False)
 
     def prepare_deceleration_arr(self, time_from, time_to, tangent, endpoint=False):
-        points_density = self.SignalData.PointsDensity * (1 - abs(tangent / self.SignalData.CriticalDecelerationTangent))
+        points_density = self.SignalData.FittingConstant * self.SignalData.PointsDensity * (1 - abs(tangent / self.SignalData.CriticalDecelerationTangent))
         if points_density <= 0:
-            return np.linspace(time_from, time_to, num=0, endpoint=endpoint)
+            return np.linspace(time_from, time_to, num=2, endpoint=endpoint)
         else:
+            # Слишком часто точки подавать тоже нельзя, "сплошняком" - большие лаги
+            if points_density >= self.SignalData.MaxPointsDensity:
+                points_density = self.SignalData.MaxPointsDensity
             return self.prepare_data_arr(time_from, time_to, points_density, endpoint, subtract=False)
 
     def UpdateSignalData(self):
@@ -72,7 +87,7 @@ class DynamicPointsDensitySignal(Signal):
             StartX = self.prepare_data_arr(time_from=0,
                                            time_to=StartTime,
                                            points_density=PointsDensity,
-                                           endpoint=False,
+                                           endpoint=True,
                                            subtract=True)
 
 
@@ -81,28 +96,51 @@ class DynamicPointsDensitySignal(Signal):
                 AccelerationX = self.prepare_acceleration_arr(time_from=StartTime,
                                                               time_to=StartTime + AccTime,
                                                               tangent=AccelerationTangent,
-                                                              endpoint=False)
+                                                              endpoint=True)
+                if len(StartX) != 0:
+                    # Если на старте уже есть точки - крайнюю точку слева у ускорения убираем, чтоб два раза не учесть
+                    AccelerationX = AccelerationX[1:]
             else: AccelerationX = []
 
 
             PlateauX = self.prepare_data_arr(time_from=StartTime + AccTime,
                                              time_to=StartTime + AccTime + PlateauTime,
                                              points_density=PointsDensity,
-                                             endpoint=False,
+                                             endpoint=True,
                                              subtract=True)
 
             if DecelerationTime != 0:
                 DecelerationTangent = (LowLevelFreq - HighLevelFreq) / DecelerationTime
                 DecelerationX = self.prepare_deceleration_arr(time_from=StartTime + AccTime + PlateauTime,
                                                               time_to=StartTime + AccTime + PlateauTime + DecTime,
-                                                              tangent=DecelerationTangent)
+                                                              tangent=DecelerationTangent,
+                                                              endpoint=True)
+                if len(PlateauX):
+                    # Значит, плато построено. И включает обе крайние точки, слева и справа (endpoint)
+                    # Тогда надо убрать крайнюю правую точку на ускорении, и крайнюю левую точку у замедления,
+                    # чтоб 2 раза не учесть
+                    AccelerationX = AccelerationX[:-1]
+                    DecelerationX = DecelerationX[1:]
             else: DecelerationX = []
+
+
+            # Ещё был баг - если PlateauX = [], т.е. пустой, тогда края у AccelerationX и DecelerationX совпадают (
+            # края на состыковке содержат одинаковые точки). У одного из массивов надо её убрать
+            if len(PlateauX) == 0:
+                # Допустим, убираем у DecelerationX
+                DecelerationX = DecelerationX[1:]
+
 
             EndX = self.prepare_data_arr(time_from=StartTime + AccTime + PlateauTime + DecTime,
                                          time_to=StartTime + AccTime + PlateauTime + DecTime + EndTime,
                                          points_density=PointsDensity,
-                                         endpoint=False,
+                                         endpoint=True,
                                          subtract=True)
+            if len(EndX):
+                # Значит, конечный отрезок построен, он включает и левую и правую крайние точки,
+                # Так что у deceleration_x надо убрать крайнюю правую точку
+                DecelerationX = DecelerationX[:-1]
+
 
             StartY = [LowLevelFreq for x in StartX]
             EndY = [LowLevelFreq for x in EndX]
@@ -129,6 +167,14 @@ class DynamicPointsDensitySignal(Signal):
 
             SignalData.y = StartY + AccelerationY + PlateauY + DecelerationY + EndY
             SignalData.x = np.concatenate((StartX, AccelerationX, PlateauX, DecelerationX, EndX))
+
+            # проверим, что в SignalData.x после наших построений не попались повторяющиеся точки
+            if not self.all_x_are_unique():
+                PopUpNotifier.Error(f'X array in Signal contains non-unique values!\nThere will be an error during sending')
+
+    @staticmethod
+    def all_x_are_unique():
+        return len(SignalData.x_with_requests) == len(set(SignalData.x_with_requests))
 
     @property
     def AccelerationTime(self):

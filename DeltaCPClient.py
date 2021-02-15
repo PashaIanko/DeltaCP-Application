@@ -118,6 +118,46 @@ class DeltaCPClient(ModbusClient):
         if res is not None:
             return res / 100
 
+    def RequestAccelerationTime1(self):
+        res = self.ReadRegister(DeltaCPRegisters.AccelerationTime_1Reg)
+        if res is not None:
+            return res / 100
+
+    def RequestDecelerationTime1(self):
+        res = self.ReadRegister(DeltaCPRegisters.DecelerationTime_1Reg)
+        if res is not None:
+            return res / 100
+
+    def RequestAccelerationTime2(self):
+        res = self.ReadRegister(DeltaCPRegisters.AccelerationTime_2Reg)
+        if res is not None:
+            return res / 100
+
+    def RequestDecelerationTime2(self):
+        res = self.ReadRegister(DeltaCPRegisters.DecelerationTime_2Reg)
+        if res is not None:
+            return res / 100
+
+    def RequestAccelerationTime3(self):
+        res = self.ReadRegister(DeltaCPRegisters.AccelerationTime_3Reg)
+        if res is not None:
+            return res / 100
+
+    def RequestDecelerationTime3(self):
+        res = self.ReadRegister(DeltaCPRegisters.DecelerationTime_3Reg)
+        if res is not None:
+            return res / 100
+
+    def RequestAccelerationTime4(self):
+        res = self.ReadRegister(DeltaCPRegisters.AccelerationTime_4Reg)
+        if res is not None:
+            return res / 100
+
+    def RequestDecelerationTime4(self):
+        res = self.ReadRegister(DeltaCPRegisters.DecelerationTime_4Reg)
+        if res is not None:
+            return res / 100
+
     def RequestSetFrequency(self):
         res = self.ReadRegister(DeltaCPRegisters.SetFrequencyRegister)
         if res is not None:
