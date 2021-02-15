@@ -41,3 +41,14 @@ class PopUpNotifier:
         else:
             return False
 
+    @staticmethod
+    def PresetDeleteQuestion(preset_name):
+        msg_box = QMessageBox()
+        return_val = msg_box.question(None, "Preset deletion", f"You will delete preset {preset_name}.\nAre you sure?",
+                                      msg_box.Yes | msg_box.No)
+        if return_val == msg_box.Yes:
+            return True
+        else:
+            return False
+
+
