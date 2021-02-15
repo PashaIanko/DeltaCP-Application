@@ -14,17 +14,40 @@ class AutoFillCallBackOperator(AutoFillOperator):
     def get_config_name(self):
         return self.window.ConfigFileNamelineEdit.text()
 
-    def init_autofill_parameters(self):
-        window = self.window
+    # overridden
+    def init_param_names_list(self):
+        # ВАЖНО - лист параметров, лист констант и лист слайдеров
+        # должны объявляться в одинаковом порядке
+        self.param_names_list = [
+            'Start Time', 'Acceleration Time', 'Plateau Time',
+            'Deceleration Time', 'Low Level Frequency', 'High Level Frequency',
+            'Vertical Offset', 'Points Number', 'End Time'
+        ]
 
-        self.autofill_parameters = [
-            [self.config_params['Start Time'], UserSignalUIParameters.StartTimeCalcConstant,                    window.StartTimehorizontalSlider],
-            [self.config_params['Acceleration Time'], UserSignalUIParameters.AccelerationTimeCalcConstant,      window.AccelerationTimehorizontalSlider],
-            [self.config_params['Plateau Time'], UserSignalUIParameters.PlateauTimeCalcConstant,                window.PlateauTimehorizontalSlider],
-            [self.config_params['Deceleration Time'], UserSignalUIParameters.DecelerationTimeCalcConstant,      window.DecelerationTimehorizontalSlider],
-            [self.config_params['Low Level Frequency'], UserSignalUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
-            [self.config_params['High Level Frequency'], UserSignalUIParameters.HighLevelFrequencyCalcConstant, window.HighLevelFrequencyhorizontalSlider],
-            [self.config_params['Vertical Offset'], UserSignalUIParameters.VerticalOffsetCalcConstant,          window.VerticalOffsethorizontalSlider],
-            [self.config_params['Points Number'], UserSignalUIParameters.PointsNumberCalcConstant,              window.PointsNumberhorizontalSlider],
-            [self.config_params['End Time'], UserSignalUIParameters.EndTimeCalcConstant,                        window.EndTimehorizontalSlider]
+    # overridden
+    def init_constants_list(self):
+        self.constants_list = [
+            UserSignalUIParameters.StartTimeCalcConstant,
+            UserSignalUIParameters.AccelerationTimeCalcConstant,
+            UserSignalUIParameters.PlateauTimeCalcConstant,
+            UserSignalUIParameters.DecelerationTimeCalcConstant,
+            UserSignalUIParameters.LowLevelFrequencyCalcConstant,
+            UserSignalUIParameters.HighLevelFrequencyCalcConstant,
+            UserSignalUIParameters.VerticalOffsetCalcConstant,
+            UserSignalUIParameters.PointsNumberCalcConstant,
+            UserSignalUIParameters.EndTimeCalcConstant
+        ]
+
+    # overridden
+    def init_sliders_list(self):
+        self.sliders_list = [
+            self.window.StartTimehorizontalSlider,
+            self.window.AccelerationTimehorizontalSlider,
+            self.window.PlateauTimehorizontalSlider,
+            self.window.DecelerationTimehorizontalSlider,
+            self.window.LowLevelFrequencyhorizontalSlider,
+            self.window.HighLevelFrequencyhorizontalSlider,
+            self.window.VerticalOffsethorizontalSlider,
+            self.window.PointsNumberhorizontalSlider,
+            self.window.EndTimehorizontalSlider,
         ]
