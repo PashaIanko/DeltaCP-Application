@@ -35,7 +35,7 @@ class PopUpNotifier:
     @staticmethod
     def PresetSavingQUestion():
         msg_box = QMessageBox()
-        return_val = msg_box.question(None, "abc", "abc", msg_box.Yes | msg_box.No)
+        return_val = msg_box.question(None, "Preset override", "You will re-write existing preset!\nAre you sure?", msg_box.Yes | msg_box.No)
         if return_val == msg_box.Yes:
             return True
         else:

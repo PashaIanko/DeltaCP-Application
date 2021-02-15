@@ -33,6 +33,9 @@ class Ui_UserSignalWindow(object):
         self.AutoFillpushButton = QtWidgets.QPushButton(self.frame_3)
         self.AutoFillpushButton.setObjectName("AutoFillpushButton")
         self.horizontalLayout.addWidget(self.AutoFillpushButton)
+        self.SavePresetpushButton = QtWidgets.QPushButton(self.frame_3)
+        self.SavePresetpushButton.setObjectName("SavePresetpushButton")
+        self.horizontalLayout.addWidget(self.SavePresetpushButton)
         self.verticalLayout.addWidget(self.frame_3)
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -228,7 +231,7 @@ class Ui_UserSignalWindow(object):
         sizePolicy.setHeightForWidth(self.plot_widget.sizePolicy().hasHeightForWidth())
         self.plot_widget.setSizePolicy(sizePolicy)
         self.plot_widget.setMinimumSize(QtCore.QSize(300, 200))
-        # self.plot_widget.setFrameShape(QtWidgets.QFrame.StyledPanel) # TODO: Эти строчки приходится комментить вручную. Потому что нет такого атрибута у класса. Что-то надо сделать
+        # self.plot_widget.setFrameShape(QtWidgets.QFrame.StyledPanel)
         # self.plot_widget.setFrameShadow(QtWidgets.QFrame.Raised)
         self.plot_widget.setObjectName("plot_widget")
         self.horizontalLayout_2.addWidget(self.plot_widget)
@@ -250,6 +253,7 @@ class Ui_UserSignalWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.ConfigFilenamelabel.setText(_translate("MainWindow", "Config Filename:"))
         self.AutoFillpushButton.setText(_translate("MainWindow", "Auto-Fill"))
+        self.SavePresetpushButton.setText(_translate("MainWindow", "Save Preset"))
         self.labelStartTime.setText(_translate("MainWindow", "Start Time:"))
         self.labelAccelerationTime.setText(_translate("MainWindow", "Acceleration Time:"))
         self.labelPlateauTime.setText(_translate("MainWindow", "Plateau Time:"))
@@ -259,6 +263,4 @@ class Ui_UserSignalWindow(object):
         self.labelVerticalOffset.setText(_translate("MainWindow", "Vertical Offset:"))
         self.labelPointsDensity.setText(_translate("MainWindow", "Points Number"))
         self.labelEndTime.setText(_translate("MainWindow", "End Time:"))
-
-
 from PlotCanvas import PlotCanvas

@@ -12,7 +12,6 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.StartTimeCallBackOperato
 from SignalGenerationPackage.DynamicPointsDensitySignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityMainWindow import DynamicPointsDensityMainWindow
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
-from SignalGenerationPackage.DynamicPointsDensitySignal.SavePresetOperator import SavePresetOperator
 
 
 class DynamicPointsDensitySignalController(SignalController):
@@ -48,7 +47,6 @@ class DynamicPointsDensitySignalController(SignalController):
                     LowLevelFrequencyCallBackOperator(self.model),
                     PointsDensityCallBackOperator(self.model),
                     AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
-                    # SavePresetOperator(self.slider_constants, self.sliders, self.param_names)
                 ]
         except:
             print(sys.exc_info())
