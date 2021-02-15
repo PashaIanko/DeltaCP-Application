@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 class Ui_DynamicPointsDensitySignalWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1119, 485)
+        MainWindow.resize(600, 451)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(600, 400))
         self.centralwidget.setObjectName("centralwidget")
@@ -33,6 +33,9 @@ class Ui_DynamicPointsDensitySignalWindow(object):
         self.AutoFillpushButton = QtWidgets.QPushButton(self.frame_3)
         self.AutoFillpushButton.setObjectName("AutoFillpushButton")
         self.horizontalLayout.addWidget(self.AutoFillpushButton)
+        self.SavePresetpushButton = QtWidgets.QPushButton(self.frame_3)
+        self.SavePresetpushButton.setObjectName("SavePresetpushButton")
+        self.horizontalLayout.addWidget(self.SavePresetpushButton)
         self.gridLayout_3.addWidget(self.frame_3, 0, 0, 1, 1)
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -216,7 +219,7 @@ class Ui_DynamicPointsDensitySignalWindow(object):
         self.gridLayout_3.addWidget(self.frame_2, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1119, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 600, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -231,6 +234,7 @@ class Ui_DynamicPointsDensitySignalWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.ConfigFilenamelabel.setText(_translate("MainWindow", "Config Filename:"))
         self.AutoFillpushButton.setText(_translate("MainWindow", "Auto-Fill"))
+        self.SavePresetpushButton.setText(_translate("MainWindow", "Save preset"))
         self.labelPlateauTime.setText(_translate("MainWindow", "Plateau Time:"))
         self.labelStartTime.setText(_translate("MainWindow", "Start Time:"))
         self.labelPointsDensity.setText(_translate("MainWindow", "Points Density:"))
@@ -239,6 +243,5 @@ class Ui_DynamicPointsDensitySignalWindow(object):
         self.labelAccelerationTime.setText(_translate("MainWindow", "Acceleration Time:"))
         self.labeLowLevelFrequency.setText(_translate("MainWindow", "Low-level Frequency:"))
         self.labelHighLevelFrequency.setText(_translate("MainWindow", "High-level Frequency:"))
-
 
 from PlotCanvas import PlotCanvas
