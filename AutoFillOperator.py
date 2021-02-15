@@ -4,7 +4,7 @@ import sys
 from LoggersConfig import loggers
 
 class AutoFillOperator(ABC):
-    def __init__(self, model, configs_path):
+    def __init__(self, slider_constants, param_names, sliders, model, configs_path):
         super().__init__()
         self.model = model
         self.configs_path = configs_path
@@ -15,9 +15,9 @@ class AutoFillOperator(ABC):
         self.window = None
 
         # list of signal parameters, sliders & constants
-        self.param_names_list = None
-        self.sliders_list = None
-        self.constants_list = None
+        self.param_names = param_names
+        self.sliders = sliders
+        self.constants = slider_constants
         self.values_to_set = None
 
         # Contructor procedure:
@@ -29,11 +29,9 @@ class AutoFillOperator(ABC):
     def ConnectCallBack(self, window):
         pass
 
-
-
     def init_autofill_parameters(self):
         self.autofill_parameters = [
-        [self.values_to_set[i], self.constants_list[i], self.sliders_list[i]] for i in range(len(self.constants_list))
+            [self.values_to_set[i], self.constants[i], self.sliders[i]] for i in range(len(self.constants))
         ]
 
     @abstractmethod
@@ -43,28 +41,13 @@ class AutoFillOperator(ABC):
     def init_config_params(self):
         self.config_params = self.configs_data.loc[self.config_name]
 
-    @abstractmethod
-    def init_param_names_list(self):
-        pass
-
-    @abstractmethod
-    def init_constants_list(self):
-        pass
-
-    @abstractmethod
-    def init_sliders_list(self):
-        pass
-
     def init_values_to_set(self):
-        self.values_to_set = [self.config_params[param_name] for param_name in self.param_names_list]
+        self.values_to_set = [self.config_params[param_name] for param_name in self.param_names]
 
     def AutoFill(self):
         try:
             self.config_name = self.get_config_name()
             self.init_config_params()
-            self.init_param_names_list()
-            self.init_constants_list()
-            self.init_sliders_list()
             self.init_values_to_set()
             self.init_autofill_parameters()
 

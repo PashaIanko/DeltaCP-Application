@@ -9,15 +9,39 @@ class SignalController(ABC):
         self.observer = None
         self.callback_operators = None
 
+        self.param_names = None
+        self.slider_constants = None
+        self.sliders = None
+
         # Процедура конструктора - надо переопределить все методы
         self.init_model()
         self.init_main_window()
         self.init_observer()
+
+        # Далее, в процедуре конструктора, надо указать лист из слайдеров, нормирующих констант и
+        # названий параметров сигнала в excel файлах. Это необходимо для Auto-Fill, и сохранения
+        # пресетов
+        self.init_param_names()
+        self.init_slider_constants()
+        self.init_sliders()
+
+        # После этого инициируем операторы, в том числе AutoFillOperator, SavePresetOperator
         self.init_callback_operators()
         self.connect_all_callbacks()
         self.show_gui()
 
 
+    @abstractmethod
+    def init_param_names(self):
+        pass
+
+    @abstractmethod
+    def init_slider_constants(self):
+        pass
+
+    @abstractmethod
+    def init_sliders(self):
+        pass
 
     def connect_all_callbacks(self):
         for conn in self.callback_operators:

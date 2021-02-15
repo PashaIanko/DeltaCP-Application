@@ -12,20 +12,62 @@ from SignalGenerationPackage.UserSignal.StartTimeCallBackOperator import StartTi
 from SignalGenerationPackage.UserSignal.VerticalOffsetCallBackOperator import VerticalOffsetCallBackOperator
 from SignalGenerationPackage.UserSignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.UserSignal.UserSignalMainWindow import UserSignalMainWindow
+from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+
 
 class UserSignalController(SignalController):
 
     def __init__(self):
         super().__init__()
 
+    # overridden
     def init_model(self):
         self.model = UserSignal()
 
+    # overridden
     def init_observer(self):
         self.observer = UserSignalObserver(self.model, self.main_window.plot)
 
+    # overridden
     def init_main_window(self):
         self.main_window = UserSignalMainWindow()
+
+    # overridden
+    def init_param_names(self):
+        self.param_names = [
+            'Start Time', 'Acceleration Time', 'Plateau Time',
+            'Deceleration Time', 'Low Level Frequency', 'High Level Frequency',
+            'Vertical Offset', 'Points Number', 'End Time'
+        ]
+
+    # overridden
+    def init_slider_constants(self):
+        self.slider_constants = [
+            UserSignalUIParameters.StartTimeCalcConstant,
+            UserSignalUIParameters.AccelerationTimeCalcConstant,
+            UserSignalUIParameters.PlateauTimeCalcConstant,
+            UserSignalUIParameters.DecelerationTimeCalcConstant,
+            UserSignalUIParameters.LowLevelFrequencyCalcConstant,
+            UserSignalUIParameters.HighLevelFrequencyCalcConstant,
+            UserSignalUIParameters.VerticalOffsetCalcConstant,
+            UserSignalUIParameters.PointsNumberCalcConstant,
+            UserSignalUIParameters.EndTimeCalcConstant
+        ]
+
+    # overridden
+    def init_sliders(self):
+        ui = self.main_window.user_interface
+        self.sliders = [
+            ui.StartTimehorizontalSlider,
+            ui.AccelerationTimehorizontalSlider,
+            ui.PlateauTimehorizontalSlider,
+            ui.DecelerationTimehorizontalSlider,
+            ui.LowLevelFrequencyhorizontalSlider,
+            ui.HighLevelFrequencyhorizontalSlider,
+            ui.VerticalOffsethorizontalSlider,
+            ui.PointsNumberhorizontalSlider,
+            ui.EndTimehorizontalSlider,
+        ]
 
     def init_callback_operators(self):
         self.callback_operators = \
@@ -39,5 +81,5 @@ class UserSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator(self.model),
                 LowLevelFrequencyCallBackOperator(self.model),
                 PointsNumberCallBackOperator(self.model),
-                AutoFillCallBackOperator(model=None)
+                AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None)
             ]

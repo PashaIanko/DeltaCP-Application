@@ -1,5 +1,4 @@
 from SignalGenerationPackage.SignalController import SignalController
-from SignalGenerationPackage.DynamicPointsDensitySignal.Ui_DynamicPointsDensitySignalWindow import Ui_DynamicPointsDensitySignalWindow
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignal import DynamicPointsDensitySignal
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalObserver import DynamicPointsDensitySignalObserver
 from SignalGenerationPackage.DynamicPointsDensitySignal.AccelerationTimeCallBackOperator import AccelerationTimeCallBackOperator
@@ -10,9 +9,9 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.PlateauTimeCallBackOpera
 from SignalGenerationPackage.DynamicPointsDensitySignal.PointsDensityCallBackOperator import PointsDensityCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.EndTimeCallBackOperator import EndTimeCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.StartTimeCallBackOperator import StartTimeCallBackOperator
-from SignalGenerationPackage.DynamicPointsDensitySignal.VerticalOffsetCallBackOperator import VerticalOffsetCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityMainWindow import DynamicPointsDensityMainWindow
+from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 
 
 class DynamicPointsDensitySignalController(SignalController):
@@ -26,11 +25,45 @@ class DynamicPointsDensitySignalController(SignalController):
 
     # overridden
     def init_observer(self):
-        self.observer = DynamicPointsDensitySignalObserver(self.model, self.main_window.plot)  # TODO: Посмотри, этот метод везде одинаков, можно в родителя
+        self.observer = DynamicPointsDensitySignalObserver(self.model, self.main_window.plot)
+        # TODO: Посмотри, этот метод везде одинаков, можно в родителя
 
     # overridden
     def init_main_window(self):
         self.main_window = DynamicPointsDensityMainWindow()
+
+    # overridden
+    def init_param_names(self):
+        self.param_names = [
+            'Start Time', 'Acceleration Time', 'Plateau Time', 'Deceleration Time', 'Low Level Frequency',
+            'High Level Frequency', 'Points Density', 'End Time']
+
+    # overridden
+    def init_slider_constants(self):
+        self.slider_constants = [
+            DynamicPointsDensityUIParameters.StartTimeCalcConstant,
+            DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant,
+            DynamicPointsDensityUIParameters.PlateauTimeCalcConstant,
+            DynamicPointsDensityUIParameters.DecelerationTimeCalcConstant,
+            DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant,
+            DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,
+            DynamicPointsDensityUIParameters.PointsDensityCalcConstant,
+            DynamicPointsDensityUIParameters.EndTimeCalcConstant,
+        ]
+
+    # overridden
+    def init_sliders(self):
+        ui = self.main_window.user_interface
+        self.sliders = [
+            ui.StartTimehorizontalSlider,
+            ui.AccelerationTimehorizontalSlider,
+            ui.PlateauTimehorizontalSlider,
+            ui.DecelerationTimehorizontalSlider,
+            ui.LowLevelFrequencyhorizontalSlider,
+            ui.HighLevelFrequencyhorizontalSlider,
+            ui.PointsDensityhorizontalSlider,
+            ui.EndTimehorizontalSlider
+        ]
 
     # overridden
     def init_callback_operators(self):
@@ -43,11 +76,11 @@ class DynamicPointsDensitySignalController(SignalController):
                     PlateauTimeCallBackOperator(self.model),
                     DecelerationTimeCallBackOperator(self.model),
                     EndTimeCallBackOperator(self.model),
-                    #VerticalOffsetCallBackOperator(self.model),
                     HighLevelFrequencyCallBackOperator(self.model),
                     LowLevelFrequencyCallBackOperator(self.model),
                     PointsDensityCallBackOperator(self.model),
-                    AutoFillCallBackOperator(model=None)
+                    AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
+                    #SavePresetOperator(constants_list, sliders_list, param_names_list)
                 ]
         except:
             print(sys.exc_info())
