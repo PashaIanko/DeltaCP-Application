@@ -12,6 +12,7 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.StartTimeCallBackOperato
 from SignalGenerationPackage.DynamicPointsDensitySignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityMainWindow import DynamicPointsDensityMainWindow
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
+from SignalGenerationPackage.DynamicPointsDensitySignal.SavePresetOperator import SavePresetOperator
 
 
 class DynamicPointsDensitySignalController(SignalController):
@@ -31,6 +32,26 @@ class DynamicPointsDensitySignalController(SignalController):
     # overridden
     def init_main_window(self):
         self.main_window = DynamicPointsDensityMainWindow()
+
+    # overridden
+    def init_callback_operators(self):
+        import sys
+        try:
+            self.callback_operators = \
+                [
+                    StartTimeCallBackOperator(self.model),
+                    AccelerationTimeCallBackOperator(self.model),
+                    PlateauTimeCallBackOperator(self.model),
+                    DecelerationTimeCallBackOperator(self.model),
+                    EndTimeCallBackOperator(self.model),
+                    HighLevelFrequencyCallBackOperator(self.model),
+                    LowLevelFrequencyCallBackOperator(self.model),
+                    PointsDensityCallBackOperator(self.model),
+                    AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
+                    # SavePresetOperator(self.slider_constants, self.sliders, self.param_names)
+                ]
+        except:
+            print(sys.exc_info())
 
     # overridden
     def init_param_names(self):
@@ -64,23 +85,3 @@ class DynamicPointsDensitySignalController(SignalController):
             ui.PointsDensityhorizontalSlider,
             ui.EndTimehorizontalSlider
         ]
-
-    # overridden
-    def init_callback_operators(self):
-        import sys
-        try:
-            self.callback_operators = \
-                [
-                    StartTimeCallBackOperator(self.model),
-                    AccelerationTimeCallBackOperator(self.model),
-                    PlateauTimeCallBackOperator(self.model),
-                    DecelerationTimeCallBackOperator(self.model),
-                    EndTimeCallBackOperator(self.model),
-                    HighLevelFrequencyCallBackOperator(self.model),
-                    LowLevelFrequencyCallBackOperator(self.model),
-                    PointsDensityCallBackOperator(self.model),
-                    AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
-                    #SavePresetOperator(constants_list, sliders_list, param_names_list)
-                ]
-        except:
-            print(sys.exc_info())

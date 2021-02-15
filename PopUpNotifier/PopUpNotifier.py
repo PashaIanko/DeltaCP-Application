@@ -31,3 +31,13 @@ class PopUpNotifier:
     @staticmethod
     def Warning(text):
        PopUpNotifier.Notify('Warning', text, error_type='warning')
+
+    @staticmethod
+    def PresetSavingQUestion():
+        msg_box = QMessageBox()
+        return_val = msg_box.question(None, "abc", "abc", msg_box.Yes | msg_box.No)
+        if return_val == msg_box.Yes:
+            return True
+        else:
+            return False
+

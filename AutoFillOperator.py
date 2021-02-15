@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import pandas as pd
-import sys
 from LoggersConfig import loggers
+from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class AutoFillOperator(ABC):
     def __init__(self, slider_constants, param_names, sliders, model, configs_path):
@@ -54,8 +54,29 @@ class AutoFillOperator(ABC):
             self.set_signal_parameters(
                 self.autofill_parameters
             )
-        except:
-            loggers['Debug'].debug(f'AutoFillOperator: AutoFill: {sys.exc_info()}')
+        except KeyError:
+            loggers['Debug'].debug(f'AutoFillOperator: AutoFill: Preset {self.config_name} not found')
+
+    def SavePreset(self):
+        current_config_name = self.get_config_name()
+        if current_config_name in self.configs_data['Config Name'].values:
+            user_decision = PopUpNotifier.PresetSavingQUestion()
+            if user_decision == True:
+                self.WriteNewPreset(current_config_name)
+            else:
+                return
+        else:
+            self.WriteNewPreset(current_config_name)
+
+    def WriteNewPreset(self, preset_name):
+        values_to_add = self.read_values_from_gui()
+        df_to_add = pd.DataFrame([[preset_name] + values_to_add],
+                                 columns=['Config Name'] + self.param_names)
+        df_to_add.index = df_to_add['Config Name']
+        self.configs_data.append(df_to_add)
+
+    def read_values_from_gui(self):
+        return [slider.value() for slider in self.sliders]
 
     def set_signal_parameters(self, value_widgets):
         for v in value_widgets:

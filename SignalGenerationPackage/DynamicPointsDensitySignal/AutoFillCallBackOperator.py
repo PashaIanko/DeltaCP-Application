@@ -14,6 +14,7 @@ class AutoFillCallBackOperator(AutoFillOperator):
     def ConnectCallBack(self, window):
         self.window = window
         window.AutoFillpushButton.clicked.connect(self.AutoFill)
+        window.SavePresetpushButton.clicked.connect(self.SavePreset)
 
     def get_config_name(self):
         return self.window.ConfigFileNamelineEdit.text()
