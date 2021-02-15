@@ -14,16 +14,36 @@ class AutoFillCallBackOperator(AutoFillOperator):
     def get_config_name(self):
         return self.window.ConfigFileNamelineEdit.text()
 
-    def init_autofill_parameters(self):
-        window = self.window
-        self.autofill_parameters = [
-                    [self.config_params['Start Time'],           DynamicPointsDensityUIParameters.StartTimeCalcConstant,           window.StartTimehorizontalSlider],
-                    [self.config_params['Acceleration Time'],    DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant,    window.AccelerationTimehorizontalSlider],
-                    [self.config_params['Plateau Time'],         DynamicPointsDensityUIParameters.PlateauTimeCalcConstant,         window.PlateauTimehorizontalSlider],
-                    [self.config_params['Deceleration Time'],    DynamicPointsDensityUIParameters.DecelerationTimeCalcConstant,    window.DecelerationTimehorizontalSlider],
-                    [self.config_params['Low Level Frequency'],  DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant,   window.LowLevelFrequencyhorizontalSlider],
-                    [self.config_params['High Level Frequency'], DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,  window.HighLevelFrequencyhorizontalSlider],
-                    #[self.config_params['Vertical Offset'],      DynamicPointsDensityUIParameters.VerticalOffsetCalcConstant,      window.VerticalOffsethorizontalSlider],
-                    [self.config_params['Points Density'],       DynamicPointsDensityUIParameters.PointsDensityCalcConstant,       window.PointsDensityhorizontalSlider],
-                    [self.config_params['End Time'],             DynamicPointsDensityUIParameters.EndTimeCalcConstant,             window.EndTimehorizontalSlider]
-                ]
+    # overridden
+    def init_param_names_list(self):
+        # ВАЖНО чтобы param names list, constants list и sliders list шли в том же порядке
+        self.param_names_list = [
+            'Start Time', 'Acceleration Time', 'Plateau Time', 'Deceleration Time', 'Low Level Frequency',
+            'High Level Frequency', 'Points Density', 'End Time']
+
+    # overridden
+    def init_constants_list(self):
+        self.constants_list = [
+            DynamicPointsDensityUIParameters.StartTimeCalcConstant,
+            DynamicPointsDensityUIParameters.AccelerationTimeCalcConstant,
+            DynamicPointsDensityUIParameters.PlateauTimeCalcConstant,
+            DynamicPointsDensityUIParameters.DecelerationTimeCalcConstant,
+            DynamicPointsDensityUIParameters.LowLevelFrequencyCalcConstant,
+            DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,
+            DynamicPointsDensityUIParameters.PointsDensityCalcConstant,
+            DynamicPointsDensityUIParameters.EndTimeCalcConstant,
+        ]
+
+    # overridden
+    def init_sliders_list(self):
+        self.sliders_list = [
+            self.window.StartTimehorizontalSlider,
+            self.window.AccelerationTimehorizontalSlider,
+            self.window.PlateauTimehorizontalSlider,
+            self.window.DecelerationTimehorizontalSlider,
+            self.window.LowLevelFrequencyhorizontalSlider,
+            self.window.HighLevelFrequencyhorizontalSlider,
+            self.window.PointsDensityhorizontalSlider,
+            self.window.EndTimehorizontalSlider
+        ]
+

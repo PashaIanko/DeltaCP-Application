@@ -14,6 +14,12 @@ class AutoFillOperator(ABC):
         self.autofill_parameters = None
         self.window = None
 
+        # list of signal parameters, sliders & constants
+        self.param_names_list = None
+        self.sliders_list = None
+        self.constants_list = None
+        self.values_to_set = None
+
         # Contructor procedure:
         self.config_name = None
         self.config_params = None
@@ -23,22 +29,45 @@ class AutoFillOperator(ABC):
     def ConnectCallBack(self, window):
         pass
 
-    @abstractmethod
+
+
     def init_autofill_parameters(self):
-        pass
+        self.autofill_parameters = [
+        [self.values_to_set[i], self.constants_list[i], self.sliders_list[i]] for i in range(len(self.constants_list))
+        ]
 
     @abstractmethod
     def get_config_name(self):
         pass
 
-    def get_config_params(self):
-        return self.configs_data.loc[self.config_name]
+    def init_config_params(self):
+        self.config_params = self.configs_data.loc[self.config_name]
+
+    @abstractmethod
+    def init_param_names_list(self):
+        pass
+
+    @abstractmethod
+    def init_constants_list(self):
+        pass
+
+    @abstractmethod
+    def init_sliders_list(self):
+        pass
+
+    def init_values_to_set(self):
+        self.values_to_set = [self.config_params[param_name] for param_name in self.param_names_list]
 
     def AutoFill(self):
         try:
             self.config_name = self.get_config_name()
-            self.config_params = self.get_config_params()
+            self.init_config_params()
+            self.init_param_names_list()
+            self.init_constants_list()
+            self.init_sliders_list()
+            self.init_values_to_set()
             self.init_autofill_parameters()
+
             self.set_signal_parameters(
                 self.autofill_parameters
             )
