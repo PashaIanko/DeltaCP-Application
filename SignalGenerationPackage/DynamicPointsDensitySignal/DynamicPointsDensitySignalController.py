@@ -12,6 +12,7 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.StartTimeCallBackOperato
 from SignalGenerationPackage.DynamicPointsDensitySignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityMainWindow import DynamicPointsDensityMainWindow
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
+from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 
 
 class DynamicPointsDensitySignalController(SignalController):
@@ -47,9 +48,17 @@ class DynamicPointsDensitySignalController(SignalController):
                     LowLevelFrequencyCallBackOperator(self.model),
                     PointsDensityCallBackOperator(self.model),
                     AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
+
                 ]
         except:
             print(sys.exc_info())
+
+
+    # overridden
+    def append_sending_operator(self):
+        self.callback_operators.append(ForwardSendingOperator(DebugMode=True))
+        # Подключится к виджетам окна с генерацией сигнала.
+        # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)
 
     # overridden
     def init_param_names(self):

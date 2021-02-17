@@ -9,7 +9,9 @@ SignalGenerationPackage/__pycache__
 __pycache__/
 __pycache__/ApplicationManager.cpython-38.pyc
 __pycache__/Graphics.cpython-38.pyc
-SignalGenerationConfigs/UserSignalConfigs/SignalConfigs.xlsx
+SignalGenerationConfigs/UserSignalConfigs/
+SignalGenerationConfigs/DynamicPointsDensitySignalConfigs/
+
 
 
 

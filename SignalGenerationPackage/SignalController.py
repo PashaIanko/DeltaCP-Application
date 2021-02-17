@@ -26,10 +26,16 @@ class SignalController(ABC):
         self.init_sliders()
 
         # После этого инициируем операторы, в том числе AutoFillOperator, SavePresetOperator
+        # и оператор, который будет заниматься отправкой сигнала
         self.init_callback_operators()
+        self.append_sending_operator()
         self.connect_all_callbacks()
         self.show_gui()
 
+    @abstractmethod
+    def append_sending_operator(self):
+        pass  # В переопределённом потомком методе определяем - какой CallBackOperator будет ответственнен за
+                # Отправку сигнала (NaiveSendingOperator, ForwardSendingOperator)
 
     @abstractmethod
     def init_param_names(self):
