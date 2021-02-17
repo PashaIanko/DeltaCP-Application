@@ -8,6 +8,7 @@ from SignalGenerationPackage.Sinus.SinusPointsNumberCallBackOperator import Sinu
 from SignalGenerationPackage.Sinus.SinusPhaseCallBackOperator import SinusPhaseCallBackOperator
 from SignalGenerationPackage.Sinus.SinusOmegaCallBackOperator import SinusOmegaCallBackOperator
 from SignalGenerationPackage.Sinus.SinusMainWindow import SinusMainWindow
+from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 
 
 class SinusSignalController(SignalController):
@@ -38,3 +39,8 @@ class SinusSignalController(SignalController):
                 SinusPhaseCallBackOperator(self.model),
                 SinusOmegaCallBackOperator(self.model)
             ]
+
+    # overridden
+    def append_sending_operator(self):
+        self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=True))
+
