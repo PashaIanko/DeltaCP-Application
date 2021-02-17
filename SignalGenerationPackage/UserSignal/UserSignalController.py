@@ -13,6 +13,7 @@ from SignalGenerationPackage.UserSignal.VerticalOffsetCallBackOperator import Ve
 from SignalGenerationPackage.UserSignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.UserSignal.UserSignalMainWindow import UserSignalMainWindow
 from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 
 
 class UserSignalController(SignalController):
@@ -83,3 +84,9 @@ class UserSignalController(SignalController):
                 PointsNumberCallBackOperator(self.model),
                 AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None)
             ]
+
+    # overridden
+    def append_sending_operator(self):
+        self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=True))
+        # Подключится к виджетам окна с генерацией сигнала.
+        # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)

@@ -48,7 +48,6 @@ class DynamicPointsDensitySignalController(SignalController):
                     LowLevelFrequencyCallBackOperator(self.model),
                     PointsDensityCallBackOperator(self.model),
                     AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
-
                 ]
         except:
             print(sys.exc_info())
