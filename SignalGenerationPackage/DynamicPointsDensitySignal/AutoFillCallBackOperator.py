@@ -8,7 +8,7 @@ class AutoFillCallBackOperator(AutoFillOperator):
             param_names,
             sliders,
             model,
-            configs_path=".\\SignalGenerationConfigs\\DynamicPointsDensitySignalConfigs\\SignalConfigs.xlsx"
+            configs_path=".\\SignalGenerationConfigs\\DynamicPointsDensitySignalConfigs\\TestConfigs.xlsx"
         )
 
     def ConnectCallBack(self, window):

@@ -55,6 +55,7 @@ class AutoFillOperator(ABC):
                 self.autofill_parameters
             )
         except KeyError:
+            PopUpNotifier.Warning(f'Preset "{self.config_name}" was not found in preset base!')
             loggers['Debug'].debug(f'AutoFillOperator: AutoFill: Preset {self.config_name} not found')
 
     def SavePreset(self):
@@ -62,24 +63,26 @@ class AutoFillOperator(ABC):
         if current_config_name in self.configs_data['Config Name'].values:
             user_decision = PopUpNotifier.PresetSavingQUestion()
             if user_decision == True:
-                self.DeletePreset(current_config_name)
+                self.RemovePreset(current_config_name)
                 self.WriteNewPreset(current_config_name)
             else:
                 return
         else:
             self.WriteNewPreset(current_config_name)
 
-    def DeletePreset(self, config_name):  # Если config name не задан, то узнаем, что введено в текстовое поле --> удалим
-        # config_name = self.get_config_name()
-        # if config_name == '':
-        #     config_name = self.get_config_name()
-        #     user_decision = PopUpNotifier.PresetDeleteQuestion(config_name)
-        #     if not user_decision:
-        #         return
-
+    def RemovePreset(self, config_name):  # Если config name не задан, то узнаем, что введено в текстовое поле --> удалим
         if config_name in self.configs_data['Config Name'].values:
             self.configs_data.drop([config_name], axis='index', inplace=True)
             self.configs_data.to_excel(self.configs_path, index=False)
+
+    def DeletePreset(self):
+        current_config_name = self.get_config_name()
+        if current_config_name in self.configs_data['Config Name'].values:
+            user_decision = PopUpNotifier.PresetDeleteQuestion(current_config_name)
+            if user_decision == True:
+                self.RemovePreset(current_config_name)
+        else:
+            PopUpNotifier.Warning(f'Preset {current_config_name} was not found in preset base!')
 
     def WriteNewPreset(self, preset_name):
         values_to_add = self.read_values_from_gui()
