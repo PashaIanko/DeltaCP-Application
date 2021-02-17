@@ -31,3 +31,24 @@ class PopUpNotifier:
     @staticmethod
     def Warning(text):
        PopUpNotifier.Notify('Warning', text, error_type='warning')
+
+    @staticmethod
+    def PresetSavingQUestion():
+        msg_box = QMessageBox()
+        return_val = msg_box.question(None, "Preset override", "You will re-write existing preset!\nAre you sure?", msg_box.Yes | msg_box.No)
+        if return_val == msg_box.Yes:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def PresetDeleteQuestion(preset_name):
+        msg_box = QMessageBox()
+        return_val = msg_box.question(None, "Preset deletion", f"You will delete preset {preset_name}.\nAre you sure?",
+                                      msg_box.Yes | msg_box.No)
+        if return_val == msg_box.Yes:
+            return True
+        else:
+            return False
+
+
