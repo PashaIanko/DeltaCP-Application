@@ -65,6 +65,26 @@ class NaiveSendingOperator(SignalSendingOperator):
                 loggers['Debug'].debug(f'Finished cycle')
                 return
 
+    # overridden
+    def get_start_button(self):
+        return self.user_interface.pushButtonStartSignalSending
+
+    # overridden
+    def get_pause_radio_button(self):
+        return self.user_interface.PauseSendingradioButton
+
+    # overridden
+    def get_resume_radio_button(self):
+        return self.user_interface.ResumeSendingradioButton
+
+    # overridden
+    def get_stop_button(self):
+        return self.user_interface.pushButtonStopSignalSending
+
+    # overridden
+    def get_endless_send_checkbox(self):
+        return self.user_interface.EndlessSendingcheckBox
+
 
 
 

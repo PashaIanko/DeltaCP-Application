@@ -12,8 +12,8 @@ class ForwardSendingOperator(SignalSendingOperator):
     # Будет достигнута истинная частота Y, указанная на графике для этого момента времени
     # (А не просто выставлена в этот момент времени)
 
-    def __init__(self, DebugMode):
-        super().__init__(DebugMode)
+    def __init__(self, signal_main_window, DebugMode):
+        super().__init__(signal_main_window, DebugMode)
         self.IsFirstCycle = True
         # На первом цикле исполнение - самую первую частоту задаём и ожидаем, пока не
         # достигнем её. Например, если первое значение = 30 Гц. Зададим и подождём, пока частотник достигнет
@@ -102,3 +102,5 @@ class ForwardSendingOperator(SignalSendingOperator):
                 loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
                 if abs(current_freq - value) <= accuracy:
                     return
+
+
