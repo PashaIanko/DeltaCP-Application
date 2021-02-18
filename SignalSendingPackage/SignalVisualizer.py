@@ -51,3 +51,7 @@ class SignalVisualizer:
         #if self.main_window is None:
         #    return True
         #return self.main_window.window_is_closed
+
+    def ResetPlot(self):
+        # Отрисовать на графике исходный сигнал
+        self.Graph.plot(self.x, self.y, color='b', marker='.', markersize=7)

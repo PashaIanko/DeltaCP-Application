@@ -51,7 +51,7 @@ class DynamicPointsDensitySignalController(SignalController):
 
     # overridden
     def append_sending_operator(self):
-        self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=False))
+        self.callback_operators.append(ForwardSendingOperator(self.main_window, self.plot_widget, DebugMode=True))
         # Подключится к виджетам окна с генерацией сигнала.
         # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)
 
@@ -73,6 +73,10 @@ class DynamicPointsDensitySignalController(SignalController):
             DynamicPointsDensityUIParameters.PointsDensityCalcConstant,
             DynamicPointsDensityUIParameters.EndTimeCalcConstant,
         ]
+
+    # overridden
+    def init_plot_widget(self):
+        self.plot_widget = self.main_window.user_interface.plot_widget
 
     # overridden
     def init_sliders(self):

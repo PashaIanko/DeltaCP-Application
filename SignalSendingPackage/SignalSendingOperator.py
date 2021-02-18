@@ -118,9 +118,11 @@ class SignalSendingOperator(CallBackOperator):
             self.SendingThread.join()
             self.SendingThread = None
 
+        # Отрисуем на графике исходный сигнал
+        self.SignalVisualizer.ResetPlot()
         # Закроем окошко с визуализацией
-        if not (self.SignalVisualizer.check_if_window_closed()):
-            self.SignalVisualizer.close_visualization_window()
+        # if not (self.SignalVisualizer.check_if_window_closed()):
+        #    self.SignalVisualizer.close_visualization_window()
 
     def TestTimer(self):
         # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
@@ -139,17 +141,19 @@ class SignalSendingOperator(CallBackOperator):
                 CurrentFreq = 0
             else:
                 CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
 
-            if self.ValueToSend is None:
-                loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
-                loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
-            else:
-                loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
-                # Если окошко не закрыто - продолжаем визуализацию и отправку
-                value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-                self.DeltaCPClient.SetFrequency(value_to_send)
-                self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
+            if not self.SendingStopped:
+                self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+
+                if self.ValueToSend is None:
+                    loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
+                    loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
+                else:
+                    loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
+                    # Если окошко не закрыто - продолжаем визуализацию и отправку
+                    value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                    self.DeltaCPClient.SetFrequency(value_to_send)
+                    self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
             self.FunctionWasCalled = True
 
     def RestartSignalIterator(self):
