@@ -51,7 +51,7 @@ class DynamicPointsDensitySignalController(SignalController):
 
     # overridden
     def append_sending_operator(self):
-        self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=True))
+        self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=False))
         # Подключится к виджетам окна с генерацией сигнала.
         # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)
 
