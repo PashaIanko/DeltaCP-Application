@@ -71,7 +71,7 @@ class UserSignalUIParameters:
 
 
     # POINTS NUMBER
-    PointsNumberMin = 5
+    PointsNumberMin = 0
     PointsNumberMax = 200
     PointsNumberLineEditAccuracy = 0
 
