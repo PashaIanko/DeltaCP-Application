@@ -9,7 +9,8 @@ from SignalGenerationPackage.Sinus.SinusPhaseCallBackOperator import SinusPhaseC
 from SignalGenerationPackage.Sinus.SinusOmegaCallBackOperator import SinusOmegaCallBackOperator
 from SignalGenerationPackage.Sinus.SinusMainWindow import SinusMainWindow
 from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
-
+from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
+from SignalGenerationPackage.Sinus.AutoFillCallBackOperator import AutoFillCallBackOperator
 
 class SinusSignalController(SignalController):
 
@@ -37,10 +38,38 @@ class SinusSignalController(SignalController):
                 SinusTimeToCallBackOperator(self.model),
                 SinusPointsNumberCallBackOperator(self.model),
                 SinusPhaseCallBackOperator(self.model),
-                SinusOmegaCallBackOperator(self.model)
+                SinusOmegaCallBackOperator(self.model),
+                AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
             ]
 
     # overridden
     def append_sending_operator(self):
         self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=True))
 
+    # overridden
+    def init_param_names(self):
+        self.param_names = [
+            "Phase", "Omega", "Points Number", "Time From", "Time To", "Amplitude"
+        ]
+
+    # overridden
+    def init_slider_constants(self):
+        self.slider_constants = [
+            SinusUIParameters.PhaseCalcConstant,
+            SinusUIParameters.OmegaCalcConstant,
+            SinusUIParameters.PointsNumberCalcConstant,
+            SinusUIParameters.TimeFromCalcConstant,
+            SinusUIParameters.TimeToCalcConstant,
+            SinusUIParameters.AmplitudeCalcConstant
+        ]
+
+    def init_sliders(self):
+        ui = self.main_window.user_interface
+        self.sliders = [
+            ui.horizontalSliderPhase,
+            ui.horizontalSliderOmega,
+            ui.horizontalSliderPointsNumber,
+            ui.horizontalSliderTimeFrom,
+            ui.horizontalSliderTimeTo,
+            ui.horizontalSliderAmplitude
+        ]
