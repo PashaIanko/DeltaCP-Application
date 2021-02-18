@@ -8,8 +8,6 @@ class VisualizerMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.window_is_closed = False
-        #self.VisualizerPlot = PlotCanvas(parent=self, width=8, height=7)
-        #self.VisualizerPlot.move(20, 29) # TODO: Вывести константы в отдельный класс
         self.VisualizerPlot = None
         self.user_interface = Ui_VisualizerMainWindow()
         self.setup_ui()
