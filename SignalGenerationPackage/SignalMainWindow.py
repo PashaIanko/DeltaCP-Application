@@ -46,6 +46,27 @@ class SignalMainWindow(ABC):
     def init_plot(self):
         pass
 
+    @abstractmethod
+    def get_start_button(self):
+        pass
+
+    @abstractmethod
+    def get_pause_radio_button(self):
+        pass
+
+    @abstractmethod
+    def get_resume_radio_button(self):
+        pass
+
+    @abstractmethod
+    def get_stop_button(self):
+        pass
+
+    @abstractmethod
+    def get_endless_send_checkbox(self):
+        pass
+
+
     def setup_user_interface(self):
         self.user_interface.setupUi(self.main_window)
 

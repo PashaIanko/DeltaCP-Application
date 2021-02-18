@@ -81,8 +81,12 @@ class AutoFillOperator(ABC):
             user_decision = PopUpNotifier.PresetDeleteQuestion(current_config_name)
             if user_decision == True:
                 self.RemovePreset(current_config_name)
+                self.SetSlidersToZero()  # Чтобы после удаления пресета "обнулить" график, оставшийся от удалённого пресета
         else:
             PopUpNotifier.Warning(f'Preset {current_config_name} was not found in preset base!')
+
+    def SetSlidersToZero(self):
+        [slider.setValue(0) for slider in self.sliders]
 
     def WriteNewPreset(self, preset_name):
         values_to_add = self.read_values_from_gui()

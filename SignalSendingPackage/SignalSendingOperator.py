@@ -9,8 +9,15 @@ from LoggersConfig import loggers
 
 
 class SignalSendingOperator(CallBackOperator):
-    def __init__(self, DebugMode=True):
+    def __init__(self, signal_main_window, DebugMode=True):
         super().__init__()
+
+        # Поскольку виджеты для отправки сигнала находятся на окошке
+        # для генерации сигнала (user_interface), названия
+        # виджетов могут отличаться (Название самих классов).
+        # Поэтому надо их переопределить
+        self.signal_main_window = signal_main_window
+
         self.DebugMode = DebugMode
         # Ниже - Набор параметров для обоих способов отправки сигнала -
         # наперёд (Как Сергей сказал), и более наивный способ
@@ -42,14 +49,38 @@ class SignalSendingOperator(CallBackOperator):
     def ExecuteSending(self, Time):
         pass
 
+    def get_start_button(self):
+        return self.signal_main_window.get_start_button()
+
+    def get_pause_radio_button(self):
+        return self.signal_main_window.get_pause_radio_button()
+
+    def get_resume_radio_button(self):
+        return self.signal_main_window.get_resume_radio_button()
+
+    def get_stop_button(self):
+        return self.signal_main_window.get_stop_button()
+
+    def get_endless_send_checkbox(self):
+        return self.signal_main_window.get_endless_send_checkbox()
+
     # overridden
     def ConnectCallBack(self, window):
         self.window = window
-        window.pushButtonStartSignalSending.clicked.connect(self.StartSendingSignal)
-        window.PauseSendingradioButton.toggled.connect(self.PauseSending)
-        window.ResumeSendingradioButton.toggled.connect(self.ResumeSending)
-        window.pushButtonStopSignalSending.clicked.connect(self.StopSendingSignal)
-        window.EndlessSendingcheckBox.stateChanged.connect(lambda: self.EnableEndlessSending())
+
+        # Абстрактные методы, т.к. названия виджетов могут отличаться
+        # для разных окошек сигналов
+        StartButton = self.get_start_button()
+        PauseRadioButton = self.get_pause_radio_button()
+        ResumeRadioButton = self.get_resume_radio_button()
+        StopButton = self.get_stop_button()
+        EndlessSendCheckbox = self.get_endless_send_checkbox()
+
+        StartButton.clicked.connect(self.StartSendingSignal)
+        PauseRadioButton.toggled.connect(self.PauseSending)
+        ResumeRadioButton.toggled.connect(self.ResumeSending)
+        StopButton.clicked.connect(self.StopSendingSignal)
+        EndlessSendCheckbox.stateChanged.connect(lambda: self.EnableEndlessSending())
 
     def EnableEndlessSending(self):
         self.EndlessSendingEnabled = \
