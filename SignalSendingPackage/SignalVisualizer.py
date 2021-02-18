@@ -2,10 +2,10 @@ from SignalSendingPackage.VisualizerMainWindow import VisualizerMainWindow
 
 
 class SignalVisualizer:
-    def __init__(self, x_arr=[], y_arr=[]):
+    def __init__(self, plot_widget, x_arr=[], y_arr=[]):
         self.main_window = None  # Окно, куда будем выводить визуализацию
-        self.init_main_window()
-        self.Graph = self.main_window.VisualizerPlot
+        # self.init_main_window()
+        self.Graph = plot_widget  # self.main_window.VisualizerPlot
         self.x = x_arr
         self.y = y_arr
         self.IfRestarted = True
@@ -46,6 +46,8 @@ class SignalVisualizer:
         self.y = y
 
     def check_if_window_closed(self):
-        if self.main_window is None:
-            return True
-        return self.main_window.window_is_closed
+        return False
+
+        #if self.main_window is None:
+        #    return True
+        #return self.main_window.window_is_closed

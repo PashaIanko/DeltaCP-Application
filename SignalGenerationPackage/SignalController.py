@@ -13,6 +13,8 @@ class SignalController(ABC):
         self.slider_constants = None
         self.sliders = None
 
+        self.plot_widget = None  # Окошечко с графиком, где будем отрисовывать
+
         # Процедура конструктора - надо переопределить все методы
         self.init_model()
         self.init_main_window()
@@ -23,6 +25,7 @@ class SignalController(ABC):
         # пресетов
         self.init_param_names()
         self.init_slider_constants()
+        self.init_plot_widget()
         self.init_sliders()
 
         # После этого инициируем операторы, в том числе AutoFillOperator, SavePresetOperator
@@ -31,6 +34,10 @@ class SignalController(ABC):
         self.append_sending_operator()
         self.connect_all_callbacks()
         self.show_gui()
+
+    @abstractmethod
+    def init_plot_widget(self):
+        pass  # Определить, в какой окошке с графиком будет отрисовка отправки сигнала ("Окошечко" - это класс PlotCanvas)
 
     @abstractmethod
     def append_sending_operator(self):

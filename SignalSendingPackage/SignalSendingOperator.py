@@ -9,7 +9,7 @@ from LoggersConfig import loggers
 
 
 class SignalSendingOperator(CallBackOperator):
-    def __init__(self, signal_main_window, DebugMode=True):
+    def __init__(self, signal_main_window, plot_widget, DebugMode=True):
         super().__init__()
 
         # Поскольку виджеты для отправки сигнала находятся на окошке
@@ -17,6 +17,7 @@ class SignalSendingOperator(CallBackOperator):
         # виджетов могут отличаться (Название самих классов).
         # Поэтому надо их переопределить
         self.signal_main_window = signal_main_window
+        self.plot_widget = plot_widget
 
         self.DebugMode = DebugMode
         # Ниже - Набор параметров для обоих способов отправки сигнала -
@@ -172,7 +173,7 @@ class SignalSendingOperator(CallBackOperator):
 
             loggers['Debug'].debug(f'Launching thread, thread is None')
             if not self.SignalVisualizerConstructed:
-                self.SignalVisualizer = SignalVisualizer()
+                self.SignalVisualizer = SignalVisualizer(self.plot_widget)
             self.DeltaCPClient.SendStart()
             self.LaunchSendingThread()
         else:
