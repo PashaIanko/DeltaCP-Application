@@ -65,6 +65,12 @@ class SignalSendingOperator(CallBackOperator):
     def get_endless_send_checkbox(self):
         return self.signal_main_window.get_endless_send_checkbox()
 
+    def get_cycles_number_widget(self):
+        return self.signal_main_window.get_cycles_number_widget()
+
+    def get_cycle_send_checkbox(self):
+        return self.signal_main_window.get_cycle_send_checkbox()
+
     # overridden
     def ConnectCallBack(self, window):
         self.window = window
@@ -76,16 +82,33 @@ class SignalSendingOperator(CallBackOperator):
         ResumeRadioButton = self.get_resume_radio_button()
         StopButton = self.get_stop_button()
         EndlessSendCheckbox = self.get_endless_send_checkbox()
+        CyclesNumberSpinBox = self.get_cycles_number_widget()
+
+        # Надо сделать так, чтобы бесконечная отправка (EndlessSendCheckbox)
+        # И отправка циклов (CyclesNumberSpinBox) были взаимоисключающими
+        # Поэтому, коннектим взаимоисключающие отклики
+        EndlessSendCheckbox.toggled.connect(lambda: self.EnableSendingRegime())  # Какой режим - бесконечной отправки
+                                                                                    # Или кол-во циклов
 
         StartButton.clicked.connect(self.StartSendingSignal)
         PauseRadioButton.toggled.connect(self.PauseSending)
         ResumeRadioButton.toggled.connect(self.ResumeSending)
         StopButton.clicked.connect(self.StopSendingSignal)
-        EndlessSendCheckbox.stateChanged.connect(lambda: self.EnableEndlessSending())
 
-    def EnableEndlessSending(self):
-        self.EndlessSendingEnabled = \
-            self.window.EndlessSendingcheckBox.isChecked()
+
+    def EnableSendingRegime(self):
+        EndlessSendradioButton = self.get_endless_send_checkbox()
+        CycleSendradioButton = self.get_cycle_send_checkbox()
+
+        endless_selected = EndlessSendradioButton.isChecked()
+        cycle_send_selected = CycleSendradioButton.isChecked()
+
+
+        self.EndlessSendingEnabled = endless_selected
+        self.CycleSendingEnabled = cycle_send_selected
+        loggers['Debug'].debug(f'if Endless: {self.EndlessSendingEnabled},'
+                               f'if CycleSend: {self.CycleSendingEnabled}')
+
 
     def PauseSending(self):
         if self.window.PauseSendingradioButton.isChecked():

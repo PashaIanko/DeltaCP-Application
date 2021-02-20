@@ -51,4 +51,12 @@ class SinusMainWindow(SignalMainWindow):
 
     # overridden
     def get_endless_send_checkbox(self):
-        return self.user_interface.EndlessSendingcheckBox
+        return self.user_interface.EndlessSendingradioButton
+
+    # overridden
+    def get_cycles_number_widget(self):
+        return self.user_interface.CyclesNumberspinBox
+
+    # overridden
+    def get_cycle_send_checkbox(self):
+        return self.user_interface.radioButton

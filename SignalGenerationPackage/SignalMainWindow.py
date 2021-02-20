@@ -66,6 +66,14 @@ class SignalMainWindow(ABC):
     def get_endless_send_checkbox(self):
         pass
 
+    @abstractmethod
+    def get_cycle_send_checkbox(self):
+        pass
+
+    @abstractmethod
+    def get_cycles_number_widget(self):
+        pass
+
 
     def setup_user_interface(self):
         self.user_interface.setupUi(self.main_window)
