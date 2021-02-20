@@ -9,7 +9,7 @@ from LoggersConfig import loggers
 
 
 class SignalSendingOperator(CallBackOperator):
-    def __init__(self, signal_main_window, DebugMode=True):
+    def __init__(self, signal_main_window, plot_widget, DebugMode=True):
         super().__init__()
 
         # Поскольку виджеты для отправки сигнала находятся на окошке
@@ -17,6 +17,7 @@ class SignalSendingOperator(CallBackOperator):
         # виджетов могут отличаться (Название самих классов).
         # Поэтому надо их переопределить
         self.signal_main_window = signal_main_window
+        self.plot_widget = plot_widget
 
         self.DebugMode = DebugMode
         # Ниже - Набор параметров для обоих способов отправки сигнала -
@@ -117,9 +118,11 @@ class SignalSendingOperator(CallBackOperator):
             self.SendingThread.join()
             self.SendingThread = None
 
+        # Отрисуем на графике исходный сигнал
+        self.SignalVisualizer.ResetPlot()
         # Закроем окошко с визуализацией
-        if not (self.SignalVisualizer.check_if_window_closed()):
-            self.SignalVisualizer.close_visualization_window()
+        # if not (self.SignalVisualizer.check_if_window_closed()):
+        #    self.SignalVisualizer.close_visualization_window()
 
     def TestTimer(self):
         # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
@@ -138,17 +141,19 @@ class SignalSendingOperator(CallBackOperator):
                 CurrentFreq = 0
             else:
                 CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
 
-            if self.ValueToSend is None:
-                loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
-                loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
-            else:
-                loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
-                # Если окошко не закрыто - продолжаем визуализацию и отправку
-                value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-                self.DeltaCPClient.SetFrequency(value_to_send)
-                self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
+            if not self.SendingStopped:
+                self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+
+                if self.ValueToSend is None:
+                    loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
+                    loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
+                else:
+                    loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
+                    # Если окошко не закрыто - продолжаем визуализацию и отправку
+                    value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                    self.DeltaCPClient.SetFrequency(value_to_send)
+                    self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
             self.FunctionWasCalled = True
 
     def RestartSignalIterator(self):
@@ -172,7 +177,7 @@ class SignalSendingOperator(CallBackOperator):
 
             loggers['Debug'].debug(f'Launching thread, thread is None')
             if not self.SignalVisualizerConstructed:
-                self.SignalVisualizer = SignalVisualizer()
+                self.SignalVisualizer = SignalVisualizer(self.plot_widget)
             self.DeltaCPClient.SendStart()
             self.LaunchSendingThread()
         else:

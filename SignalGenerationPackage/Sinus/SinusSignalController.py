@@ -43,8 +43,12 @@ class SinusSignalController(SignalController):
             ]
 
     # overridden
+    def init_plot_widget(self):
+        self.plot_widget = self.main_window.user_interface.frame
+
+    # overridden
     def append_sending_operator(self):
-        self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=True))
+        self.callback_operators.append(ForwardSendingOperator(self.main_window, self.plot_widget, DebugMode=True))
 
     # overridden
     def init_param_names(self):

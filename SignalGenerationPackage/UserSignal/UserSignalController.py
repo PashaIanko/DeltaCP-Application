@@ -70,6 +70,9 @@ class UserSignalController(SignalController):
             ui.EndTimehorizontalSlider,
         ]
 
+    def init_plot_widget(self):
+        self.plot_widget = self.main_window.user_interface.plot_widget
+
     def init_callback_operators(self):
         self.callback_operators = \
             [
@@ -87,6 +90,6 @@ class UserSignalController(SignalController):
 
     # overridden
     def append_sending_operator(self):
-        self.callback_operators.append(ForwardSendingOperator(self.main_window, DebugMode=True))
+        self.callback_operators.append(ForwardSendingOperator(self.main_window, self.plot_widget, DebugMode=True))
         # Подключится к виджетам окна с генерацией сигнала.
         # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)
