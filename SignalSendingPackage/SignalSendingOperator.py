@@ -33,6 +33,7 @@ class SignalSendingOperator(CallBackOperator):
         self.SendingOnPause = False
         self.SendingStopped = False
         self.EndlessSendingEnabled = False
+        self.CycleSendingEnabled = True  # Предустановлено на интерфейсе
         self.CycleFinishedSuccessfully = False
 
         self.SendingThread = None
@@ -82,7 +83,6 @@ class SignalSendingOperator(CallBackOperator):
         ResumeRadioButton = self.get_resume_radio_button()
         StopButton = self.get_stop_button()
         EndlessSendCheckbox = self.get_endless_send_checkbox()
-        CyclesNumberSpinBox = self.get_cycles_number_widget()
 
         # Надо сделать так, чтобы бесконечная отправка (EndlessSendCheckbox)
         # И отправка циклов (CyclesNumberSpinBox) были взаимоисключающими
@@ -102,7 +102,6 @@ class SignalSendingOperator(CallBackOperator):
 
         endless_selected = EndlessSendradioButton.isChecked()
         cycle_send_selected = CycleSendradioButton.isChecked()
-
 
         self.EndlessSendingEnabled = endless_selected
         self.CycleSendingEnabled = cycle_send_selected
@@ -155,7 +154,7 @@ class SignalSendingOperator(CallBackOperator):
         window_is_closed = self.SignalVisualizer.check_if_window_closed()
         if window_is_closed:
             loggers['Application'].info(f'Visualization window was closed --> Application Stop Signal Sending')
-            self.StopSendingSignal()
+            self.StopSendingSignal()  # TODO: Теперь окошко встроено --> Нет нужды проверять window_is_closed
         else:
             # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
             # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
@@ -221,24 +220,37 @@ class SignalSendingOperator(CallBackOperator):
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
         self.ExecuteSending(Time)
 
-
+        cycle_counter = 0
+        cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
         while True:
             if self.SendingStopped == True:
                 self.SendingStopped = False  # Reset the flag
                 return
             elif self.EndlessSendingEnabled and self.CycleFinishedSuccessfully:
+                # Случай бесконечной отправки
                 # update Time array and restart the cycle
                 self.CycleFinishedSuccessfully = False
-                upd_val = SignalData.x[-1]
-                Time = self.update_time_array(Time, upd_val)
-                updated_x = self.update_time_array(updated_x, upd_val)
+                self.RestartSending(Time, updated_x)
 
+            elif self.CycleSendingEnabled and self.CycleFinishedSuccessfully:
+                # Случай отправки N циклов
+                cycle_counter += 1
+                cycles_to_perform = cycle_number_widget.value()
+                if cycle_counter >= cycles_to_perform:
+                    return
+                else:
+                    self.CycleFinishedSuccessfully = False
+                    self.RestartSending(Time, updated_x)
 
-                # restarting points Iterator, Visualisation and Sending Thread
-                self.PointsIterator = 0
-                self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
-                self.ExecuteSending(Time)
+    def RestartSending(self, Time, updated_x):
+        upd_val = SignalData.x[-1]
+        Time = self.update_time_array(Time, upd_val)
+        updated_x = self.update_time_array(updated_x, upd_val)
 
+        # restarting points Iterator, Visualisation and Sending Thread
+        self.PointsIterator = 0
+        self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
+        self.ExecuteSending(Time)
 
     @staticmethod
     def update_time_array(arr, upd_val):
