@@ -50,7 +50,7 @@ class SinusMainWindow(SignalMainWindow):
         return self.user_interface.pushButtonStopSignalSending
 
     # overridden
-    def get_endless_send_checkbox(self):
+    def get_endless_send_radiobutton(self):
         return self.user_interface.EndlessSendingradioButton
 
     # overridden
@@ -58,5 +58,5 @@ class SinusMainWindow(SignalMainWindow):
         return self.user_interface.CyclesNumberspinBox
 
     # overridden
-    def get_cycle_send_checkbox(self):
+    def get_cycle_send_radiobutton(self):
         return self.user_interface.radioButton

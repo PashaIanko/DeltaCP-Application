@@ -63,14 +63,14 @@ class SignalSendingOperator(CallBackOperator):
     def get_stop_button(self):
         return self.signal_main_window.get_stop_button()
 
-    def get_endless_send_checkbox(self):
-        return self.signal_main_window.get_endless_send_checkbox()
+    def get_endless_send_radiobutton(self):
+        return self.signal_main_window.get_endless_send_radiobutton()
 
     def get_cycles_number_widget(self):
         return self.signal_main_window.get_cycles_number_widget()
 
-    def get_cycle_send_checkbox(self):
-        return self.signal_main_window.get_cycle_send_checkbox()
+    def get_cycle_send_radiobutton(self):
+        return self.signal_main_window.get_cycle_send_radiobutton()
 
     # overridden
     def ConnectCallBack(self, window):
@@ -82,7 +82,7 @@ class SignalSendingOperator(CallBackOperator):
         PauseRadioButton = self.get_pause_radio_button()
         ResumeRadioButton = self.get_resume_radio_button()
         StopButton = self.get_stop_button()
-        EndlessSendCheckbox = self.get_endless_send_checkbox()
+        EndlessSendCheckbox = self.get_endless_send_radiobutton()
 
         # Надо сделать так, чтобы бесконечная отправка (EndlessSendCheckbox)
         # И отправка циклов (CyclesNumberSpinBox) были взаимоисключающими
@@ -97,8 +97,8 @@ class SignalSendingOperator(CallBackOperator):
 
 
     def EnableSendingRegime(self):
-        EndlessSendradioButton = self.get_endless_send_checkbox()
-        CycleSendradioButton = self.get_cycle_send_checkbox()
+        EndlessSendradioButton = self.get_endless_send_radiobutton()
+        CycleSendradioButton = self.get_cycle_send_radiobutton()
 
         endless_selected = EndlessSendradioButton.isChecked()
         cycle_send_selected = CycleSendradioButton.isChecked()
