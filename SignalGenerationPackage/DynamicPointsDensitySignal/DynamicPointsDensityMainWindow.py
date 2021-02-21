@@ -55,4 +55,8 @@ class DynamicPointsDensityMainWindow(SignalMainWindow):
     def get_cycles_number_widget(self):
         return self.user_interface.CyclesNumberspinBox
 
+    # overridden
+    def get_LCD_display(self):
+        return self.user_interface.lcdNumber
+
 
