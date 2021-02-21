@@ -135,6 +135,9 @@ class SignalSendingOperator(CallBackOperator):
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
 
+        current_cycle_display = self.signal_main_window.get_LCD_display()
+        current_cycle_display.display(0)  # Обновить дисплей с текущим циклом - обратно на ноль
+
         loggers['Debug'].debug(f'Stopping sending thread')
         if not (self.SendingThread is None):
             self.SendingThread.join()
@@ -192,6 +195,8 @@ class SignalSendingOperator(CallBackOperator):
     def StartSendingSignal(self):
 
         # Сначала надо наладить частоту опроса - Это небольной костыль.
+        current_cycle_display = self.signal_main_window.get_LCD_display()
+        current_cycle_display.display(1)  # Сбросить значение на дисплее текущего цикла
 
         if self.SendingThread is None:
             self.SendingStopped = False  # Надо почистить флаг - иначе неверно работает при последовательности:
@@ -221,15 +226,21 @@ class SignalSendingOperator(CallBackOperator):
         self.ExecuteSending(Time)
 
         cycle_counter = 0
+        endless_counter = 0
         cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
+
+        current_cycle_display = self.signal_main_window.get_LCD_display()
         while True:
             if self.SendingStopped == True:
                 self.SendingStopped = False  # Reset the flag
+                current_cycle_display.display(0)
                 return
             elif self.EndlessSendingEnabled and self.CycleFinishedSuccessfully:
                 # Случай бесконечной отправки
                 # update Time array and restart the cycle
+                endless_counter += 1
                 self.CycleFinishedSuccessfully = False
+                current_cycle_display.display(endless_counter + 1)
                 self.RestartSending(Time, updated_x)
 
             elif self.CycleSendingEnabled and self.CycleFinishedSuccessfully:
@@ -239,6 +250,7 @@ class SignalSendingOperator(CallBackOperator):
                 if cycle_counter >= cycles_to_perform:
                     return
                 else:
+                    current_cycle_display.display(cycle_counter + 1)
                     self.CycleFinishedSuccessfully = False
                     self.RestartSending(Time, updated_x)
 

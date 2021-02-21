@@ -60,3 +60,7 @@ class SinusMainWindow(SignalMainWindow):
     # overridden
     def get_cycle_send_radiobutton(self):
         return self.user_interface.radioButton
+
+    # overridden
+    def get_LCD_display(self):
+        return self.user_interface.lcdNumber
