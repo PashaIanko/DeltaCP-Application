@@ -86,5 +86,11 @@ class DynamicPointsDensityUIParameters:
     PlotXPosition = 0
     PlotYPosition = 320
 
+    # REQUEST FREQUENCY
+    RequestFreqLineEditAccuracy = 100
+    RequestFreqCalcConstant = 10
+    RequestFreqSliderMin = 0.1 * RequestFreqCalcConstant
+    RequestFreqSliderMax = 1.1 * RequestFreqCalcConstant
+
     def __init__(self):
         pass
