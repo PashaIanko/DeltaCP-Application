@@ -11,6 +11,7 @@ from SignalGenerationPackage.Sinus.SinusMainWindow import SinusMainWindow
 from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
 from SignalGenerationPackage.Sinus.AutoFillCallBackOperator import AutoFillCallBackOperator
+from SignalGenerationPackage.Sinus.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
 
 class SinusSignalController(SignalController):
 
@@ -39,6 +40,7 @@ class SinusSignalController(SignalController):
                 SinusPointsNumberCallBackOperator(self.model),
                 SinusPhaseCallBackOperator(self.model),
                 SinusOmegaCallBackOperator(self.model),
+                RequestFrequencyCallBackOperator(self.model),
                 AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
             ]
 

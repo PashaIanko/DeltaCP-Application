@@ -57,4 +57,12 @@ class SinusUIParameters:
     SinusPlotWidth = 5
     SinusPlotHeight = 5
 
+    # REQUEST FREQUENCY
+    RequestFreqLineEditAccuracy = 2
+    RequestFreqCalcConstant = 10
+    RequestFreqSliderMin = 0.1 * RequestFreqCalcConstant
+    RequestFreqSliderMax = 1.1 * RequestFreqCalcConstant
+
+
+
 
