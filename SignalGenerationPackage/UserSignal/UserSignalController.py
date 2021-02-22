@@ -13,6 +13,7 @@ from SignalGenerationPackage.UserSignal.VerticalOffsetCallBackOperator import Ve
 from SignalGenerationPackage.UserSignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.UserSignal.UserSignalMainWindow import UserSignalMainWindow
 from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.UserSignal.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
 from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 
 
@@ -85,6 +86,7 @@ class UserSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator(self.model),
                 LowLevelFrequencyCallBackOperator(self.model),
                 PointsNumberCallBackOperator(self.model),
+                RequestFrequencyCallBackOperator(self.model),
                 AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None)
             ]
 
