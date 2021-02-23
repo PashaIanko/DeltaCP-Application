@@ -61,7 +61,7 @@ class DynamicPointsDensitySignalController(SignalController):
     def init_param_names(self):
         self.param_names = [
             'Start Time', 'Acceleration Time', 'Plateau Time', 'Deceleration Time', 'Low Level Frequency',
-            'High Level Frequency', 'Points Density', 'End Time']
+            'High Level Frequency', 'Points Density', 'End Time', 'Request Frequency']
 
     # overridden
     def init_slider_constants(self):
@@ -74,6 +74,7 @@ class DynamicPointsDensitySignalController(SignalController):
             DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,
             DynamicPointsDensityUIParameters.PointsDensityCalcConstant,
             DynamicPointsDensityUIParameters.EndTimeCalcConstant,
+            DynamicPointsDensityUIParameters.RequestFreqCalcConstant
         ]
 
     # overridden
@@ -91,5 +92,6 @@ class DynamicPointsDensitySignalController(SignalController):
             ui.LowLevelFrequencyhorizontalSlider,
             ui.HighLevelFrequencyhorizontalSlider,
             ui.PointsDensityhorizontalSlider,
-            ui.EndTimehorizontalSlider
+            ui.EndTimehorizontalSlider,
+            ui.RequestFrequencyhorizontalSlider
         ]

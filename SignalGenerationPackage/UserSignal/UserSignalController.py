@@ -39,7 +39,7 @@ class UserSignalController(SignalController):
         self.param_names = [
             'Start Time', 'Acceleration Time', 'Plateau Time',
             'Deceleration Time', 'Low Level Frequency', 'High Level Frequency',
-            'Vertical Offset', 'Points Number', 'End Time'
+            'Vertical Offset', 'Points Number', 'End Time', 'Request Frequency'
         ]
 
     # overridden
@@ -53,7 +53,8 @@ class UserSignalController(SignalController):
             UserSignalUIParameters.HighLevelFrequencyCalcConstant,
             UserSignalUIParameters.VerticalOffsetCalcConstant,
             UserSignalUIParameters.PointsNumberCalcConstant,
-            UserSignalUIParameters.EndTimeCalcConstant
+            UserSignalUIParameters.EndTimeCalcConstant,
+            UserSignalUIParameters.RequestFreqCalcConstant
         ]
 
     # overridden
@@ -69,6 +70,7 @@ class UserSignalController(SignalController):
             ui.VerticalOffsethorizontalSlider,
             ui.PointsNumberhorizontalSlider,
             ui.EndTimehorizontalSlider,
+            ui.RequestFrequencyhorizontalSlider
         ]
 
     def init_plot_widget(self):
