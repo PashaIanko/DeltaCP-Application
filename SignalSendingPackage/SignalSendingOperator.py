@@ -6,6 +6,7 @@ from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
+from time import sleep
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -194,7 +195,6 @@ class SignalSendingOperator(CallBackOperator):
 
     def StartSendingSignal(self):
 
-        # Сначала надо наладить частоту опроса - Это небольной костыль.
         current_cycle_display = self.signal_main_window.get_LCD_display()
         current_cycle_display.display(1)  # Сбросить значение на дисплее текущего цикла
 
@@ -277,3 +277,19 @@ class SignalSendingOperator(CallBackOperator):
         self.RestartVisualization(Time)
         self.ExecuteSending(Time)
 
+    def PresetFrequency(self, value):
+        # Перед запуском, если частота ненулевая - убедиться, предварительно задать требуемую начальную частоту
+        value_to_send = int(value * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+        self.DeltaCPClient.SetFrequency(value_to_send)
+        accuracy = 0.05
+
+        if self.DebugMode:
+            return
+        else:
+            while True:
+                # мониторим, достигли ли требуемой начальной частоты
+                sleep(1)
+                current_freq = self.DeltaCPClient.RequestCurrentFrequency()
+                loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
+                if abs(current_freq - value) <= accuracy:
+                    return

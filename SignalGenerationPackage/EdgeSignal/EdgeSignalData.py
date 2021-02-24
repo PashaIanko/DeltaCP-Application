@@ -14,3 +14,14 @@ class EdgeSignalData(SignalData):
 
         self.LowLevelFrequency = 0
         self.HighLevelFrequency = 0
+
+        # Необходимые времёна разгона для
+        # Частотного преобразователя
+        self.MinFrequency = 0
+        self.MaxFrequency = 50
+        self.NecessaryAccelerationTime = 0
+        self.NecessaryDecelerationTime = 0
+
+        # Критические Параметры разгона
+        self.CriticalAcceleration = (50 - 0) / (15)  # От 0 до 50 Hz за 15 сек
+        self.CriticalDeceleration = (50 - 0) / (15) # От 50 до 0 Hz за 15 сек

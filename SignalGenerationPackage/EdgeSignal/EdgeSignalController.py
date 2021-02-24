@@ -3,7 +3,7 @@ from SignalGenerationPackage.EdgeSignal.EdgeSignal import EdgeSignal
 from SignalGenerationPackage.EdgeSignal.EdgeSignalObserver import EdgeSignalObserver
 from SignalGenerationPackage.EdgeSignal.EdgeSignalMainWindow import EdgeSignalMainWindow
 from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters
-from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
+from CallBackOperators.PIDSendingOperator import PIDSendingOperator
 
 from SignalGenerationPackage.EdgeSignal.CallBacks.AccelerationTimeCallBackOperator import AccelerationTimeCallBackOperator
 from SignalGenerationPackage.EdgeSignal.CallBacks.DecelerationTimeCallBackOperator import DecelerationTimeCallBackOperator
@@ -88,6 +88,6 @@ class EdgeSignalController(SignalController):
 
     # overridden
     def append_sending_operator(self):
-        self.callback_operators.append(ForwardSendingOperator(self.main_window, self.plot_widget, DebugMode=True))
+        self.callback_operators.append(PIDSendingOperator(self.main_window, self.plot_widget, model=self.model, DebugMode=True))
         # Подключится к виджетам окна с генерацией сигнала.
         # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)

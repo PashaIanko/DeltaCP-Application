@@ -51,4 +51,17 @@ class PopUpNotifier:
         else:
             return False
 
-
+    @staticmethod
+    def CriticalAccelerDecelerQuestion(
+            cur_acc_t, cur_dec_t,
+            critical_acc, critical_dec,
+            desirable_acc, desirable_dec
+    ):
+        msg_box = QMessageBox()
+        return_val = msg_box.question(None, "Critical Acceleration/Deceleration",
+                                      f"Current t_acceleration: {cur_acc_t}\nCurrent t_deceleration: {cur_dec_t}\n"
+                                      f"Critical acceleration: {critical_acc}\nCriticalDeceleration: {critical_dec}\n\n"
+                                      f"You want: acceleration = {desirable_acc}, Deceleration = {desirable_dec}\n"
+                                      f"Are you sure to set values above critical?",
+                                      msg_box.Yes | msg_box.No)
+        return return_val == msg_box.Yes
