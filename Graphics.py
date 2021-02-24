@@ -339,6 +339,7 @@ class Ui_MainWindow(object):
         self.SignalTypecomboBox.addItem("")
         self.SignalTypecomboBox.addItem("")
         self.SignalTypecomboBox.addItem("")
+        self.SignalTypecomboBox.addItem("")
         self.horizontalLayout_8.addWidget(self.SignalTypecomboBox)
         self.gridLayout_10.addWidget(self.frame_18, 1, 0, 1, 1)
         self.frame_17 = QtWidgets.QFrame(self.frame_20)
@@ -491,6 +492,7 @@ class Ui_MainWindow(object):
         self.SignalTypecomboBox.setItemText(1, _translate("MainWindow", "sin"))
         self.SignalTypecomboBox.setItemText(2, _translate("MainWindow", "user signal"))
         self.SignalTypecomboBox.setItemText(3, _translate("MainWindow", "dynamic points density"))
+        self.SignalTypecomboBox.setItemText(4, _translate("MainWindow", "edge signal"))
         self.AccDecTime1pushButton.setText(_translate("MainWindow", "Acceleration\n"
                                                                     "Deceleration 1"))
         self.AccDecTime2pushButton.setText(_translate("MainWindow", "Acceleration\n"
