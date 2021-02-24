@@ -1,9 +1,8 @@
 from SignalGenerationPackage.EdgeSignal.Ui_EdgeSignalWindow import Ui_EdgeSignalWindow
-from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters
 from SignalGenerationPackage.SignalMainWindow import SignalMainWindow
 
 
-class UserSignalMainWindow(SignalMainWindow):
+class EdgeSignalMainWindow(SignalMainWindow):
     def __init__(self):
         super().__init__()
 

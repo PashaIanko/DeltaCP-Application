@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters as UIParameters
 
 
 class DecelerationTimeCallBackOperator(CallBackOperator):
@@ -12,12 +12,12 @@ class DecelerationTimeCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=UserSignalUIParameters.DecelerationTimeSliderMin,
-            validator_max=UserSignalUIParameters.DecelerationTimeSliderMax,
-            validator_accuracy=UserSignalUIParameters.DecelerationTimeLineEditAccuracy,
+            validator_min=UIParameters.DecelerationTimeSliderMin,
+            validator_max=UIParameters.DecelerationTimeSliderMax,
+            validator_accuracy=UIParameters.DecelerationTimeLineEditAccuracy,
             line_edit=window.DecelerationTimelineEdit,
-            slider_min=UserSignalUIParameters.DecelerationTimeSliderMin,
-            slider_max=UserSignalUIParameters.DecelerationTimeSliderMax,
+            slider_min=UIParameters.DecelerationTimeSliderMin,
+            slider_max=UIParameters.DecelerationTimeSliderMax,
             slider=window.DecelerationTimehorizontalSlider,
             update_slider_func=self.update_deceleration_time_slider,
             update_line_edit_func=self.update_deceleration_time_line_edit
@@ -27,14 +27,14 @@ class DecelerationTimeCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.DecelerationTimelineEdit,
             slider=self.window.DecelerationTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.DecelerationTimeCalcConstant
+            calc_constant=UIParameters.DecelerationTimeCalcConstant
         )
 
     def update_deceleration_time_line_edit(self):
         self.update_line_edit(
             line_edit=self.window.DecelerationTimelineEdit,
             slider=self.window.DecelerationTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.DecelerationTimeCalcConstant,
+            calc_constant=UIParameters.DecelerationTimeCalcConstant,
             update_model_func=self.update_deceleration_time
         )
 
