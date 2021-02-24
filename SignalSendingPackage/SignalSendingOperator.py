@@ -226,7 +226,6 @@ class SignalSendingOperator(CallBackOperator):
         self.ExecuteSending(Time)
 
         cycle_counter = 0
-        endless_counter = 0
         cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
@@ -235,24 +234,23 @@ class SignalSendingOperator(CallBackOperator):
                 self.SendingStopped = False  # Reset the flag
                 current_cycle_display.display(0)
                 return
-            elif self.EndlessSendingEnabled and self.CycleFinishedSuccessfully:
-                # Случай бесконечной отправки
-                # update Time array and restart the cycle
-                endless_counter += 1
-                self.CycleFinishedSuccessfully = False
-                current_cycle_display.display(endless_counter + 1)
-                self.RestartSending(Time, updated_x)
 
-            elif self.CycleSendingEnabled and self.CycleFinishedSuccessfully:
-                # Случай отправки N циклов
+            if self.CycleFinishedSuccessfully:
+                self.CycleFinishedSuccessfully = False
                 cycle_counter += 1
-                cycles_to_perform = cycle_number_widget.value()
-                if cycle_counter >= cycles_to_perform:
-                    return
-                else:
+
+                if self.EndlessSendingEnabled:
                     current_cycle_display.display(cycle_counter + 1)
-                    self.CycleFinishedSuccessfully = False
                     self.RestartSending(Time, updated_x)
+
+                if self.CycleSendingEnabled:
+                    cycles_to_perform = cycle_number_widget.value()
+                    if cycle_counter >= cycles_to_perform:
+                        return
+                    else:
+                        current_cycle_display.display(cycle_counter + 1)
+                        self.RestartSending(Time, updated_x)
+
 
     def RestartSending(self, Time, updated_x):
         upd_val = SignalData.x[-1]
