@@ -11,6 +11,7 @@ from SignalGenerationPackage.Sinus.SinusMainWindow import SinusMainWindow
 from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 from SignalGenerationPackage.Sinus.SinusUIParameters import SinusUIParameters
 from SignalGenerationPackage.Sinus.AutoFillCallBackOperator import AutoFillCallBackOperator
+from SignalGenerationPackage.Sinus.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
 
 class SinusSignalController(SignalController):
 
@@ -39,6 +40,7 @@ class SinusSignalController(SignalController):
                 SinusPointsNumberCallBackOperator(self.model),
                 SinusPhaseCallBackOperator(self.model),
                 SinusOmegaCallBackOperator(self.model),
+                RequestFrequencyCallBackOperator(self.model),
                 AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
             ]
 
@@ -53,7 +55,7 @@ class SinusSignalController(SignalController):
     # overridden
     def init_param_names(self):
         self.param_names = [
-            "Phase", "Omega", "Points Number", "Time From", "Time To", "Amplitude"
+            "Phase", "Omega", "Points Number", "Time From", "Time To", "Amplitude", "Request Frequency"
         ]
 
     # overridden
@@ -64,7 +66,8 @@ class SinusSignalController(SignalController):
             SinusUIParameters.PointsNumberCalcConstant,
             SinusUIParameters.TimeFromCalcConstant,
             SinusUIParameters.TimeToCalcConstant,
-            SinusUIParameters.AmplitudeCalcConstant
+            SinusUIParameters.AmplitudeCalcConstant,
+            SinusUIParameters.RequestFreqCalcConstant
         ]
 
     def init_sliders(self):
@@ -75,5 +78,6 @@ class SinusSignalController(SignalController):
             ui.horizontalSliderPointsNumber,
             ui.horizontalSliderTimeFrom,
             ui.horizontalSliderTimeTo,
-            ui.horizontalSliderAmplitude
+            ui.horizontalSliderAmplitude,
+            ui.horizontalSliderRequestFrequency
         ]

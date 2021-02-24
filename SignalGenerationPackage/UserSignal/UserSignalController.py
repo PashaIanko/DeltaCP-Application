@@ -13,6 +13,7 @@ from SignalGenerationPackage.UserSignal.VerticalOffsetCallBackOperator import Ve
 from SignalGenerationPackage.UserSignal.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.UserSignal.UserSignalMainWindow import UserSignalMainWindow
 from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.UserSignal.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
 from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
 
 
@@ -38,7 +39,7 @@ class UserSignalController(SignalController):
         self.param_names = [
             'Start Time', 'Acceleration Time', 'Plateau Time',
             'Deceleration Time', 'Low Level Frequency', 'High Level Frequency',
-            'Vertical Offset', 'Points Number', 'End Time'
+            'Vertical Offset', 'Points Number', 'End Time', 'Request Frequency'
         ]
 
     # overridden
@@ -52,7 +53,8 @@ class UserSignalController(SignalController):
             UserSignalUIParameters.HighLevelFrequencyCalcConstant,
             UserSignalUIParameters.VerticalOffsetCalcConstant,
             UserSignalUIParameters.PointsNumberCalcConstant,
-            UserSignalUIParameters.EndTimeCalcConstant
+            UserSignalUIParameters.EndTimeCalcConstant,
+            UserSignalUIParameters.RequestFreqCalcConstant
         ]
 
     # overridden
@@ -68,6 +70,7 @@ class UserSignalController(SignalController):
             ui.VerticalOffsethorizontalSlider,
             ui.PointsNumberhorizontalSlider,
             ui.EndTimehorizontalSlider,
+            ui.RequestFrequencyhorizontalSlider
         ]
 
     def init_plot_widget(self):
@@ -85,6 +88,7 @@ class UserSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator(self.model),
                 LowLevelFrequencyCallBackOperator(self.model),
                 PointsNumberCallBackOperator(self.model),
+                RequestFrequencyCallBackOperator(self.model),
                 AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None)
             ]
 

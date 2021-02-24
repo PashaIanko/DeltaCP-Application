@@ -10,6 +10,7 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.PointsDensityCallBackOpe
 from SignalGenerationPackage.DynamicPointsDensitySignal.EndTimeCallBackOperator import EndTimeCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.StartTimeCallBackOperator import StartTimeCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.AutoFillCallBackOperator import AutoFillCallBackOperator
+from SignalGenerationPackage.DynamicPointsDensitySignal.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityMainWindow import DynamicPointsDensityMainWindow
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensityUIParameters import DynamicPointsDensityUIParameters
 from CallBackOperators.ForwardSendingOperator import ForwardSendingOperator
@@ -45,6 +46,7 @@ class DynamicPointsDensitySignalController(SignalController):
                 HighLevelFrequencyCallBackOperator(self.model),
                 LowLevelFrequencyCallBackOperator(self.model),
                 PointsDensityCallBackOperator(self.model),
+                RequestFrequencyCallBackOperator(self.model),
                 AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None),
             ]
 
@@ -59,7 +61,7 @@ class DynamicPointsDensitySignalController(SignalController):
     def init_param_names(self):
         self.param_names = [
             'Start Time', 'Acceleration Time', 'Plateau Time', 'Deceleration Time', 'Low Level Frequency',
-            'High Level Frequency', 'Points Density', 'End Time']
+            'High Level Frequency', 'Points Density', 'End Time', 'Request Frequency']
 
     # overridden
     def init_slider_constants(self):
@@ -72,6 +74,7 @@ class DynamicPointsDensitySignalController(SignalController):
             DynamicPointsDensityUIParameters.HighLevelFrequencyCalcConstant,
             DynamicPointsDensityUIParameters.PointsDensityCalcConstant,
             DynamicPointsDensityUIParameters.EndTimeCalcConstant,
+            DynamicPointsDensityUIParameters.RequestFreqCalcConstant
         ]
 
     # overridden
@@ -89,5 +92,6 @@ class DynamicPointsDensitySignalController(SignalController):
             ui.LowLevelFrequencyhorizontalSlider,
             ui.HighLevelFrequencyhorizontalSlider,
             ui.PointsDensityhorizontalSlider,
-            ui.EndTimehorizontalSlider
+            ui.EndTimehorizontalSlider,
+            ui.RequestFrequencyhorizontalSlider
         ]

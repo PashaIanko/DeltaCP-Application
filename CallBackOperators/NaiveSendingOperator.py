@@ -82,7 +82,7 @@ class NaiveSendingOperator(SignalSendingOperator):
         return self.user_interface.pushButtonStopSignalSending
 
     # overridden
-    def get_endless_send_checkbox(self):
+    def get_endless_send_radiobutton(self):
         return self.user_interface.EndlessSendingcheckBox
 
 

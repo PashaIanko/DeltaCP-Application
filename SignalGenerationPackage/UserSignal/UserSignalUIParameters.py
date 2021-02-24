@@ -94,5 +94,12 @@ class UserSignalUIParameters:
     PlotXPosition = 0
     PlotYPosition = 320
 
+    # REQUEST FREQUENCY
+    RequestFreqLineEditAccuracy = 2
+    RequestFreqCalcConstant = 100
+    RequestFreqSliderMin = 0.1 * RequestFreqCalcConstant
+    RequestFreqSliderMax = 1.1 * RequestFreqCalcConstant
+
+
     def __init__(self):
         pass

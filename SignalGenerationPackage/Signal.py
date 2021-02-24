@@ -158,4 +158,12 @@ class Signal(metaclass=ABCMeta):
     def y(self):
         return SignalData.y
 
+    @property
+    def request_freq(self):
+        return self.RequestFreq
 
+    @request_freq.setter
+    def request_freq(self, val):
+        self.RequestFreq = val
+        self.RecalcData()
+        self.NotifyObservers()

@@ -63,7 +63,19 @@ class SignalMainWindow(ABC):
         pass
 
     @abstractmethod
-    def get_endless_send_checkbox(self):
+    def get_endless_send_radiobutton(self):
+        pass
+
+    @abstractmethod
+    def get_cycle_send_radiobutton(self):
+        pass
+
+    @abstractmethod
+    def get_cycles_number_widget(self):
+        pass
+
+    @abstractmethod
+    def get_LCD_display(self):
         pass
 
 
