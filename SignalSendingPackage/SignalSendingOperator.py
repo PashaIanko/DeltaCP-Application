@@ -41,8 +41,8 @@ class SignalSendingOperator(CallBackOperator):
         self.SignalVisualizer = None
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
-        self.CycleGap = 1.0  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
-        self.CommandExecutionTime = 0.23  # Часть времени уходит на исполнение команды (отправку частоты на
+        self.CycleGap = 0.1  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
+        self.CommandExecutionTime = 0.5  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды

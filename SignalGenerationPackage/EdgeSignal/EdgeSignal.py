@@ -36,10 +36,10 @@ class EdgeSignal(Signal):
         # Пересчёт необходимого времени разгона / замедления
         try:
             self.SignalData.NecessaryAccelerationTime = (self.SignalData.MaxFrequency - self.SignalData.MinFrequency) * \
-                                                    (AccelerationTime / (LowLevelFreq - HighLevelFreq))
+                                                    (AccelerationTime / (HighLevelFreq - LowLevelFreq))
 
             self.SignalData.NecessaryDecelerationTime = (self.SignalData.MaxFrequency - self.SignalData.MinFrequency) * \
-                                                    (DecelerationTime / (LowLevelFreq - HighLevelFreq))
+                                                    (DecelerationTime / (HighLevelFreq - LowLevelFreq))
         except ZeroDivisionError:
             pass  # В случае LowLevelFreq == HighLevelFreq может быть деление на 0. Здесь это допускается (т.к. пользователь
                   # редактирует сигнал. Далее, на этапе PIDSendingOperator (отправка сигнала) будет доп. проверка)
@@ -144,3 +144,11 @@ class EdgeSignal(Signal):
     @property
     def CriticalDeceleration(self):
         return self.SignalData.CriticalDeceleration
+
+    @property
+    def NecessaryAccelerationTime(self):
+        return self.SignalData.NecessaryAccelerationTime
+
+    @property
+    def NecessaryDecelerationTime(self):
+        return self.SignalData.NecessaryDecelerationTime

@@ -32,8 +32,8 @@ class PIDSendingOperator(SignalSendingOperator):
 
         # Проверим - готовы начать, или желаемое ускорение / замедление
         # превышает критическое
-        necessary_t_acceleration = self.model.AccelerationTime
-        necessary_t_deceleration = self.model.DecelerationTime
+        necessary_t_acceleration = self.model.NecessaryAccelerationTime
+        necessary_t_deceleration = self.model.NecessaryDecelerationTime
         ready_to_start = self.check_acceleration_deceleration(necessary_t_acceleration, necessary_t_deceleration)
 
         if ready_to_start:
