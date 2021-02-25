@@ -1,5 +1,5 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.UserSignal.UserSignalUIParameters import UserSignalUIParameters
+from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters as UIParameters
 
 
 class EndTimeCallBackOperator(CallBackOperator):
@@ -12,12 +12,12 @@ class EndTimeCallBackOperator(CallBackOperator):
         self.window = window
 
         self.setup_callback_and_synchronize_slider(
-            validator_min=UserSignalUIParameters.EndTimeSliderMin,
-            validator_max=UserSignalUIParameters.EndTimeSliderMax,
-            validator_accuracy=UserSignalUIParameters.EndTimeLineEditAccuracy,
+            validator_min=UIParameters.EndTimeSliderMin,
+            validator_max=UIParameters.EndTimeSliderMax,
+            validator_accuracy=UIParameters.EndTimeLineEditAccuracy,
             line_edit=window.EndTimelineEdit,
-            slider_min=UserSignalUIParameters.EndTimeSliderMin,
-            slider_max=UserSignalUIParameters.EndTimeSliderMax,
+            slider_min=UIParameters.EndTimeSliderMin,
+            slider_max=UIParameters.EndTimeSliderMax,
             slider=window.EndTimehorizontalSlider,
             update_slider_func=self.update_end_time_slider,
             update_line_edit_func=self.update_end_time_line_edit
@@ -27,14 +27,14 @@ class EndTimeCallBackOperator(CallBackOperator):
         self.update_slider(
             line_edit=self.window.EndTimelineEdit,
             slider=self.window.EndTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.EndTimeCalcConstant
+            calc_constant=UIParameters.EndTimeCalcConstant
         )
 
     def update_end_time_line_edit(self):
         self.update_line_edit(
             line_edit=self.window.EndTimelineEdit,
             slider=self.window.EndTimehorizontalSlider,
-            calc_constant=UserSignalUIParameters.EndTimeCalcConstant,
+            calc_constant=UIParameters.EndTimeCalcConstant,
             update_model_func=self.update_end_time
         )
 

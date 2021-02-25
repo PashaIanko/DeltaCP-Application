@@ -2,7 +2,7 @@ from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.Sinus.SinusSignalController import SinusSignalController
 from SignalGenerationPackage.UserSignal.UserSignalController import UserSignalController
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalController import DynamicPointsDensitySignalController
-
+from SignalGenerationPackage.EdgeSignal.EdgeSignalController import EdgeSignalController
 
 class SignalTypeOperator(CallBackOperator):
     def __init__(self):
@@ -22,4 +22,6 @@ class SignalTypeOperator(CallBackOperator):
             self.SignalController = UserSignalController()
         elif signal_text == 'dynamic points density':
             self.SignalController = DynamicPointsDensitySignalController()
+        elif signal_text == 'edge signal':
+            self.SignalController = EdgeSignalController()
         # TODO: убрать ветвление, вставить словарь

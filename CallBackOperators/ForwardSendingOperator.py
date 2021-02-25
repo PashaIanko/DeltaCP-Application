@@ -1,7 +1,7 @@
 from SignalGenerationPackage.SignalData import SignalData
 from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
 from LoggersConfig import loggers
-from time import sleep
+
 
 class ForwardSendingOperator(SignalSendingOperator):
 
@@ -84,23 +84,3 @@ class ForwardSendingOperator(SignalSendingOperator):
                 self.CycleFinishedSuccessfully = True
                 loggers['SignalSending'].info(f'Finished Cycle')
                 return
-
-
-    def PresetFrequency(self, value):
-        # Перед запуском, если частота ненулевая - убедиться, предварительно задать требуемую начальную частоту
-        value_to_send = int(value * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-        self.DeltaCPClient.SetFrequency(value_to_send)
-        accuracy = 0.05
-
-        if self.DebugMode:
-            return
-        else:
-            while True:
-                # мониторим, достигли ли требуемой начальной частоты
-                sleep(1)
-                current_freq = self.DeltaCPClient.RequestCurrentFrequency()
-                loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
-                if abs(current_freq - value) <= accuracy:
-                    return
-
-

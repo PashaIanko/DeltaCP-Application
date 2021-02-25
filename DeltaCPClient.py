@@ -192,5 +192,14 @@ class DeltaCPClient(ModbusClient):
         loggers['Application'].debug(f'Presetting initial parameters: Acceleration time #1, Deceleration time #1')
         self.SetRegime1()
 
+    def SetAccelerationTime1(self, val):
+        if val > 0:
+            self.WriteRegister(DeltaCPRegisters.AccelerationTime_1Reg, int(float(val) * 100))
+
+    def SetDecelerationTime1(self, val):
+        if val > 0:
+            self.WriteRegister(DeltaCPRegisters.DecelerationTime_1Reg, int(float(val) * 100))
+
+
 
 # TODO: Переделать визуализацию (чтоб два графика в едином окошке)
