@@ -4,7 +4,7 @@ from ConnectionPackage.ConnectionModule import ConnectionModule
 from SignalGenerationPackage.SignalGenerationModule import SignalGenerationModule
 from SignalSendingPackage.SignalSendingModule import SignalSendingModule
 from FrequencySettingPackage.FrequencySettingModule import FrequencySettingModule
-from AccelerDecelerTimePackage.AccelerDecelerTimeModule import AccelerDecelerTimeModule
+# from AccelerDecelerTimePackage.AccelerDecelerTimeModule import AccelerDecelerTimeModule
 
 
 class ApplicationManager:
@@ -15,7 +15,7 @@ class ApplicationManager:
             [
                 ConnectionModule(),
                 FrequencySettingModule(),
-                AccelerDecelerTimeModule(),
+                # AccelerDecelerTimeModule(),
                 SignalGenerationModule(),
                 SignalSendingModule()
             ]
