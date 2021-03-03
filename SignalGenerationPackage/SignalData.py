@@ -12,8 +12,8 @@ class SignalData(metaclass=ABCMeta):
     y_with_requests = []
     dx_with_requests = []
 
+    x_to_send = []
+    y_to_send = []
+
     def __init__(self):
         pass
-
-
-

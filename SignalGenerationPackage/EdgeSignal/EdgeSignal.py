@@ -1,6 +1,7 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.EdgeSignal.EdgeSignalData import EdgeSignalData
 from SignalGenerationPackage.SignalData import SignalData
+from SignalGenerationPackage.EdgeSignal.EdgeSignalTransformer import EdgeSignalTransformer
 
 
 class EdgeSignal(Signal):
@@ -11,6 +12,10 @@ class EdgeSignal(Signal):
 
     def __init__(self):
         super().__init__()
+
+    # overridden
+    def InitSendingTransformer(self):
+        self.SendingTransformer = EdgeSignalTransformer(self.SignalData)
 
     # overridden
     def InitSignalData(self):

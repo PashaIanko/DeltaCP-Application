@@ -11,12 +11,18 @@ class Signal(metaclass=ABCMeta):
 
     def __init__(self):
         self.SignalData = None  # abstract class
+        self.SendingTransformer = None
         self.Observers = []
         self.InitSignalData()
+        self.InitSendingTransformer()
         self.RequestFreq = 1.0
 
     @abstractmethod
     def InitSignalData(self):
+        pass
+
+    @abstractmethod
+    def InitSendingTransformer(self):
         pass
 
     @abstractmethod
@@ -52,19 +58,25 @@ class Signal(metaclass=ABCMeta):
     def RecalcData(self):
         self.UpdateSignalData()
         self.ClearRequestData()
-        self.AddRequestData(self.RequestFreq)
+        self.TransformSignal()  # Преобразовать для отправки # TODO: Может Transform и Request сделать по колбеку на StartSending?
+        #self.AddRequestData(self.RequestFreq, SignalData.x, SignalData.y)
+
+        self.AddRequestData(self.RequestFreq, SignalData.x_to_send, SignalData.y_to_send)
 
         # Теперь обновить dt для x, y, x_with_requests, y_with_requests
         SignalData.dx = self.UpdateDeltaTimes(input=SignalData.x, output=SignalData.dx)  # We calculate the array of dt values for optimization sakes, in the
                                                                         # Signal Sending Module
         SignalData.dx_with_requests = self.UpdateDeltaTimes(input=SignalData.x_with_requests, output=SignalData.dx_with_requests)
 
+    def TransformSignal(self):
+        self.SendingTransformer.TransformSignal()
+
     @staticmethod
     def extend_edge_points(list_x, list_y):
         SignalData.x_with_requests.extend(list_x)
         SignalData.y_with_requests.extend(list_y)
 
-    def AddRequestData(self, request_freq = 1.0):
+    def AddRequestData(self, request_freq, x, y):
         # Исходные данные - сам сигнал, SignalData.x, SignalData.y
         # Надо - зная частоту опроса, идём по всему массиву времени
         # dt = SignalData.x[i+1] - SignalData.x[i].
@@ -73,13 +85,13 @@ class Signal(metaclass=ABCMeta):
         # на частотник
 
         dx = 1 / request_freq
-        len_x = len(SignalData.x)
+        len_x = len(x)
         for prev_idx in range(0, len_x - 1):
             next_idx = prev_idx + 1
-            x_prev = SignalData.x[prev_idx]
-            x_next = SignalData.x[next_idx]
-            y_prev = SignalData.y[prev_idx]
-            y_next = SignalData.y[next_idx]
+            x_prev = x[prev_idx]
+            x_next = x[next_idx]
+            y_prev = y[prev_idx]
+            y_next = y[next_idx]
             dx_current = abs(x_next - x_prev)
 
             if dx_current <= dx and next_idx == len_x - 1:
