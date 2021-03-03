@@ -167,7 +167,3 @@ class PIDSendingOperator(SignalSendingOperator):
                 self.CycleFinishedSuccessfully = True
                 loggers['SignalSending'].info(f'Finished Cycle')
                 return
-
-
-
-

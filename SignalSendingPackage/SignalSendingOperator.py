@@ -42,7 +42,7 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
         self.CycleGap = 0.1  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
-        self.CommandExecutionTime = 0.5  # Часть времени уходит на исполнение команды (отправку частоты на
+        self.CommandExecutionTime = 0.0  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды
@@ -155,32 +155,27 @@ class SignalSendingOperator(CallBackOperator):
         # окошко с визуализацией. Если закрыл - то мы ничего уже не отправляем. Тогда выставляем частоту 0Гц
         # SetFrequency(0) и посылаем STOP
 
-        window_is_closed = self.SignalVisualizer.check_if_window_closed()
-        if window_is_closed:
-            loggers['Application'].info(f'Visualization window was closed --> Application Stop Signal Sending')
-            self.StopSendingSignal()  # TODO: Теперь окошко встроено --> Нет нужды проверять window_is_closed
+        # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
+        # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
+        # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
+        if self.DebugMode:
+            CurrentFreq = 0
         else:
-            # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
-            # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
-            # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
-            if self.DebugMode:
-                CurrentFreq = 0
+            CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+
+        if not self.SendingStopped:
+            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+
+            if self.ValueToSend is None:
+                loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
+                loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
             else:
-                CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-
-            if not self.SendingStopped:
-                self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
-
-                if self.ValueToSend is None:
-                    loggers['Debug'].debug(f'SignalSendingOperator: TestTimer: Request current freq')
-                    loggers['SignalSending'].info(f'Current frequency = {CurrentFreq} Hz')
-                else:
-                    loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
-                    # Если окошко не закрыто - продолжаем визуализацию и отправку
-                    value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-                    self.DeltaCPClient.SetFrequency(value_to_send)
-                    self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
-            self.FunctionWasCalled = True
+                loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
+                # Если окошко не закрыто - продолжаем визуализацию и отправку
+                value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                self.DeltaCPClient.SetFrequency(value_to_send)
+                self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
+        self.FunctionWasCalled = True
 
     def RestartSignalIterator(self):
         self.PointsIterator = 0
