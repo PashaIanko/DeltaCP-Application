@@ -177,3 +177,33 @@ class PIDSendingOperator(SignalSendingOperator):
                 self.CycleFinishedSuccessfully = True
                 loggers['SignalSending'].info(f'Finished Cycle')
                 return
+
+    def TestTimer(self):
+        # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
+        # окошко с визуализацией. Если закрыл - то мы ничего уже не отправляем. Тогда выставляем частоту 0Гц
+        # SetFrequency(0) и посылаем STOP
+
+        # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
+        # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
+        # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
+        if self.DebugMode:
+            CurrentFreq = 0
+        else:
+            CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+
+        if not self.SendingStopped:
+
+            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+
+            # Если поставлено на Паузу - тогда последнюю опрошенную частоту задаём и просто ждём, пока
+            # флаг паузы не снимется
+            if self.SendingOnPause:
+                print(f'SENDING PAUSED')
+                self.DeltaCPClient.SetFrequency(int(CurrentFreq * 100))
+            else:
+                if self.ValueToSend is not None:
+                    loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
+                    value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                    self.DeltaCPClient.SetFrequency(value_to_send)
+                    self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
+        self.FunctionWasCalled = True
