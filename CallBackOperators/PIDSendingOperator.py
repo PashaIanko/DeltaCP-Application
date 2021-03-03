@@ -84,8 +84,13 @@ class PIDSendingOperator(SignalSendingOperator):
 
         # 2
         diff_freq = abs(self.model.HighLevelFrequency - self.model.LowLevelFrequency)
-        necessary_acceleration = diff_freq / necessary_t_acceleration
-        necessary_deceleration = diff_freq / necessary_t_deceleration
+
+        try:
+            necessary_acceleration = diff_freq / necessary_t_acceleration
+            necessary_deceleration = diff_freq / necessary_t_deceleration
+        except ZeroDivisionError:
+            PopUpNotifier.Error(f'Zero Acceleration/Deceleration time!')
+            return False
 
         # 3
         critical_acceleration = self.model.CriticalAcceleration
