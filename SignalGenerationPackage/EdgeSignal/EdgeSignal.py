@@ -45,27 +45,53 @@ class EdgeSignal(Signal):
                   # редактирует сигнал. Далее, на этапе PIDSendingOperator (отправка сигнала) будет доп. проверка)
 
         if WholePeriod != 0:
-            X_arr = [
-                0,
-                0 + StartTime,
-                0 + StartTime + AccelerationTime,
-                0 + StartTime + AccelerationTime + PlateauTime,
-                0 + StartTime + AccelerationTime + PlateauTime + DecelerationTime,
-                0 + StartTime + AccelerationTime + PlateauTime + DecelerationTime + EndTime
-            ]
+            # Есть несколько разных случаев при
+            # PlateauTime = 0, StartTime = 0, EndTime = 0
+            X_arr = self.get_X_arr(StartTime, AccelerationTime, PlateauTime, DecelerationTime, EndTime)
+            Y_arr = self.get_Y_arr(LowLevelFreq, HighLevelFreq, StartTime, PlateauTime, EndTime)
 
-            Y_arr = [
-                LowLevelFreq,
-                LowLevelFreq,
-                HighLevelFreq,
-                HighLevelFreq,
-                LowLevelFreq,
-                LowLevelFreq
-            ]
 
             SignalData.y = Y_arr
             SignalData.x = X_arr
 
+    @staticmethod
+    def get_Y_arr(LowFreq, HiFreq, StartTime, PlateauTime, EndTime):
+
+        # Изначальный массив
+        res = [
+            LowFreq,
+            LowFreq,
+            HiFreq,
+            HiFreq,
+            LowFreq,
+            LowFreq
+        ]
+        if PlateauTime == 0:
+            del res[3]
+        if StartTime == 0:
+            del res[0]
+        if EndTime == 0:
+            del res[-1]
+        return res
+
+    @staticmethod
+    def get_X_arr(StartTime, AccTime, PlateauTime, DecTime, EndTime):
+        res = [
+            0,
+            0 + StartTime,
+            0 + StartTime + AccTime,
+            0 + StartTime + AccTime + PlateauTime,
+            0 + StartTime + AccTime + PlateauTime + DecTime,
+            0 + StartTime + AccTime + PlateauTime + DecTime + EndTime
+        ]
+        if PlateauTime == 0:
+            # Убрать 3 точку (индекс с 0)
+            del res[3]
+        if StartTime == 0:
+            del res[0]
+        if EndTime == 0:
+            del res[-1]
+        return res
 
     @property
     def AccelerationTime(self):

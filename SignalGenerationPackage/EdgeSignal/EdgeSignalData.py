@@ -23,5 +23,5 @@ class EdgeSignalData(SignalData):
         self.NecessaryDecelerationTime = 0
 
         # Критические Параметры разгона
-        self.CriticalAcceleration = (50 - 0) / (15)  # От 0 до 50 Hz за 15 сек
-        self.CriticalDeceleration = (50 - 0) / (15) # От 50 до 0 Hz за 15 сек
+        self.CriticalAcceleration = (self.MaxFrequency - self.MinFrequency) / (15)  # От 0 до 50 Hz за 15 сек
+        self.CriticalDeceleration = (self.MaxFrequency - self.MinFrequency) / (15) # От 50 до 0 Hz за 15 сек
