@@ -181,7 +181,6 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0
 
     def RestartVisualization(self, TimeArray):
-        print(f'Restarting Visualization!!')
         self.SignalVisualizer.Restart(TimeArray)
 
     def LaunchSendingThread(self):
