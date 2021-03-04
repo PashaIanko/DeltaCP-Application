@@ -3,6 +3,7 @@ from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
 from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 from LoggersConfig import loggers
+import time
 
 
 class PIDSendingOperator(SignalSendingOperator):
@@ -179,6 +180,7 @@ class PIDSendingOperator(SignalSendingOperator):
                 return
 
     def TestTimer(self):
+        t0 = time.time()
         # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
         # окошко с визуализацией. Если закрыл - то мы ничего уже не отправляем. Тогда выставляем частоту 0Гц
         # SetFrequency(0) и посылаем STOP
@@ -207,3 +209,6 @@ class PIDSendingOperator(SignalSendingOperator):
                     self.DeltaCPClient.SetFrequency(value_to_send)
                     self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
         self.FunctionWasCalled = True
+
+        t1 = time.time()
+        print(f'TIME {t1 - t0}')
