@@ -76,10 +76,10 @@ class Signal(metaclass=ABCMeta):
         self.SendingTransformer.TransformSignal()
 
     @staticmethod
-    def extend_edge_points(list_x, list_y):
+    def extend_edge_points(list_x, list_y, to_send_list):
         pts_arr = []
-        for x, y in zip(list_x, list_y):
-            point = Point(x=x, y=y, to_send=False)
+        for x, y, to_send in zip(list_x, list_y, to_send_list):
+            point = Point(x=x, y=y, to_send=to_send)
             pts_arr.append(point)
         SignalData.point_array_with_requests.extend(pts_arr)
 
@@ -109,10 +109,10 @@ class Signal(metaclass=ABCMeta):
             if dx_current <= dx and next_idx == len_x - 1:
                 # Значит, нет необходимости вставлять точки для опроса - текущий dx_current и так достаточно мал
                 # На последней итерации вставляем крайние точки
-                self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+                self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[True, True])
             elif dx_current <= dx and next_idx < len_x - 1:
                 # Итерация не последняя - только левые крайние точки добавляем
-                self.extend_edge_points([x_prev], [y_prev])
+                self.extend_edge_points([x_prev], [y_prev], to_send_list=[True])
             elif dx_current > dx:
                 # Значит, надо вставить точки для опроса
                 # Сколько точек вставить:
@@ -122,10 +122,10 @@ class Signal(metaclass=ABCMeta):
                     # Так совпало - тогда только крайние точки вставляем
                     if next_idx < len_x - 1:
                         # итерация не последняя
-                        self.extend_edge_points([x_prev], [y_prev])
+                        self.extend_edge_points([x_prev], [y_prev], to_send_list=[True, True])
                     else:
                         # итерация последняя - добавляем края
-                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[True, True])
                 else:
                     # Тогда вставим несколько промежуточных точек:
                     # Массив x для вставки:
@@ -138,6 +138,18 @@ class Signal(metaclass=ABCMeta):
                     # частоту TODO: Исправить этот костыль
                     y_new = [y_prev] + [None] * (len(x_new) - 2) + [y_next]
 
+                    # Ещё один костыль - лист из булевых флагов to_send - отправлять мы
+                    # будем или опрашивать
+                    if y_prev is None:
+                        first_val = False
+                    else:
+                        first_val = True
+                    if y_next is None:
+                        last_val = False
+                    else:
+                        last_val = True
+                    to_send_list = [first_val] + [False] * (len(x_new) - 2) + [last_val]
+
 
                     # Если не последняя итерация - то необходимо исключить последнюю точку
                     # из массивов X и Y
@@ -145,7 +157,9 @@ class Signal(metaclass=ABCMeta):
                     if next_idx != len_x - 1:
                         x_new = x_new[0:-1]
                         y_new = y_new[0:-1]
-                    self.extend_edge_points(x_new, y_new)
+                        to_send_list = to_send_list[0:-1]
+
+                    self.extend_edge_points(x_new, y_new, to_send_list)
 
     def AddObserver(self, Observer):
         self.Observers.append(Observer)

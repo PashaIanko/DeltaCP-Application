@@ -206,9 +206,7 @@ class SignalSendingOperator(CallBackOperator):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
 
-        Time = SignalData.x.copy()
         updated_x = SignalData.x.copy()
-
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
         self.ExecuteSending()
 
@@ -228,7 +226,7 @@ class SignalSendingOperator(CallBackOperator):
 
                 if self.EndlessSendingEnabled:
                     current_cycle_display.display(cycle_counter + 1)
-                    self.RestartSending(Time, updated_x)
+                    self.RestartSending(updated_x)
 
                 if self.CycleSendingEnabled:
                     cycles_to_perform = cycle_number_widget.value()
@@ -236,13 +234,12 @@ class SignalSendingOperator(CallBackOperator):
                         return
                     else:
                         current_cycle_display.display(cycle_counter + 1)
-                        self.RestartSending(Time, updated_x)
+                        self.RestartSending(updated_x)
 
 
-    def RestartSending(self, Time, updated_x):
+    def RestartSending(self, updated_x):
         upd_val = SignalData.x[-1]
         self.update_time_stamps(upd_val)
-        #Time = self.update_array(Time, upd_val)
         updated_x = self.update_array(updated_x, upd_val)
 
         # restarting points Iterator, Visualisation and Sending Thread
