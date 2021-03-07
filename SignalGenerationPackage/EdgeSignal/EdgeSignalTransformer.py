@@ -29,5 +29,7 @@ class EdgeSignalTransformer:
         if self.SignalData.EndTime == 0:
             del y_optimized[-1]
 
-        self.SignalData.x_to_send = self.SignalData.x
-        self.SignalData.y_to_send = y_optimized
+        point_arr = self.SignalData.transformed_point_array
+        for i in range (len(point_arr)):
+            point_arr[i].y = y_optimized[i]
+            point_arr[i].x = self.SignalData.point_array[i].x

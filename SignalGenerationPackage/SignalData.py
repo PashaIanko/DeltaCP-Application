@@ -1,19 +1,15 @@
-from abc import abstractmethod, ABCMeta
+from abc import ABCMeta
 
 
 class SignalData(metaclass=ABCMeta):
 
-    # A part of Model in MVC pattern
+    point_array = []
+    transformed_point_array = []
+    point_array_with_requests = []
+
     x = []
     y = []
-    dx = []  # Array of dx values, for optimization sakes in the SignalSendingModule
-
-    x_with_requests = []
-    y_with_requests = []
-    dx_with_requests = []
-
-    x_to_send = []
-    y_to_send = []
+    dx = []
 
     def __init__(self):
         pass

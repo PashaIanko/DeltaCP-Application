@@ -2,6 +2,7 @@ from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.EdgeSignal.EdgeSignalData import EdgeSignalData
 from SignalGenerationPackage.SignalData import SignalData
 from SignalGenerationPackage.EdgeSignal.EdgeSignalTransformer import EdgeSignalTransformer
+from SignalGenerationPackage.Point import Point
 
 
 class EdgeSignal(Signal):
@@ -50,19 +51,26 @@ class EdgeSignal(Signal):
                   # редактирует сигнал. Далее, на этапе PIDSendingOperator (отправка сигнала) будет доп. проверка)
 
         if WholePeriod != 0:
-            # Есть несколько разных случаев при
-            # PlateauTime = 0, StartTime = 0, EndTime = 0
-            X_arr = self.get_X_arr(StartTime, AccelerationTime, PlateauTime, DecelerationTime, EndTime)
-            Y_arr = self.get_Y_arr(LowLevelFreq, HighLevelFreq, StartTime, PlateauTime, EndTime)
+            point_arr = self.get_point_array()
+            SignalData.point_array = point_arr
+
+    def get_point_array(self):
+        res = []
+        X_arr = self.get_X_arr()
+        Y_arr = self.get_Y_arr()
+
+        for x, y in zip(X_arr, Y_arr):
+            res.append(Point(x=x, y=y, to_send=True))
+        return res
 
 
-            SignalData.y = Y_arr
-            SignalData.x = X_arr
-
-    @staticmethod
-    def get_Y_arr(LowFreq, HiFreq, StartTime, PlateauTime, EndTime):
-
+    def get_Y_arr(self):
         # Изначальный массив
+        LowFreq = self.SignalData.LowLevelFrequency  # TODO: Переписать через атрибуты
+        HiFreq = self.SignalData.HighLevelFrequency
+        PlateauTime = self.SignalData.PlateauTime
+        StartTime = self.SignalData.StartTime
+        EndTime = self.SignalData.EndTime
         res = [
             LowFreq,
             LowFreq,
@@ -79,8 +87,12 @@ class EdgeSignal(Signal):
             del res[-1]
         return res
 
-    @staticmethod
-    def get_X_arr(StartTime, AccTime, PlateauTime, DecTime, EndTime):
+    def get_X_arr(self):
+        StartTime = self.SignalData.StartTime
+        AccTime = self.SignalData.AccelerationTime
+        PlateauTime = self.SignalData.PlateauTime
+        DecTime = self.SignalData.DecelerationTime
+        EndTime = self.SignalData.EndTime
         res = [
             0,
             0 + StartTime,
