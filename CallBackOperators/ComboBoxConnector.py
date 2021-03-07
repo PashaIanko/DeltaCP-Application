@@ -9,7 +9,7 @@ class ComboBoxOperator(CallBackOperator):
 
     def ConnectCallBack(self, window):
         window.BaudRatecomboBox.currentIndexChanged.connect(self.SetBaudRate)
-        window.COMPortcomboBox.currentIndexChanged.connect(self.SetCOMPort)
+        window.COMPortspinBox.valueChanged.connect(self.SetCOMPort)
         window.ProtocolcomboBox.currentIndexChanged.connect(self.SetProtocol)
         window.ByteSizecomboBox.currentIndexChanged.connect(self.SetByteSize)
         window.ParitycomboBox.currentIndexChanged.connect(self.SetParity)
@@ -33,7 +33,6 @@ class ComboBoxOperator(CallBackOperator):
         if (len(arg)):
             self.ConnectionParameters.SetParity(arg)
 
-
     def SetStopBits(self):
         arg = (self.window.StopBitscomboBox.currentText())
         if (len(arg)):
@@ -45,7 +44,7 @@ class ComboBoxOperator(CallBackOperator):
             self.ConnectionParameters.SetBaudRate(int(arg))
 
     def SetCOMPort(self):
-        arg = self.window.COMPortcomboBox.currentText()
-        if (len(arg)):
-            self.ConnectionParameters.SetCOMPort(arg)
+        arg = self.window.COMPortspinBox.value()
+        print(f'arg = {arg}')
+        self.ConnectionParameters.SetCOMPort(arg)
 

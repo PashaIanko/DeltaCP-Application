@@ -3,7 +3,7 @@ from Singleton import Singleton
 @Singleton
 class ConnectionParameters:
     def __init__(self):
-        self.COMPort = 0
+        self.COMPort = 1
         self.BaudRate = 0
         self.Protocol = ""
         self.ByteSize = 0
