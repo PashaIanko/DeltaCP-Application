@@ -143,7 +143,6 @@ class PIDSendingOperator(SignalSendingOperator):
             while self.PointsIterator <= Dts_len:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
-
                     self.current_point = points[self.PointsIterator]
                     dt_to_wait = DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime
                     loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
@@ -181,8 +180,6 @@ class PIDSendingOperator(SignalSendingOperator):
                     CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
                     self.DeltaCPClient.SetFrequency(int(CurrentFreq * 100))
                 else:
-                    if current_point.y is None and current_point.to_send:
-                        a = 1
                     loggers['Debug'].debug(f'TestTimer: ValueToSend = {current_point.y}')
                     value_to_send = int(current_point.y * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
                     self.DeltaCPClient.SetFrequency(value_to_send)
