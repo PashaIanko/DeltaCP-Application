@@ -40,9 +40,8 @@ class Signal(metaclass=ABCMeta):
         output = []
 
         N = len(input)
-        if N == 0:
-            return  # No points at all
-        elif N == 1:
+
+        if N == 1:
             output.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
         elif N > 1:
             output = [
@@ -69,6 +68,7 @@ class Signal(metaclass=ABCMeta):
         SignalData.x.clear()
         SignalData.y.clear()
         SignalData.dx.clear()
+        SignalData.transformed_point_array.clear()
         SignalData.point_array.clear()
         SignalData.point_array_with_requests.clear()
 

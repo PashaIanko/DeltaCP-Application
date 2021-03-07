@@ -106,9 +106,6 @@ class SignalSendingOperator(CallBackOperator):
 
         self.EndlessSendingEnabled = endless_selected
         self.CycleSendingEnabled = cycle_send_selected
-        loggers['Debug'].debug(f'if Endless: {self.EndlessSendingEnabled},'
-                               f'if CycleSend: {self.CycleSendingEnabled}')
-
 
     def PauseSending(self):
         if self.window.PauseSendingradioButton.isChecked():
@@ -146,14 +143,8 @@ class SignalSendingOperator(CallBackOperator):
 
         # Отрисуем на графике исходный сигнал
         self.SignalVisualizer.ResetPlot()
-        # Закроем окошко с визуализацией
-        # if not (self.SignalVisualizer.check_if_window_closed()):
-        #    self.SignalVisualizer.close_visualization_window()
 
     def TestTimer(self):
-        # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
-        # окошко с визуализацией. Если закрыл - то мы ничего уже не отправляем. Тогда выставляем частоту 0Гц
-        # SetFrequency(0) и посылаем STOP
 
         # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
         # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
@@ -214,10 +205,12 @@ class SignalSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
-        Time = SignalData.x_with_requests.copy()
+
+        Time = SignalData.x.copy()
         updated_x = SignalData.x.copy()
+
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
-        self.ExecuteSending(Time)
+        self.ExecuteSending()
 
         cycle_counter = 0
         cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
@@ -248,16 +241,22 @@ class SignalSendingOperator(CallBackOperator):
 
     def RestartSending(self, Time, updated_x):
         upd_val = SignalData.x[-1]
-        Time = self.update_time_array(Time, upd_val)
-        updated_x = self.update_time_array(updated_x, upd_val)
+        self.update_time_stamps(upd_val)
+        #Time = self.update_array(Time, upd_val)
+        updated_x = self.update_array(updated_x, upd_val)
 
         # restarting points Iterator, Visualisation and Sending Thread
         self.PointsIterator = 0
         self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
-        self.ExecuteSending(Time)
+        self.ExecuteSending()
 
     @staticmethod
-    def update_time_array(arr, upd_val):
+    def update_time_stamps(upd_val):
+        for p in SignalData.point_array_with_requests:
+            p.x += upd_val
+
+    @staticmethod
+    def update_array(arr, upd_val):
         for i in range(len(arr)):
             arr[i] += upd_val
         return arr

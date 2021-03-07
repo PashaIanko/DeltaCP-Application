@@ -109,19 +109,22 @@ class PIDSendingOperator(SignalSendingOperator):
             return True
 
     # overridden
-    def ExecuteSending(self, Time):
-        DeltaTimes = SignalData.dx_with_requests
+    def ExecuteSending(self):
+
+        points = SignalData.point_array_with_requests
+        DeltaTimes = SignalData.dx
         Dts_len = len(DeltaTimes)
+
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
         self.PointsIterator = 0
-        self.TimeStamp = Time[self.PointsIterator]  # В какой момент времени на графике мы выставим ValueToSend
-        self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]  # Сигнал опережает теперь
+        self.TimeStamp = points[self.PointsIterator].x
+        self.ValueToSend = points[self.PointsIterator].y
 
 
         # На первом прогоне надо предварительно выставить начальную частоту
         if self.IsFirstCycle == True:
-            preset_value = SignalData.y_with_requests[0]
+            preset_value = points[0].y
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
 
@@ -136,37 +139,18 @@ class PIDSendingOperator(SignalSendingOperator):
         if Dts_len != 0:  # If the Time array has only one point, then we've already accomplished it in
                           # the method self.Timer.run()
 
-            i = 0
             self.PointsIterator = 1
-            while i < Dts_len:
+            while self.PointsIterator <= Dts_len:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
 
-                    self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]
-                    self.TimeStamp = Time[self.PointsIterator]
-                    dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
+                    cur_point = points[self.PointsIterator]
+                    self.ValueToSend = cur_point.y
+                    self.TimeStamp = cur_point.x
+                    dt_to_wait = DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime
                     loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
                     self.Timer.reset(dt_to_wait)
 
-                    # if i == Dts_len - 1:
-                    #     # Это значит, мы достигли конца отправляемого сигнала.
-                    #     # Поскольку отправляем наперёд - надо отправить начальную точку сигнала,
-                    #     # При этом подождав detaT[-1] (Последний временной отрезок)
-                    #     # Тогда, когда цикл отправки возобновится - начальная точка уже была отправлена в
-                    #     # Этом коде. Поэтому в новом цикле начинаем отправку не с 0й, а с 1ой точки.
-                    #     self.ValueToSend = SignalData.y_with_requests[0]
-                    #     self.TimeStamp = Time[self.PointsIterator - 1]
-                    #     loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
-                    #     self.Timer.reset(DeltaTimes[-1] - self.CommandExecutionTime)
-                    #
-                    # else:
-                    #     self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]
-                    #     self.TimeStamp = Time[self.PointsIterator]
-                    #     dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
-                    #     loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
-                    #     self.Timer.reset(dt_to_wait)
-
-                    i += 1
                     self.PointsIterator += 1
 
                 if self.SendingStopped:
