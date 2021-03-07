@@ -32,7 +32,6 @@ class AutoConnectOperator(CallBackOperator):
                 [str(config['Byte Size']),  self.window.ByteSizecomboBox],
                 [config['Parity'],          self.window.ParitycomboBox],
                 [str(config['Stop Bits']),  self.window.StopBitscomboBox],
-                [config['COM Port'],        self.window.COMPortcomboBox],
                 [str(config['Baud Rate']),  self.window.BaudRatecomboBox]
             )
 

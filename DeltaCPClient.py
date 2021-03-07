@@ -199,7 +199,3 @@ class DeltaCPClient(ModbusClient):
     def SetDecelerationTime1(self, val):
         if val > 0:
             self.WriteRegister(DeltaCPRegisters.DecelerationTime_1Reg, int(float(val) * 100))
-
-
-
-# TODO: Переделать визуализацию (чтоб два графика в едином окошке)
