@@ -3,7 +3,7 @@ from Singleton import Singleton
 @Singleton
 class ConnectionParameters:
     def __init__(self):
-        self.COMPort = 1
+        self.COMPort = 'COM1'  # Начальное значение на пользовательском интерфейсе тоже Comport = 1
         self.BaudRate = 0
         self.Protocol = ""
         self.ByteSize = 0
@@ -27,7 +27,7 @@ class ConnectionParameters:
         self.BaudRate = BaudRate
 
     def SetCOMPort(self, COMPort):
-        self.COMPort = COMPort
+        self.COMPort = 'COM' + str(COMPort)
 
     def GetConnectionParameters(self):
         Dict = \

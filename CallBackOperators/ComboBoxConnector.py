@@ -45,6 +45,5 @@ class ComboBoxOperator(CallBackOperator):
 
     def SetCOMPort(self):
         arg = self.window.COMPortspinBox.value()
-        print(f'arg = {arg}')
         self.ConnectionParameters.SetCOMPort(arg)
 
