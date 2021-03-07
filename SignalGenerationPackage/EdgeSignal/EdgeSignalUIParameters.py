@@ -31,7 +31,7 @@ class EdgeSignalUIParameters:
 
 
     # END TIME
-    EndTimeMin = 0.1
+    EndTimeMin = 0.0
     EndTimeMax = 600.0
     EndTimeLineEditAccuracy = 2
 
@@ -40,7 +40,7 @@ class EdgeSignalUIParameters:
     EndTimeSliderMax = EndTimeMax * EndTimeCalcConstant
 
     # START TIME
-    StartTimeMin = 0.1
+    StartTimeMin = 0.0
     StartTimeMax = 600.0
     StartTimeLineEditAccuracy = 2
 
@@ -51,7 +51,7 @@ class EdgeSignalUIParameters:
 
     # LOW LEVEL
     LowLevelFrequencyMin = 0.1
-    LowLevelFrequencyMax = 20.0
+    LowLevelFrequencyMax = 45.0
     LowLevelFrequencyLineEditAccuracy = 2
 
     LowLevelFrequencyCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2
@@ -61,7 +61,7 @@ class EdgeSignalUIParameters:
 
     # HIGH LEVEL
     HighLevelFrequencyMin = 0.1
-    HighLevelFrequencyMax = 80.0
+    HighLevelFrequencyMax = 50.0
     HighLevelFrequencyLineEditAccuracy = 2
 
     HighLevelFrequencyCalcConstant = 100  # Раз 100, значит цифры с точностью до 10**2

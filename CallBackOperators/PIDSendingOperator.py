@@ -3,6 +3,7 @@ from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
 from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 from LoggersConfig import loggers
+import time
 
 
 class PIDSendingOperator(SignalSendingOperator):
@@ -84,8 +85,13 @@ class PIDSendingOperator(SignalSendingOperator):
 
         # 2
         diff_freq = abs(self.model.HighLevelFrequency - self.model.LowLevelFrequency)
-        necessary_acceleration = diff_freq / necessary_t_acceleration
-        necessary_deceleration = diff_freq / necessary_t_deceleration
+
+        try:
+            necessary_acceleration = diff_freq / necessary_t_acceleration
+            necessary_deceleration = diff_freq / necessary_t_deceleration
+        except ZeroDivisionError:
+            PopUpNotifier.Error(f'Zero Acceleration/Deceleration time!')
+            return False
 
         # 3
         critical_acceleration = self.model.CriticalAcceleration
@@ -108,8 +114,8 @@ class PIDSendingOperator(SignalSendingOperator):
         Dts_len = len(DeltaTimes)
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
-        self.PointsIterator = 1
-        self.TimeStamp = Time[self.PointsIterator - 1]  # В какой момент времени на графике мы выставим ValueToSend
+        self.PointsIterator = 0
+        self.TimeStamp = Time[self.PointsIterator]  # В какой момент времени на графике мы выставим ValueToSend
         self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]  # Сигнал опережает теперь
 
 
@@ -127,33 +133,38 @@ class PIDSendingOperator(SignalSendingOperator):
             self.Timer.run()
 
         # После этого - ждём delta_t[i] и выставляем следующие точки, i = 0, 1, ...
-        if Dts_len != 1:  # If the Time array has only one point, then we've already accomplished it in
+        if Dts_len != 0:  # If the Time array has only one point, then we've already accomplished it in
                           # the method self.Timer.run()
 
             i = 0
-            self.PointsIterator += 1
+            self.PointsIterator = 1
             while i < Dts_len:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
 
-                    if i == Dts_len - 1:
-                        # Это значит, мы достигли конца отправляемого сигнала.
-                        # Поскольку отправляем наперёд - надо отправить начальную точку сигнала,
-                        # При этом подождав detaT[-1] (Последний временной отрезок)
-                        # Тогда, когда цикл отправки возобновится - начальная точка уже была отправлена в
-                        # Этом коде. Поэтому в новом цикле начинаем отправку не с 0й, а с 1ой точки.
-                        self.ValueToSend = SignalData.y_with_requests[0]
-                        self.TimeStamp = Time[self.PointsIterator - 1]
-                        loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
-                        self.Timer.reset(DeltaTimes[-1] - self.CommandExecutionTime)
+                    self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]
+                    self.TimeStamp = Time[self.PointsIterator]
+                    dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
+                    loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
+                    self.Timer.reset(dt_to_wait)
 
-                    else:
-                        self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]
-                        self.TimeStamp = Time[self.PointsIterator - 1]
-                        dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
-
-                        loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
-                        self.Timer.reset(dt_to_wait)
+                    # if i == Dts_len - 1:
+                    #     # Это значит, мы достигли конца отправляемого сигнала.
+                    #     # Поскольку отправляем наперёд - надо отправить начальную точку сигнала,
+                    #     # При этом подождав detaT[-1] (Последний временной отрезок)
+                    #     # Тогда, когда цикл отправки возобновится - начальная точка уже была отправлена в
+                    #     # Этом коде. Поэтому в новом цикле начинаем отправку не с 0й, а с 1ой точки.
+                    #     self.ValueToSend = SignalData.y_with_requests[0]
+                    #     self.TimeStamp = Time[self.PointsIterator - 1]
+                    #     loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
+                    #     self.Timer.reset(DeltaTimes[-1] - self.CommandExecutionTime)
+                    #
+                    # else:
+                    #     self.ValueToSend = SignalData.y_with_requests[self.PointsIterator]
+                    #     self.TimeStamp = Time[self.PointsIterator]
+                    #     dt_to_wait = DeltaTimes[i] - self.CommandExecutionTime
+                    #     loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
+                    #     self.Timer.reset(dt_to_wait)
 
                     i += 1
                     self.PointsIterator += 1
@@ -167,3 +178,37 @@ class PIDSendingOperator(SignalSendingOperator):
                 self.CycleFinishedSuccessfully = True
                 loggers['SignalSending'].info(f'Finished Cycle')
                 return
+
+    def TestTimer(self):
+        t0 = time.time()
+        # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
+        # окошко с визуализацией. Если закрыл - то мы ничего уже не отправляем. Тогда выставляем частоту 0Гц
+        # SetFrequency(0) и посылаем STOP
+
+        # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
+        # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
+        # Итого, опрашивать частоту надо в любом случае, поэтому вывел её за пределы if/else
+        if self.DebugMode:
+            CurrentFreq = 0
+        else:
+            CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+
+        if not self.SendingStopped:
+
+            self.SignalVisualizer.UpdateCurrentFrequency(self.TimeStamp, CurrentFreq)
+
+            # Если поставлено на Паузу - тогда последнюю опрошенную частоту задаём и просто ждём, пока
+            # флаг паузы не снимется
+            if self.SendingOnPause:
+                print(f'SENDING PAUSED')
+                self.DeltaCPClient.SetFrequency(int(CurrentFreq * 100))
+            else:
+                if self.ValueToSend is not None:
+                    loggers['Debug'].debug(f'TestTimer: ValueToSend = {self.ValueToSend}')
+                    value_to_send = int(self.ValueToSend * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                    self.DeltaCPClient.SetFrequency(value_to_send)
+                    self.SignalVisualizer.UpdateSetFrequency(self.TimeStamp, self.ValueToSend)
+        self.FunctionWasCalled = True
+
+        t1 = time.time()
+        print(f'TIME {t1 - t0}')

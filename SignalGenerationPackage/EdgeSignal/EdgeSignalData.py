@@ -23,5 +23,21 @@ class EdgeSignalData(SignalData):
         self.NecessaryDecelerationTime = 0
 
         # Критические Параметры разгона
-        self.CriticalAcceleration = (50 - 0) / (15)  # От 0 до 50 Hz за 15 сек
-        self.CriticalDeceleration = (50 - 0) / (15) # От 50 до 0 Hz за 15 сек
+        self.CriticalAcceleration = (self.MaxFrequency - self.MinFrequency) / (15)  # От 0 до 50 Hz за 15 сек
+        self.CriticalDeceleration = (self.MaxFrequency - self.MinFrequency) / (15) # От 50 до 0 Hz за 15 сек
+
+    @property
+    def x_to_send(self):
+        return SignalData.x_to_send
+
+    @x_to_send.setter
+    def x_to_send(self, val):
+        SignalData.x_to_send = val
+
+    @property
+    def y_to_send(self):
+        return SignalData.y_to_send
+
+    @y_to_send.setter
+    def y_to_send(self, val):
+        SignalData.y_to_send = val
