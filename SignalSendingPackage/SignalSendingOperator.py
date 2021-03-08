@@ -6,6 +6,7 @@ from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
+from SignalSendingPackage.SendingLogger import SendingLogger
 from time import sleep
 
 
@@ -27,6 +28,7 @@ class SignalSendingOperator(CallBackOperator):
         self.ValueToSend = 0
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         self.DeltaCPClient = DeltaCPClient()
+        self.SendingLogger = SendingLogger()
 
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
@@ -42,7 +44,7 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
         self.CycleGap = 0.1  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
-        self.CommandExecutionTime = 0.45  # Часть времени уходит на исполнение команды (отправку частоты на
+        self.CommandExecutionTime = 0.0 #45  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды
@@ -51,6 +53,9 @@ class SignalSendingOperator(CallBackOperator):
     @abstractmethod
     def ExecuteSending(self, Time):
         pass
+
+    def get_log_filename_lineedit(self):
+        return self.signal_main_window.get_log_filename_lineedit()
 
     def get_start_button(self):
         return self.signal_main_window.get_start_button()
@@ -143,6 +148,17 @@ class SignalSendingOperator(CallBackOperator):
 
         # Отрисуем на графике исходный сигнал
         self.SignalVisualizer.ResetPlot()
+
+        # Сохраним файл лога
+        self.SaveLog()
+
+
+    def SaveLog(self):
+        log_lineedit = self.get_log_filename_lineedit()
+        log_filename = log_lineedit.text()
+
+        self.SendingLogger.output_filename = log_filename + '.xlsx'
+        self.SendingLogger.save_database()
 
     def TestTimer(self):
 

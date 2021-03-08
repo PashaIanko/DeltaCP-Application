@@ -3,6 +3,7 @@ from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
 from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 from LoggersConfig import loggers
+import datetime
 import time
 
 
@@ -21,6 +22,7 @@ class PIDSendingOperator(SignalSendingOperator):
         self.IsFirstCycle = True
         self.current_point = None
         self.model = model
+
         # Model (модель) нужна, для того чтобы перед отправкой пересчитать необходимые времёна
         # разгона / замедления
 
@@ -41,6 +43,7 @@ class PIDSendingOperator(SignalSendingOperator):
         if ready_to_start:
             # Раз готовы к старту - тогда отправляем на частотник
             # необходимые времёна разгона
+            self.SendingLogger.start_database()
             self.DeltaCPClient.SetAccelerationTime1(necessary_t_acceleration)
             self.DeltaCPClient.SetDecelerationTime1(necessary_t_deceleration)
 
@@ -161,7 +164,6 @@ class PIDSendingOperator(SignalSendingOperator):
 
     def TestTimer(self):
         t0 = time.time()
-
         if not self.SendingStopped:
 
             current_point = self.current_point
@@ -172,6 +174,7 @@ class PIDSendingOperator(SignalSendingOperator):
                 else:
                     CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
                 self.SignalVisualizer.UpdateCurrentFrequency(current_point.x, CurrentFreq)
+                self.SendingLogger.log(f_expect=current_point.y, f_real=CurrentFreq, t_expect=current_point.x, t_real=datetime.datetime.now().time())
 
             else:
                 # Если не на паузе, значит задаём частоту. Иначе висим на паузе

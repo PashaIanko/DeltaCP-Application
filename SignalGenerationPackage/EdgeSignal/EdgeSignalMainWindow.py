@@ -57,3 +57,7 @@ class EdgeSignalMainWindow(SignalMainWindow):
     # overridden
     def get_LCD_display(self):
         return self.user_interface.lcdNumber
+
+    # overridden
+    def get_log_filename_lineedit(self):
+        return self.user_interface.LogFilenamelineEdit
