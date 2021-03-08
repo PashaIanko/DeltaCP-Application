@@ -55,7 +55,8 @@ class Signal(metaclass=ABCMeta):
         self.ClearSignalData()
         self.UpdateSignalData()
         self.TransformSignal()  # Преобразовать для отправки # TODO: Может Transform и Request сделать по колбеку на StartSending?
-        self.AddRequestData()
+        self.AddRequests_X()
+        self.AddRequests_Y()
         SignalData.dx = self.UpdateDeltaTimes()
         self.Recalc_X_Y()
 
@@ -83,7 +84,13 @@ class Signal(metaclass=ABCMeta):
             pts_arr.append(point)
         SignalData.point_array_with_requests.extend(pts_arr)
 
-    def AddRequestData(self):
+    @abstractmethod
+    def AddRequests_Y(self):
+        # Уже добавили моменты времени для опроса.
+        # Теперь надо пересчитать ожидаемую частоту в момент опроса.
+        pass
+
+    def AddRequests_X(self):
 
         # Исходные данные - сам сигнал, SignalData.x, SignalData.y
         # Надо - зная частоту опроса, идём по всему массиву времени
