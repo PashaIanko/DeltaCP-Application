@@ -118,7 +118,6 @@ class EdgeSignal(Signal):
     def AddRequests_Y(self):
         points = SignalData.point_array_with_requests
         t_start = self.StartTime
-        t_end = self.EndTime
         t_acc = self.AccelerationTime
         t_plateau = self.PlateauTime
         t_dec = self.DecelerationTime
