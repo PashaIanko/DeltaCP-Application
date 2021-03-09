@@ -33,10 +33,12 @@ class SendingLogger:
 
         df = pd.DataFrame({
             'Expect Freq, Hz': self.f_expect,
-            'Actual Freq, Hz': self.f_real,
-            'Desired Time': self.t_expect,
-            'Actual Time': self.t_real,
-            'Actual Time Synchronized, Sec': real_shifted_seconds
+            'Expect Time': self.t_expect,
+
+            'Real Freq, Hz': self.f_real,
+            'Real Time (Synchronized), Sec': real_shifted_seconds,
+
+            'Real Time, Sec': self.t_real
         })
         df.to_excel(self.output_filename, index=False)
 

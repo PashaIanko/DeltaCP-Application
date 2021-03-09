@@ -379,7 +379,7 @@ class Ui_EdgeSignalWindow(object):
                                                                      "preset"))
         self.label_2.setText(_translate("MainWindow", "Current Cycle №:"))
         self.label_3.setText(_translate("MainWindow", "Log filename:"))
-        self.LogFilenamelineEdit.setText(_translate("MainWindow", "Default"))
+        self.LogFilenamelineEdit.setText(_translate("MainWindow", "SendingLogs/Default"))
         self.labelStartTime.setText(_translate("MainWindow", "Start Time:"))
         self.labelEndTime_2.setText(_translate("MainWindow", "Request Frequency:"))
         self.labeLowLevelFrequency.setText(_translate("MainWindow", "Low-level Frequency:"))
