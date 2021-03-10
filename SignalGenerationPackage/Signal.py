@@ -111,15 +111,17 @@ class Signal(metaclass=ABCMeta):
             x_next = point_arr[next_idx].x
             y_prev = point_arr[prev_idx].y
             y_next = point_arr[next_idx].y
+            to_send_prev = point_arr[prev_idx].to_send
+            to_send_next = point_arr[next_idx].to_send
             dx_current = abs(x_next - x_prev)
 
             if dx_current <= dx and next_idx == len_x - 1:
                 # Значит, нет необходимости вставлять точки для опроса - текущий dx_current и так достаточно мал
                 # На последней итерации вставляем крайние точки
-                self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[True, True])
+                self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[to_send_prev, to_send_next])
             elif dx_current <= dx and next_idx < len_x - 1:
                 # Итерация не последняя - только левые крайние точки добавляем
-                self.extend_edge_points([x_prev], [y_prev], to_send_list=[True])
+                self.extend_edge_points([x_prev], [y_prev], to_send_list=[to_send_prev])
             elif dx_current > dx:
                 # Значит, надо вставить точки для опроса
                 # Сколько точек вставить:
@@ -129,10 +131,10 @@ class Signal(metaclass=ABCMeta):
                     # Так совпало - тогда только крайние точки вставляем
                     if next_idx < len_x - 1:
                         # итерация не последняя
-                        self.extend_edge_points([x_prev], [y_prev], to_send_list=[True, True])
+                        self.extend_edge_points([x_prev], [y_prev], to_send_list=[to_send_prev])
                     else:
                         # итерация последняя - добавляем края
-                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[True, True])
+                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[to_send_prev, to_send_next])
                 else:
                     # Тогда вставим несколько промежуточных точек:
                     # Массив x для вставки:
@@ -147,15 +149,15 @@ class Signal(metaclass=ABCMeta):
 
                     # Ещё один костыль - лист из булевых флагов to_send - отправлять мы
                     # будем или опрашивать
-                    if y_prev is None:
-                        first_val = False
-                    else:
-                        first_val = True
-                    if y_next is None:
-                        last_val = False
-                    else:
-                        last_val = True
-                    to_send_list = [first_val] + [False] * (len(x_new) - 2) + [last_val]
+                    #if y_prev is None:
+                    #    first_val = False
+                    #else:
+                    #    first_val = True
+                    #if y_next is None:
+                    #    last_val = False
+                    #else:
+                    #    last_val = True
+                    to_send_list = [to_send_prev] + [False] * (len(x_new) - 2) + [to_send_next]
 
 
                     # Если не последняя итерация - то необходимо исключить последнюю точку
