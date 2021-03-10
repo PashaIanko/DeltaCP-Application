@@ -149,14 +149,6 @@ class Signal(metaclass=ABCMeta):
 
                     # Ещё один костыль - лист из булевых флагов to_send - отправлять мы
                     # будем или опрашивать
-                    #if y_prev is None:
-                    #    first_val = False
-                    #else:
-                    #    first_val = True
-                    #if y_next is None:
-                    #    last_val = False
-                    #else:
-                    #    last_val = True
                     to_send_list = [to_send_prev] + [False] * (len(x_new) - 2) + [to_send_next]
 
 
