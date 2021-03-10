@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from SignalGenerationPackage.SignalData import SignalData
 import numpy as np
 from LoggersConfig import loggers
+from SignalGenerationPackage.Point import Point
 
 
 class Signal(metaclass=ABCMeta):
@@ -34,121 +35,63 @@ class Signal(metaclass=ABCMeta):
     def UpdateSignalData(self):
         pass
 
-    def UpdateDeltaTimes(self, input, output):
+    def UpdateDeltaTimes(self):
+        input = SignalData.point_array_with_requests
+        output = []
+
         N = len(input)
-        if N == 0:
-            return  # No points at all
-        elif N == 1:
+
+        if N == 1:
             output.insert(0, 0.0)  # Начальная точка отсчёта по времени, 0.00
         elif N > 1:
             output = [
-                input[dt_next_idx] - input[dt_prev_idx]
+                input[dt_next_idx].x - input[dt_prev_idx].x
                 for dt_next_idx, dt_prev_idx
                 in zip(range(1, N), range(0, N - 1))
             ]
         return output
-            # TODO: В строке ниже - я не помню, с какой целью я вставлял лишнее dx в начало массива
-            # SignalData.dx.insert(0, statistics.mean(SignalData.dx))  # Начальная точка отсчёта по времени, 0.00
-
-
-    def ClearRequestData(self):
-        SignalData.x_with_requests.clear()
-        SignalData.y_with_requests.clear()
 
     def RecalcData(self):
+        self.ClearSignalData()
         self.UpdateSignalData()
-        self.ClearRequestData()
         self.TransformSignal()  # Преобразовать для отправки # TODO: Может Transform и Request сделать по колбеку на StartSending?
-        #self.AddRequestData(self.RequestFreq, SignalData.x, SignalData.y)
+        self.AddRequests_X()
+        self.AddRequests_Y()
+        SignalData.dx = self.UpdateDeltaTimes()
+        self.Recalc_X_Y()
 
-        self.AddRequestData(self.RequestFreq, SignalData.x_to_send, SignalData.y_to_send)
+    def Recalc_X_Y(self):
+        for p in SignalData.point_array:
+            SignalData.x.append(p.x)
+            SignalData.y.append(p.y)
 
-        # Теперь обновить dt для x, y, x_with_requests, y_with_requests
-        SignalData.dx = self.UpdateDeltaTimes(input=SignalData.x, output=SignalData.dx)  # We calculate the array of dt values for optimization sakes, in the
-                                                                        # Signal Sending Module
-        SignalData.dx_with_requests = self.UpdateDeltaTimes(input=SignalData.x_with_requests, output=SignalData.dx_with_requests)
+    def ClearSignalData(self):
+        SignalData.x.clear()
+        SignalData.y.clear()
+        SignalData.dx.clear()
+        SignalData.transformed_point_array.clear()
+        SignalData.point_array.clear()
+        SignalData.point_array_with_requests.clear()
 
     def TransformSignal(self):
         self.SendingTransformer.TransformSignal()
 
     @staticmethod
-    def extend_edge_points(list_x, list_y):
-        SignalData.x_with_requests.extend(list_x)
-        SignalData.y_with_requests.extend(list_y)
+    def extend_edge_points(list_x, list_y, to_send_list):
+        pts_arr = []
+        for x, y, to_send in zip(list_x, list_y, to_send_list):
+            point = Point(x=x, y=y, to_send=to_send)
+            pts_arr.append(point)
+        SignalData.point_array_with_requests.extend(pts_arr)
 
-    # def AddRequestData(self, request_freq, x, y):
-    #     # Исходные данные - сам сигнал, SignalData.x, SignalData.y
-    #     # Надо - зная частоту опроса, идём по всему массиву времени
-    #     # dt = SignalData.x[i+1] - SignalData.x[i].
-    #     # Если dt > 1 / request_freq --> Надо добавить "фиктивные точки" по времени
-    #     # В этой точке, по прерыванию, будет только опрос, без отправки значения
-    #     # на частотник
-    #
-    #     dx = 1 / request_freq
-    #     len_x = len(x)
-    #     for prev_idx in range(0, len_x - 1):
-    #         next_idx = prev_idx + 1
-    #         x_prev = x[prev_idx]
-    #         x_next = x[next_idx]
-    #         y_prev = y[prev_idx]
-    #         y_next = y[next_idx]
-    #         dx_current = abs(x_next - x_prev)
-    #
-    #         if dx_current <= dx and next_idx == len_x - 1:
-    #             # Значит, нет необходимости вставлять точки для опроса - текущий dx_current и так достаточно мал
-    #             #self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
-    #             # На последней итерации вставляем крайние точки
-    #             self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
-    #         elif dx_current <= dx and next_idx < len_x - 1:
-    #             # Итерация не последняя - только левые крайние точки добавляем
-    #             self.extend_edge_points([x_prev], [y_prev])
-    #         elif dx_current > dx:
-    #             # Значит, надо вставить точки для опроса
-    #             # Сколько точек вставить:
-    #             N = int(dx_current * request_freq)
-    #
-    #             if N == 0:
-    #                 # Так совпало - тогда только крайние точки вставляем
-    #                 if next_idx < len_x - 1:
-    #                     # итерация не последняя
-    #                     self.extend_edge_points([x_prev], [y_prev])
-    #                 else:
-    #                     # итерация последняя - добавляем края
-    #                     self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
-    #             else:
-    #                 # Тогда вставим несколько промежуточных точек:
-    #                 # Массив x для вставки:
-    #                 # N + 2 в linspace - т.к. N - только промежуточные, а тут linspace c учётом крайних
-    #                 x_new = np.linspace(x_prev, x_next, N + 2, endpoint=True)
-    #
-    #                 # Если не последняя итерация - то необходимо исключить последнюю точку
-    #                 # А если последняя - то она включится
-    #                 if next_idx != len_x - 1:
-    #                     x_new = x_new[0:-1]
-    #
-    #                 # Массив y для вставки:
-    #                 # Да, None это костыль. При отправке (SignalSendingOperator),
-    #                 # если значение 'y' == None, то не отправляем, а только запрашиваем
-    #                 # частоту TODO: Исправить этот костыль
-    #                 y_new = [y_prev] + [y_next] + [None] * (len(x_new) - 2) # + [y_next]
-    #
-    #                 # Ещё костыль, чтобы не было дублирования точек - если не первая итерация -
-    #                 # заменить начальную точку на None
-    #                 if prev_idx > 0:
-    #                     y_new[0] = None
-    #
-    #                 # Вставляем x_new и y_new
-    #                 try:
-    #                     SignalData.x_with_requests.extend(x_new)
-    #                     SignalData.y_with_requests.extend(y_new)
-    #                 except:
-    #                     import sys
-    #
-    #                     loggers['Debug'].debug(f'Signal: AddRequestData: exception: {sys.exc_info()}')
-    #     self.test_adding_requests()
+    @abstractmethod
+    def AddRequests_Y(self):
+        # Уже добавили моменты времени для опроса.
+        # Теперь надо пересчитать ожидаемую частоту в момент опроса.
+        pass
 
+    def AddRequests_X(self):
 
-    def AddRequestData(self, request_freq, x, y):
         # Исходные данные - сам сигнал, SignalData.x, SignalData.y
         # Надо - зная частоту опроса, идём по всему массиву времени
         # dt = SignalData.x[i+1] - SignalData.x[i].
@@ -156,24 +99,29 @@ class Signal(metaclass=ABCMeta):
         # В этой точке, по прерыванию, будет только опрос, без отправки значения
         # на частотник
 
+        request_freq = self.RequestFreq
+        point_arr = SignalData.transformed_point_array
+
         dx = 1 / request_freq
-        len_x = len(x)
+        len_x = len(point_arr)
+
         for prev_idx in range(0, len_x - 1):
             next_idx = prev_idx + 1
-            x_prev = x[prev_idx]
-            x_next = x[next_idx]
-            y_prev = y[prev_idx]
-            y_next = y[next_idx]
+            x_prev = point_arr[prev_idx].x
+            x_next = point_arr[next_idx].x
+            y_prev = point_arr[prev_idx].y
+            y_next = point_arr[next_idx].y
+            to_send_prev = point_arr[prev_idx].to_send
+            to_send_next = point_arr[next_idx].to_send
             dx_current = abs(x_next - x_prev)
 
             if dx_current <= dx and next_idx == len_x - 1:
                 # Значит, нет необходимости вставлять точки для опроса - текущий dx_current и так достаточно мал
-                #self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
                 # На последней итерации вставляем крайние точки
-                self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+                self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[to_send_prev, to_send_next])
             elif dx_current <= dx and next_idx < len_x - 1:
                 # Итерация не последняя - только левые крайние точки добавляем
-                self.extend_edge_points([x_prev], [y_prev])
+                self.extend_edge_points([x_prev], [y_prev], to_send_list=[to_send_prev])
             elif dx_current > dx:
                 # Значит, надо вставить точки для опроса
                 # Сколько точек вставить:
@@ -183,10 +131,10 @@ class Signal(metaclass=ABCMeta):
                     # Так совпало - тогда только крайние точки вставляем
                     if next_idx < len_x - 1:
                         # итерация не последняя
-                        self.extend_edge_points([x_prev], [y_prev])
+                        self.extend_edge_points([x_prev], [y_prev], to_send_list=[to_send_prev])
                     else:
                         # итерация последняя - добавляем края
-                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next])
+                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[to_send_prev, to_send_next])
                 else:
                     # Тогда вставим несколько промежуточных точек:
                     # Массив x для вставки:
@@ -199,6 +147,10 @@ class Signal(metaclass=ABCMeta):
                     # частоту TODO: Исправить этот костыль
                     y_new = [y_prev] + [None] * (len(x_new) - 2) + [y_next]
 
+                    # Ещё один костыль - лист из булевых флагов to_send - отправлять мы
+                    # будем или опрашивать
+                    to_send_list = [to_send_prev] + [False] * (len(x_new) - 2) + [to_send_next]
+
 
                     # Если не последняя итерация - то необходимо исключить последнюю точку
                     # из массивов X и Y
@@ -206,15 +158,9 @@ class Signal(metaclass=ABCMeta):
                     if next_idx != len_x - 1:
                         x_new = x_new[0:-1]
                         y_new = y_new[0:-1]
+                        to_send_list = to_send_list[0:-1]
 
-                    SignalData.x_with_requests.extend(x_new)
-                    SignalData.y_with_requests.extend(y_new)
-        self.test_adding_requests()
-
-    def test_adding_requests(self):
-        l_y = [i in SignalData.y_with_requests for i in SignalData.y]
-        l_x = [i in SignalData.x_with_requests for i in SignalData.x]
-        loggers['Debug'].debug(f'Added Requests correctly?: for y: {not (False in l_y)}, for x: {not (False in l_x)}')
+                    self.extend_edge_points(x_new, y_new, to_send_list)
 
     def AddObserver(self, Observer):
         self.Observers.append(Observer)

@@ -1,3 +1,5 @@
+from SignalGenerationPackage.Point import Point
+
 class EdgeSignalTransformer:
     # На этапе SignalGeneration мы создаём сигнал
     # Но перед отправкой, необходимо его преобразовать -
@@ -29,5 +31,10 @@ class EdgeSignalTransformer:
         if self.SignalData.EndTime == 0:
             del y_optimized[-1]
 
-        self.SignalData.x_to_send = self.SignalData.x
-        self.SignalData.y_to_send = y_optimized
+        point_arr = self.SignalData.transformed_point_array
+        for i in range (len(y_optimized)):
+            if y_optimized[i] is None:
+                p = Point(x=self.SignalData.point_array[i].x, y=y_optimized[i], to_send=False)
+            else:
+                p = Point(x=self.SignalData.point_array[i].x, y=y_optimized[i], to_send=True)
+            point_arr.append(p)

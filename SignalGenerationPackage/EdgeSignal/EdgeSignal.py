@@ -2,6 +2,7 @@ from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.EdgeSignal.EdgeSignalData import EdgeSignalData
 from SignalGenerationPackage.SignalData import SignalData
 from SignalGenerationPackage.EdgeSignal.EdgeSignalTransformer import EdgeSignalTransformer
+from SignalGenerationPackage.Point import Point
 
 
 class EdgeSignal(Signal):
@@ -32,9 +33,6 @@ class EdgeSignal(Signal):
 
         LowLevelFreq = self.SignalData.LowLevelFrequency
         HighLevelFreq = self.SignalData.HighLevelFrequency
-        StartTime = self.SignalData.StartTime
-        PlateauTime = self.SignalData.PlateauTime
-        EndTime = self.SignalData.EndTime
         AccelerationTime = self.SignalData.AccelerationTime
         DecelerationTime = self.SignalData.DecelerationTime
 
@@ -45,24 +43,38 @@ class EdgeSignal(Signal):
 
             self.SignalData.NecessaryDecelerationTime = (self.SignalData.MaxFrequency - self.SignalData.MinFrequency) * \
                                                     (DecelerationTime / (HighLevelFreq - LowLevelFreq))
+
+            # Коэффициенты ускорения понадобятся для расчёта промежуточных точек
+            # на разгоне / замедлении
+            self.SignalData.AccelerationCoeff = (HighLevelFreq - LowLevelFreq) / AccelerationTime
+            self.SignalData.DecelerationCoeff = (LowLevelFreq - HighLevelFreq) / DecelerationTime
+
+
         except ZeroDivisionError:
             pass  # В случае LowLevelFreq == HighLevelFreq может быть деление на 0. Здесь это допускается (т.к. пользователь
                   # редактирует сигнал. Далее, на этапе PIDSendingOperator (отправка сигнала) будет доп. проверка)
 
         if WholePeriod != 0:
-            # Есть несколько разных случаев при
-            # PlateauTime = 0, StartTime = 0, EndTime = 0
-            X_arr = self.get_X_arr(StartTime, AccelerationTime, PlateauTime, DecelerationTime, EndTime)
-            Y_arr = self.get_Y_arr(LowLevelFreq, HighLevelFreq, StartTime, PlateauTime, EndTime)
+            point_arr = self.get_point_array()
+            SignalData.point_array = point_arr
+
+    def get_point_array(self):
+        res = []
+        X_arr = self.get_X_arr()
+        Y_arr = self.get_Y_arr()
+
+        for x, y in zip(X_arr, Y_arr):
+            res.append(Point(x=x, y=y, to_send=True))
+        return res
 
 
-            SignalData.y = Y_arr
-            SignalData.x = X_arr
-
-    @staticmethod
-    def get_Y_arr(LowFreq, HiFreq, StartTime, PlateauTime, EndTime):
-
+    def get_Y_arr(self):
         # Изначальный массив
+        LowFreq = self.SignalData.LowLevelFrequency  # TODO: Переписать через атрибуты
+        HiFreq = self.SignalData.HighLevelFrequency
+        PlateauTime = self.SignalData.PlateauTime
+        StartTime = self.SignalData.StartTime
+        EndTime = self.SignalData.EndTime
         res = [
             LowFreq,
             LowFreq,
@@ -79,8 +91,12 @@ class EdgeSignal(Signal):
             del res[-1]
         return res
 
-    @staticmethod
-    def get_X_arr(StartTime, AccTime, PlateauTime, DecTime, EndTime):
+    def get_X_arr(self):
+        StartTime = self.SignalData.StartTime
+        AccTime = self.SignalData.AccelerationTime
+        PlateauTime = self.SignalData.PlateauTime
+        DecTime = self.SignalData.DecelerationTime
+        EndTime = self.SignalData.EndTime
         res = [
             0,
             0 + StartTime,
@@ -97,6 +113,39 @@ class EdgeSignal(Signal):
         if EndTime == 0:
             del res[-1]
         return res
+
+    # overridden
+    def AddRequests_Y(self):
+        points = SignalData.point_array_with_requests
+        t_start = self.StartTime
+        t_acc = self.AccelerationTime
+        t_plateau = self.PlateauTime
+        t_dec = self.DecelerationTime
+        f_low = self.LowLevelFrequency
+        f_hi = self.HighLevelFrequency
+        acc = self.AccelerationCoeff
+        dec = self.DecelerationCoeff
+
+        lim0 = t_start
+        lim1 = lim0 + t_acc
+        lim2 = lim1 + t_plateau
+        lim3 = lim2 + t_dec
+
+        for p in points:
+            if not p.to_send:
+                x = p.x
+                if x < lim0 or x >= lim3:
+                    # Попадает на T_start, T_end
+                    p.y = f_low
+                elif lim1 <= x < lim2:
+                    # Попадает на плато
+                    p.y = f_hi
+                elif lim0 <= x < lim1:
+                    # Попадает на разгон
+                    p.y = f_low + acc * (x - lim0)  # y = y_0 + k * (x - x0)
+                elif lim2 <= x < lim3:
+                    # Попадает на замедление
+                    p.y = f_hi + dec * (x - lim2)
 
     @property
     def AccelerationTime(self):
@@ -183,3 +232,11 @@ class EdgeSignal(Signal):
     @property
     def NecessaryDecelerationTime(self):
         return self.SignalData.NecessaryDecelerationTime
+
+    @property
+    def AccelerationCoeff(self):
+        return self.SignalData.AccelerationCoeff
+
+    @property
+    def DecelerationCoeff(self):
+        return self.SignalData.DecelerationCoeff

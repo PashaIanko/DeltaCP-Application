@@ -78,6 +78,9 @@ class SignalMainWindow(ABC):
     def get_LCD_display(self):
         pass
 
+    @abstractmethod
+    def get_log_filename_lineedit(self):
+        pass
 
     def setup_user_interface(self):
         self.user_interface.setupUi(self.main_window)

@@ -6,6 +6,7 @@ from threading import Thread
 from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
+from SignalSendingPackage.SendingLogger import SendingLogger
 from time import sleep
 
 
@@ -27,6 +28,7 @@ class SignalSendingOperator(CallBackOperator):
         self.ValueToSend = 0
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         self.DeltaCPClient = DeltaCPClient()
+        self.SendingLogger = SendingLogger()
 
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
@@ -42,7 +44,7 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
         self.CycleGap = 0.1  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
-        self.CommandExecutionTime = 0.45  # Часть времени уходит на исполнение команды (отправку частоты на
+        self.CommandExecutionTime = 0.2 #45  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды
@@ -51,6 +53,9 @@ class SignalSendingOperator(CallBackOperator):
     @abstractmethod
     def ExecuteSending(self, Time):
         pass
+
+    def get_log_filename_lineedit(self):
+        return self.signal_main_window.get_log_filename_lineedit()
 
     def get_start_button(self):
         return self.signal_main_window.get_start_button()
@@ -106,9 +111,6 @@ class SignalSendingOperator(CallBackOperator):
 
         self.EndlessSendingEnabled = endless_selected
         self.CycleSendingEnabled = cycle_send_selected
-        loggers['Debug'].debug(f'if Endless: {self.EndlessSendingEnabled},'
-                               f'if CycleSend: {self.CycleSendingEnabled}')
-
 
     def PauseSending(self):
         if self.window.PauseSendingradioButton.isChecked():
@@ -146,14 +148,19 @@ class SignalSendingOperator(CallBackOperator):
 
         # Отрисуем на графике исходный сигнал
         self.SignalVisualizer.ResetPlot()
-        # Закроем окошко с визуализацией
-        # if not (self.SignalVisualizer.check_if_window_closed()):
-        #    self.SignalVisualizer.close_visualization_window()
+
+        # Сохраним файл лога
+        self.SaveLog()
+
+
+    def SaveLog(self):
+        log_lineedit = self.get_log_filename_lineedit()
+        log_filename = log_lineedit.text()
+
+        self.SendingLogger.output_filename = log_filename + '.xlsx'
+        self.SendingLogger.save_database()
 
     def TestTimer(self):
-        # Перед отправкой частоты по прерыванию, необходимо проверить - а не закрыл ли пользователь
-        # окошко с визуализацией. Если закрыл - то мы ничего уже не отправляем. Тогда выставляем частоту 0Гц
-        # SetFrequency(0) и посылаем STOP
 
         # Если self.ValueToSend - это None. Значит это "фиктивная точка" - то есть
         # не надо выставлять её на частотник. Надо только опросить текущую частоту и вывести на график.
@@ -214,10 +221,10 @@ class SignalSendingOperator(CallBackOperator):
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
-        Time = SignalData.x_with_requests.copy()
+
         updated_x = SignalData.x.copy()
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
-        self.ExecuteSending(Time)
+        self.ExecuteSending()
 
         cycle_counter = 0
         cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
@@ -235,7 +242,7 @@ class SignalSendingOperator(CallBackOperator):
 
                 if self.EndlessSendingEnabled:
                     current_cycle_display.display(cycle_counter + 1)
-                    self.RestartSending(Time, updated_x)
+                    self.RestartSending(updated_x)
 
                 if self.CycleSendingEnabled:
                     cycles_to_perform = cycle_number_widget.value()
@@ -243,21 +250,26 @@ class SignalSendingOperator(CallBackOperator):
                         return
                     else:
                         current_cycle_display.display(cycle_counter + 1)
-                        self.RestartSending(Time, updated_x)
+                        self.RestartSending(updated_x)
 
 
-    def RestartSending(self, Time, updated_x):
+    def RestartSending(self, updated_x):
         upd_val = SignalData.x[-1]
-        Time = self.update_time_array(Time, upd_val)
-        updated_x = self.update_time_array(updated_x, upd_val)
+        self.update_time_stamps(upd_val)
+        updated_x = self.update_array(updated_x, upd_val)
 
         # restarting points Iterator, Visualisation and Sending Thread
         self.PointsIterator = 0
         self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
-        self.ExecuteSending(Time)
+        self.ExecuteSending()
 
     @staticmethod
-    def update_time_array(arr, upd_val):
+    def update_time_stamps(upd_val):
+        for p in SignalData.point_array_with_requests:
+            p.x += upd_val
+
+    @staticmethod
+    def update_array(arr, upd_val):
         for i in range(len(arr)):
             arr[i] += upd_val
         return arr
