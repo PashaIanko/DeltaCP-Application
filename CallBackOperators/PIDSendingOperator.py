@@ -73,7 +73,6 @@ class PIDSendingOperator(SignalSendingOperator):
                 else:
                     loggers['Debug'].debug(f'Prev sending thread is executing, cant launch one')
 
-
     def check_acceleration_deceleration(self, necessary_t_acceleration, necessary_t_deceleration):
         # Перед началом отправки, надо:
         # 1. Опросить текущие t разгона, замедления
@@ -184,14 +183,12 @@ class PIDSendingOperator(SignalSendingOperator):
                     CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
                     self.DeltaCPClient.SetFrequency(int(CurrentFreq * 100))
                 else:
-                    #loggers['Debug'].debug(f'TestTimer: ValueToSend = {current_point.y}')
-                    #value_to_send = int(current_point.y * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
                     t_before = time.time()
                     self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                               int(current_point.y * 100))
+
                     t_after = time.time()
                     print(f'SENDING DT = {t_after - t_before}')
-                    #self.DeltaCPClient.SetFrequency(value_to_send)
                     self.SignalVisualizer.UpdateSetFrequency(current_point.x, current_point.y)
         self.FunctionWasCalled = True
 

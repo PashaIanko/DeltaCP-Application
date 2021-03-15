@@ -73,12 +73,12 @@ class DeltaCPClient(ModbusClient):
         except TypeError:
             loggers['Debug'].debug(f'DeltaCPClient: WriteRegister: Type error (value is None)')
         except:
+            import sys
             loggers['Debug'].debug(f'DeltaCPClient: WriteRegister: Exception {sys.exc_info()}')
 
     def ReadRegister(self, address):
         try:
             hh = self.Client.read_holding_registers(address, count=1, unit=1)
-            loggers['Debug'].debug(f"DeltaCPClient: ReadRedister: Register value = {hh.registers[0]}")
             return hh.registers[0]
         except AttributeError:
             loggers['Debug'].debug(f'DeltaCPClient: ReadRegister: Client is None (not constructed)')
