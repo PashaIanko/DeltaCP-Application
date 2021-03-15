@@ -38,6 +38,7 @@ class SignalSendingOperator(CallBackOperator):
         self.EndlessSendingEnabled = False
         self.CycleSendingEnabled = True  # Предустановлено на интерфейсе
         self.CycleFinishedSuccessfully = False
+        self.IsFirstCycle = True
 
         self.SendingThread = None
         self.SignalVisualizer = None
@@ -137,6 +138,7 @@ class SignalSendingOperator(CallBackOperator):
         self.DeltaCPClient.SetFrequency(0)
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
+        self.IsFirstCycle = True
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
         current_cycle_display.display(0)  # Обновить дисплей с текущим циклом - обратно на ноль

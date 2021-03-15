@@ -32,11 +32,11 @@ class SendingLogger:
         real_shifted_seconds = self.process_time_column()
 
         df = pd.DataFrame({
-            'Expect Freq, Hz': self.f_expect,
             'Expect Time': self.t_expect,
+            'Expect Freq, Hz': self.f_expect,
 
-            'Real Freq, Hz': self.f_real,
             'Real Time (Synchronized), Sec': real_shifted_seconds,
+            'Real Freq, Hz': self.f_real,
 
             'Real Time, Sec': self.t_real
         })

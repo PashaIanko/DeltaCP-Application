@@ -2,6 +2,7 @@ from CallBackOperator import CallBackOperator
 from DeltaCPClient import DeltaCPClient
 from DeltaCPRegisters import DeltaCPRegisters
 from LoggersConfig import loggers
+from time import time
 import sys
 
 
@@ -34,8 +35,11 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         #  Отправлять int число == 1000 (Два нуля приписали)
         value_to_send = int(float(lineEditText) * 100)
         try:
+            t1 = time()
             self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                       value_to_send)
+            t2 = time()
+            print(f'dt = {t2-t1}')
         except:
             loggers['Debug'].debug(f'SetFrequency: {sys.exc_info()}')
 

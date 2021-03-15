@@ -3,6 +3,7 @@ from SignalSendingPackage.SignalSendingOperator import SignalSendingOperator
 from SignalSendingPackage.SignalVisualizer import SignalVisualizer
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 from LoggersConfig import loggers
+from DeltaCPRegisters import DeltaCPRegisters
 import datetime
 import time
 
@@ -19,7 +20,7 @@ class PIDSendingOperator(SignalSendingOperator):
 
     def __init__(self, signal_main_window, plot_widget, model, DebugMode):
         super().__init__(signal_main_window, plot_widget, DebugMode)
-        self.IsFirstCycle = True
+
         self.current_point = None
         self.model = model
 
@@ -127,7 +128,7 @@ class PIDSendingOperator(SignalSendingOperator):
 
         # На первом прогоне надо предварительно выставить начальную частоту
         if self.IsFirstCycle == True:
-            preset_value = points[0].y
+            preset_value = self.model.LowLevelFrequency  #points[0].y
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
 
@@ -147,7 +148,7 @@ class PIDSendingOperator(SignalSendingOperator):
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
                     self.current_point = points[self.PointsIterator]
-                    dt_to_wait = DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime
+                    dt_to_wait = max(0.2, DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime)
                     loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
                     self.Timer.reset(dt_to_wait)
                     self.PointsIterator += 1
@@ -183,11 +184,17 @@ class PIDSendingOperator(SignalSendingOperator):
                     CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
                     self.DeltaCPClient.SetFrequency(int(CurrentFreq * 100))
                 else:
-                    loggers['Debug'].debug(f'TestTimer: ValueToSend = {current_point.y}')
-                    value_to_send = int(current_point.y * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
-                    self.DeltaCPClient.SetFrequency(value_to_send)
+                    #loggers['Debug'].debug(f'TestTimer: ValueToSend = {current_point.y}')
+                    #value_to_send = int(current_point.y * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+                    t_before = time.time()
+                    self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
+                                              int(current_point.y * 100))
+                    t_after = time.time()
+                    print(f'SENDING DT = {t_after - t_before}')
+                    #self.DeltaCPClient.SetFrequency(value_to_send)
                     self.SignalVisualizer.UpdateSetFrequency(current_point.x, current_point.y)
         self.FunctionWasCalled = True
 
         t1 = time.time()
+        self.CommandExecutionTime = t1 - t0
         print(f'TIME {t1 - t0}')
