@@ -299,5 +299,5 @@ class SignalSendingOperator(CallBackOperator):
                 sleep(1)
                 current_freq = self.DeltaCPClient.RequestCurrentFrequency()
                 loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
-                if abs(current_freq - value) <= accuracy:
+                if abs(current_freq - value) <= accuracy:  # TODO: Добавить Notifier если currentFreq==None, чтобы окошко вылезло
                     return

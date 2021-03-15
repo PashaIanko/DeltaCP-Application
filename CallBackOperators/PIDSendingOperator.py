@@ -5,6 +5,7 @@ from PopUpNotifier.PopUpNotifier import PopUpNotifier
 from LoggersConfig import loggers
 from DeltaCPRegisters import DeltaCPRegisters
 import datetime
+from threading import Thread
 import time
 
 
@@ -23,6 +24,8 @@ class PIDSendingOperator(SignalSendingOperator):
 
         self.current_point = None
         self.model = model
+        self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
+        self.thread = None
 
         # Model (модель) нужна, для того чтобы перед отправкой пересчитать необходимые времёна
         # разгона / замедления
@@ -147,8 +150,11 @@ class PIDSendingOperator(SignalSendingOperator):
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
                     self.current_point = points[self.PointsIterator]
-                    dt_to_wait = max(0.2, DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime)
-                    loggers['SignalSending'].info(f'After dt={dt_to_wait} sec, I will send {self.ValueToSend} Hz')
+                    dt_to_wait = DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime
+                    #if self.current_point.to_send:
+                    #    dt_to_wait = max(0.2, DeltaTimes[self.PointsIterator - 1] - self.FreqSendingTime)
+                    #else:
+                    #    dt_to_wait = max(0.2, DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime)
                     self.Timer.reset(dt_to_wait)
                     self.PointsIterator += 1
 
@@ -169,12 +175,14 @@ class PIDSendingOperator(SignalSendingOperator):
             current_point = self.current_point
             if not current_point.to_send:
                 # Значит опрашиваем
-                if self.DebugMode:
-                    CurrentFreq = 0
-                else:
+                if self.thread is None or not self.thread.is_alive():
                     CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+                else:
+                    CurrentFreq = 0
+                self.SendingLogger.log(f_expect=current_point.y, f_real=CurrentFreq, t_expect=current_point.x,
+                                       t_real=datetime.datetime.now().time())
                 self.SignalVisualizer.UpdateCurrentFrequency(current_point.x, CurrentFreq)
-                self.SendingLogger.log(f_expect=current_point.y, f_real=CurrentFreq, t_expect=current_point.x, t_real=datetime.datetime.now().time())
+
 
             else:
                 # Если не на паузе, значит задаём частоту. Иначе висим на паузе
@@ -183,15 +191,16 @@ class PIDSendingOperator(SignalSendingOperator):
                     CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
                     self.DeltaCPClient.SetFrequency(int(CurrentFreq * 100))
                 else:
-                    t_before = time.time()
-                    self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
-                                              int(current_point.y * 100))
 
-                    t_after = time.time()
-                    print(f'SENDING DT = {t_after - t_before}')
+                    self.thread = Thread(target=self.SendFreq, args=(int(current_point.y * 100),))
+                    self.thread.start()
+                    # self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, int(current_point.y * 100))
                     self.SignalVisualizer.UpdateSetFrequency(current_point.x, current_point.y)
         self.FunctionWasCalled = True
 
         t1 = time.time()
         self.CommandExecutionTime = t1 - t0
         print(f'TIME {t1 - t0}')
+
+    def SendFreq(self, *args):
+        self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, args[0])
