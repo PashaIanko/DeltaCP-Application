@@ -7,7 +7,8 @@ from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
 from SignalSendingPackage.SendingLogger import SendingLogger
-from time import sleep
+from time import sleep, time
+
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -38,19 +39,22 @@ class SignalSendingOperator(CallBackOperator):
         self.EndlessSendingEnabled = False
         self.CycleSendingEnabled = True  # Предустановлено на интерфейсе
         self.CycleFinishedSuccessfully = False
+        self.CycleRestarted = False
         self.IsFirstCycle = True
 
         self.SendingThread = None
         self.SignalVisualizer = None
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
-        self.CycleGap = 0.1  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
+        self.CycleGap = 0.01  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
         self.CommandExecutionTime = 0.2 #45  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды
         self.send_request_thread = None
 
+        self.t_restart_begin = 0
+        self.t_restart_end = 0
 
     @abstractmethod
     def ExecuteSending(self, Time):
@@ -244,6 +248,9 @@ class SignalSendingOperator(CallBackOperator):
 
             if self.CycleFinishedSuccessfully:
                 self.CycleFinishedSuccessfully = False
+                #self.CycleRestarted = True
+
+                self.t_restart_begin = time()
                 cycle_counter += 1
 
                 if self.EndlessSendingEnabled:
@@ -267,6 +274,8 @@ class SignalSendingOperator(CallBackOperator):
         # restarting points Iterator, Visualisation and Sending Thread
         self.PointsIterator = 0
         self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
+
+        self.t_restart_end = time()
         self.ExecuteSending()
 
     @staticmethod
