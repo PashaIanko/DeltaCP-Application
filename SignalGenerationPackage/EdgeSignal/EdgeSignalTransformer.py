@@ -16,7 +16,7 @@ class EdgeSignalTransformer:
         # Трапеция, если все времёна != 0
 
         y_optimized = [
-            None, #self.SignalData.LowLevelFrequency,
+            None,
             self.SignalData.HighLevelFrequency,
             None,  # Повторяющаяся точка на плато
             self.SignalData.LowLevelFrequency,

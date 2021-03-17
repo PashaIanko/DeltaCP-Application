@@ -155,7 +155,7 @@ class PIDSendingOperator(SignalSendingOperator):
 
         # На первом прогоне надо предварительно выставить начальную частоту
         if self.IsFirstCycle == True:
-            preset_value = self.model.LowLevelFrequency  #points[0].y
+            preset_value = self.model.LowLevelFrequency
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
 
