@@ -25,7 +25,6 @@ class PIDSendingOperator(SignalSendingOperator):
         self.current_point = None
         self.model = model
         self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
-        self.thread = None
         self.send_request_thread = Thread(target=self.SendRequestMonitor)
         self._do_request = False
         self._do_send = False
@@ -45,18 +44,25 @@ class PIDSendingOperator(SignalSendingOperator):
             if self.SendingStopped:
                 return
             if self._do_request:
-                self._do_request = False
+                self._do_request = False  # Сброс флага
+
                 if self.DebugMode:
                     self.CurrentFreq = 0
                 else:
+                    t_before_request = time.time()
                     self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+                    self.SendingLogger.log_request_dt(time.time() - t_before_request)
+                self.SignalVisualizer.UpdateCurrentFrequency(self.current_point.x, self.CurrentFreq)
+
             if self._do_send:
                 self._do_send = False
                 if self._set_upper_freq:
                     val_to_set = int(self.model.HighLevelFrequency * 100)
                 else:
                     val_to_set = int(self.model.LowLevelFrequency * 100)
+                t_before_write = time.time()
                 self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, val_to_set)
+                self.SendingLogger.log_send_dt(time.time() - t_before_write)
                 self.SignalVisualizer.UpdateSetFrequency(self.current_point.x, val_to_set / 100)
 
     # Переопределённый метод, т.к. немного отличается (Надо задать t_разгона, t_замедления перед отправкой)
@@ -178,8 +184,8 @@ class PIDSendingOperator(SignalSendingOperator):
                     self.FunctionWasCalled = False
                     self.current_point = points[self.PointsIterator]
                     self.prev_point = points[self.PointsIterator - 1]
-                    dt_to_wait = DeltaTimes[self.PointsIterator - 1] #- self.CommandExecutionTime
-                    self.Timer.reset(dt_to_wait - self.CommandExecutionTime)
+                    dt_to_wait = DeltaTimes[self.PointsIterator - 1]
+                    self.Timer.reset(dt_to_wait)
                     self.PointsIterator += 1
 
                 if self.SendingStopped:
@@ -204,7 +210,7 @@ class PIDSendingOperator(SignalSendingOperator):
                     self.SendingLogger.log(f_expect=self.prev_point.y, f_real=self.CurrentFreq,
                                        t_expect=self.prev_point.x,
                                        t_real=datetime.datetime.now().time())
-                    self.SignalVisualizer.UpdateCurrentFrequency(self.prev_point.x, self.CurrentFreq)
+                    #self.SignalVisualizer.UpdateCurrentFrequency(self.prev_point.x, self.CurrentFreq)
             else:
                 # Если не на паузе, значит задаём частоту. Иначе висим на паузе
                 # c ближайшей частотой (задаём опрошенную частоту), пока флаг не снимется
@@ -214,11 +220,12 @@ class PIDSendingOperator(SignalSendingOperator):
                 else:
                     self._do_send = True
                     self._set_upper_freq = current_point.y == self.model.HighLevelFrequency
-
         self.FunctionWasCalled = True
 
         t1 = time.time()
-        self.CommandExecutionTime = t1 - t0
+        interrupt_dt = t1-t0
+        self.CommandExecutionTime = interrupt_dt
+        self.SendingLogger.log_interrupt_dt(interrupt_dt)
 
     def SendFreq(self, *args):
         self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, args[0])

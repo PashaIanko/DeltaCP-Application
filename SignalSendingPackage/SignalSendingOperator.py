@@ -134,7 +134,6 @@ class SignalSendingOperator(CallBackOperator):
             self.window.PauseSendingradioButton.setChecked(True)
 
     def StopSendingSignal(self):
-        loggers['Debug'].debug(f'SignalSendingOperator: StopSendingSignal: Setting freq = 0 & sending stop')
         self.DeltaCPClient.SetFrequency(0)
         self.DeltaCPClient.SendStop()
         self.SendingStopped = True
