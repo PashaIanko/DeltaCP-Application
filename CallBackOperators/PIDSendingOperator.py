@@ -46,10 +46,10 @@ class PIDSendingOperator(SignalSendingOperator):
                 return
             if self._do_request:
                 self._do_request = False
-                self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-                # self.SendingLogger.log(f_expect=self.current_point.y, f_real=CurrentFreq, t_expect=self.current_point.x,
-                #                    t_real=datetime.datetime.now().time())
-                # self.SignalVisualizer.UpdateCurrentFrequency(self.current_point.x, CurrentFreq)
+                if self.DebugMode:
+                    self.CurrentFreq = 0
+                else:
+                    self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
             if self._do_send:
                 self._do_send = False
                 if self._set_upper_freq:
@@ -189,40 +189,6 @@ class PIDSendingOperator(SignalSendingOperator):
                 self.CycleFinishedSuccessfully = True
                 loggers['SignalSending'].info(f'Finished Cycle')
                 return
-
-    # def TestTimer(self):
-    #     t0 = time.time()
-    #     if not self.SendingStopped:
-    #
-    #         current_point = self.current_point
-    #         if not current_point.to_send:
-    #             # Значит опрашиваем
-    #             if self.thread is None or not self.thread.is_alive():
-    #                 CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-    #             else:
-    #                 CurrentFreq = 0
-    #             self.SendingLogger.log(f_expect=current_point.y, f_real=CurrentFreq, t_expect=current_point.x,
-    #                                    t_real=datetime.datetime.now().time())
-    #             self.SignalVisualizer.UpdateCurrentFrequency(current_point.x, CurrentFreq)
-    #
-    #
-    #         else:
-    #             # Если не на паузе, значит задаём частоту. Иначе висим на паузе
-    #             # c ближайшей частотой (задаём опрошенную частоту), пока флаг не снимется
-    #             if self.SendingOnPause:
-    #                 CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-    #                 self.DeltaCPClient.SetFrequency(int(CurrentFreq * 100))
-    #             else:
-    #
-    #                 self.thread = Thread(target=self.SendFreq, args=(int(current_point.y * 100),))
-    #                 self.thread.start()
-    #                 # self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, int(current_point.y * 100))
-    #                 self.SignalVisualizer.UpdateSetFrequency(current_point.x, current_point.y)
-    #     self.FunctionWasCalled = True
-    #
-    #     t1 = time.time()
-    #     self.CommandExecutionTime = t1 - t0
-    #     print(f'TIME {t1 - t0}')
 
     def TestTimer(self):
         t0 = time.time()
