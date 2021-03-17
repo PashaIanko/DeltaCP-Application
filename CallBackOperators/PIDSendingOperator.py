@@ -143,6 +143,8 @@ class PIDSendingOperator(SignalSendingOperator):
     # overridden
     def ExecuteSending(self):
 
+        t_cycle_start = time.time()
+
         points = SignalData.point_array_with_requests
         DeltaTimes = SignalData.dx
         Dts_len = len(DeltaTimes)
@@ -187,7 +189,8 @@ class PIDSendingOperator(SignalSendingOperator):
             if self.FunctionWasCalled == True:
                 self.FunctionWasCalled = False
                 self.CycleFinishedSuccessfully = True
-                loggers['SignalSending'].info(f'Finished Cycle')
+                t_cycle_end = time.time()
+                self.SendingLogger.log_cycle_time(t_cycle_end - t_cycle_start, self.model.WholePeriod)
                 return
 
     def TestTimer(self):
