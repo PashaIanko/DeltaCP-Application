@@ -49,6 +49,7 @@ class SignalSendingOperator(CallBackOperator):
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды
+        self.send_request_thread = None
 
 
     @abstractmethod
@@ -134,9 +135,13 @@ class SignalSendingOperator(CallBackOperator):
             self.window.PauseSendingradioButton.setChecked(True)
 
     def StopSendingSignal(self):
+        self.SendingStopped = True
+        if self.send_request_thread is not None:
+            self.send_request_thread.join()
+
         self.DeltaCPClient.SetFrequency(0)
         self.DeltaCPClient.SendStop()
-        self.SendingStopped = True
+
         self.IsFirstCycle = True
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
