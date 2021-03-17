@@ -54,7 +54,6 @@ class PIDSendingOperator(SignalSendingOperator):
 
                 if self.DebugMode:
                     self.CurrentFreq = 0
-                    self._requested = True
                 else:
                     t_before_request = time.time()
                     self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
