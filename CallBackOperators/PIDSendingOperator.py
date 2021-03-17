@@ -7,6 +7,7 @@ from DeltaCPRegisters import DeltaCPRegisters
 import datetime
 from threading import Thread
 import time
+from SignalGenerationPackage.Point import Point
 
 
 class PIDSendingOperator(SignalSendingOperator):
@@ -49,6 +50,7 @@ class PIDSendingOperator(SignalSendingOperator):
             if self.SendingStopped:
                 return
             if self._do_request and self._requested:  # Если на предыдущей итерации опросили, и надо вновь опросить
+                pt = Point(y=self.current_point.y, x = self.current_point.x, to_send=self.current_point.to_send)
                 self._do_request = False  # Сброс флага
                 self._requested = False
 
@@ -59,16 +61,21 @@ class PIDSendingOperator(SignalSendingOperator):
                     self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
                     self.SendingLogger.log_request_dt(time.time() - t_before_request)
 
-                self.SendingLogger.log(f_expect=self.current_point.y, f_real=self.CurrentFreq,
-                                           t_expect=self.current_point.x,
+                # self.SendingLogger.log(f_expect=self.current_point.y, f_real=self.CurrentFreq,
+                #                            t_expect=self.current_point.x,
+                #                            t_real=datetime.datetime.now().time())
+                if not pt.to_send:
+                    self.SendingLogger.log(f_expect=pt.y, f_real=self.CurrentFreq,
+                                           t_expect=pt.x,
                                            t_real=datetime.datetime.now().time())
-                self.SignalVisualizer.UpdateCurrentFrequency(self.current_point.x, self.CurrentFreq)
+
+                self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
                 self._requested = True
 
             if self._do_send and self._sent:
                 self._do_send = False
                 self._sent = False
-
+                pt = Point(y=self.current_point.y, x=self.current_point.x, to_send=self.current_point.to_send)
                 if self._set_upper_freq:
                     val_to_set = int(self.model.HighLevelFrequency * 100)
                 else:
@@ -77,7 +84,7 @@ class PIDSendingOperator(SignalSendingOperator):
                 t_before_write = time.time()
                 self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, val_to_set)
                 self.SendingLogger.log_send_dt(time.time() - t_before_write)
-                self.SignalVisualizer.UpdateSetFrequency(self.current_point.x, val_to_set / 100)
+                self.SignalVisualizer.UpdateSetFrequency(pt.x, val_to_set / 100)
                 self._sent = True
 
     # Переопределённый метод, т.к. немного отличается (Надо задать t_разгона, t_замедления перед отправкой)
