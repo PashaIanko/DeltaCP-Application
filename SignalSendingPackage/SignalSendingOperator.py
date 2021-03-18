@@ -54,7 +54,7 @@ class SignalSendingOperator(CallBackOperator):
         self.send_request_thread = None
 
         self.t_restart_begin = 0
-        self.t_restart_end = 0
+        self.t_restart_diff = 0
 
     @abstractmethod
     def ExecuteSending(self, Time):
@@ -248,7 +248,6 @@ class SignalSendingOperator(CallBackOperator):
 
             if self.CycleFinishedSuccessfully:
                 self.CycleFinishedSuccessfully = False
-                #self.CycleRestarted = True
 
                 self.t_restart_begin = time()
                 cycle_counter += 1
@@ -275,7 +274,7 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0
         self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
 
-        self.t_restart_end = time()
+        self.t_restart_diff = time() - self.t_restart_begin
         self.CycleRestarted = True
         self.ExecuteSending()
 

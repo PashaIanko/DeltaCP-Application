@@ -70,6 +70,7 @@ class PIDSendingOperator(SignalSendingOperator):
                     else:
                         t_before_request = time.time()
                         self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+                        #self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister) / 100
                         self.SendingLogger.log_request_dt(time.time() - t_before_request)
 
                     self.SendingLogger.log(f_expect=pt.y, f_real=self.CurrentFreq,
@@ -201,7 +202,7 @@ class PIDSendingOperator(SignalSendingOperator):
 
                     if self.CycleRestarted:
                         self.CycleRestarted = False
-                        dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime - self.t_cycle_diff)
+                        dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime - self.t_cycle_diff - self.t_restart_diff)
                     else:
                         dt_to_wait = DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime
                     self.Timer.reset(dt_to_wait)
