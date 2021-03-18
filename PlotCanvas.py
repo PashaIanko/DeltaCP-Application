@@ -4,7 +4,7 @@ from matplotlib.figure import Figure
 
 
 class PlotCanvas(FigureCanvas):
-    def __init__(self, parent=None,  width=8.8, height=10.5, dpi=100, title='Default title'):
+    def __init__(self, parent=None,  width=8.8, height=10.5, dpi=100, title=' '):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         FigureCanvas.__init__(self, self.fig)
         self.setStyleSheet("background-color:rgb(240,240,240);")
@@ -40,3 +40,9 @@ class PlotCanvas(FigureCanvas):
 
     def set_xlim(self, left, right):
         self.axes.set_xlim(left, right)
+
+    def setFrameShape(self, styled_panel):
+        pass  # Этот метод вызывается в автоматически сгенерированном коде от Qt Designer, но нам он не нужен
+
+    def setFrameShadow(self, raised):
+        pass  # Этот метод вызывается в автоматически сгенерированном коде от Qt Designer, но нам он не нужен
