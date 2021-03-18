@@ -163,8 +163,6 @@ class PIDSendingOperator(SignalSendingOperator):
     # overridden
     def ExecuteSending(self):
 
-        t_cycle_start = time.time()
-
         points = SignalData.point_array_with_requests
         DeltaTimes = SignalData.dx
         Dts_len = len(DeltaTimes)
@@ -180,6 +178,8 @@ class PIDSendingOperator(SignalSendingOperator):
             preset_value = self.model.LowLevelFrequency
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
+
+        t_cycle_start = time.time()
 
         # После выставления начальной частоты - Ждём cycle gap и выставляем следующую точку
         if self.Timer.if_started == True:  # Если уже дали старт таймеру на предудущем цикле
@@ -199,7 +199,11 @@ class PIDSendingOperator(SignalSendingOperator):
                     self.current_point = points[self.PointsIterator]
                     self.prev_point = points[self.PointsIterator - 1]
 
-                    dt_to_wait = DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime
+                    if self.CycleRestarted:
+                        self.CycleRestarted = False
+                        dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime - self.t_cycle_diff)
+                    else:
+                        dt_to_wait = DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime
                     self.Timer.reset(dt_to_wait)
                     self.PointsIterator += 1
 
@@ -211,7 +215,7 @@ class PIDSendingOperator(SignalSendingOperator):
                 self.FunctionWasCalled = False
                 self.CycleFinishedSuccessfully = True
                 t_cycle_end = time.time()
-                self.t_cycle_diff = abs(self.model.WholePeriod - (t_cycle_end - t_cycle_start))
+                self.t_cycle_diff = abs(self.model.WholePeriod - abs(t_cycle_end - t_cycle_start))
                 self.SendingLogger.log_cycle_time(t_cycle_end - t_cycle_start, self.model.WholePeriod)
                 return
 

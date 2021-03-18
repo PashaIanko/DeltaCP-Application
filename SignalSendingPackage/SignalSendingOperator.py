@@ -276,6 +276,7 @@ class SignalSendingOperator(CallBackOperator):
         self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
 
         self.t_restart_end = time()
+        self.CycleRestarted = True
         self.ExecuteSending()
 
     @staticmethod
