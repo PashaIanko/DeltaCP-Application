@@ -2,9 +2,9 @@ from PyQt5 import QtWidgets
 from Graphics import Ui_MainWindow
 from ConnectionPackage.ConnectionModule import ConnectionModule
 from SignalGenerationPackage.SignalGenerationModule import SignalGenerationModule
-from SignalSendingPackage.SignalSendingModule import SignalSendingModule
 from FrequencySettingPackage.FrequencySettingModule import FrequencySettingModule
-# from AccelerDecelerTimePackage.AccelerDecelerTimeModule import AccelerDecelerTimeModule
+from LogVisualizationPackage.LogVisualizationModule import LogVisualizationModule
+
 
 
 class ApplicationManager:
@@ -15,9 +15,10 @@ class ApplicationManager:
             [
                 ConnectionModule(),
                 FrequencySettingModule(),
-                # AccelerDecelerTimeModule(),
+                # AccelerDecelerTimeModule(), # TODO: Удалить этот модуль
                 SignalGenerationModule(),
-                SignalSendingModule()
+                LogVisualizationModule()
+                # SignalSendingModule()  # TODO: Удалить SignalSendingModule
             ]
 
         self.MainWindow = QtWidgets.QMainWindow()
