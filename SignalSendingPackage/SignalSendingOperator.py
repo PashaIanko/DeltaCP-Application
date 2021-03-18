@@ -7,7 +7,8 @@ from SignalSendingPackage.SignalTimer import SignalTimer
 from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
 from SignalSendingPackage.SendingLogger import SendingLogger
-from time import sleep
+from time import sleep, time
+
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -38,18 +39,22 @@ class SignalSendingOperator(CallBackOperator):
         self.EndlessSendingEnabled = False
         self.CycleSendingEnabled = True  # Предустановлено на интерфейсе
         self.CycleFinishedSuccessfully = False
+        self.CycleRestarted = False
         self.IsFirstCycle = True
 
         self.SendingThread = None
         self.SignalVisualizer = None
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
-        self.CycleGap = 0.1  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
+        self.CycleGap = 0.01  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
         self.CommandExecutionTime = 0.2 #45  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды
+        self.send_request_thread = None
 
+        self.t_restart_begin = 0
+        self.t_restart_diff = 0
 
     @abstractmethod
     def ExecuteSending(self, Time):
@@ -134,10 +139,13 @@ class SignalSendingOperator(CallBackOperator):
             self.window.PauseSendingradioButton.setChecked(True)
 
     def StopSendingSignal(self):
-        loggers['Debug'].debug(f'SignalSendingOperator: StopSendingSignal: Setting freq = 0 & sending stop')
+        self.SendingStopped = True
+        if self.send_request_thread is not None:
+            self.send_request_thread.join()
+
         self.DeltaCPClient.SetFrequency(0)
         self.DeltaCPClient.SendStop()
-        self.SendingStopped = True
+
         self.IsFirstCycle = True
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
@@ -240,6 +248,8 @@ class SignalSendingOperator(CallBackOperator):
 
             if self.CycleFinishedSuccessfully:
                 self.CycleFinishedSuccessfully = False
+
+                self.t_restart_begin = time()
                 cycle_counter += 1
 
                 if self.EndlessSendingEnabled:
@@ -263,6 +273,9 @@ class SignalSendingOperator(CallBackOperator):
         # restarting points Iterator, Visualisation and Sending Thread
         self.PointsIterator = 0
         self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
+
+        self.t_restart_diff = time() - self.t_restart_begin
+        self.CycleRestarted = True
         self.ExecuteSending()
 
     @staticmethod
@@ -299,5 +312,5 @@ class SignalSendingOperator(CallBackOperator):
                 sleep(1)
                 current_freq = self.DeltaCPClient.RequestCurrentFrequency()
                 loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
-                if abs(current_freq - value) <= accuracy:
+                if abs(current_freq - value) <= accuracy:  # TODO: Добавить Notifier если currentFreq==None, чтобы окошко вылезло
                     return

@@ -11,6 +11,7 @@ class EdgeSignalData(SignalData):
         self.PlateauTime = 0
         self.DecelerationTime = 0
         self.EndTime = 0
+        self.WholePeriod = 0
 
         self.LowLevelFrequency = 0
         self.HighLevelFrequency = 0

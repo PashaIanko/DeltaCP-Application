@@ -7,6 +7,11 @@ class SendingLogger:
         self.f_expect = []
         self.t_real = []
         self.t_expect = []
+        self.cycle_real_dts = []
+        self.cycle_expect_dts = []
+        self.request_dts = []
+        self.send_dts = []
+        self.interrupt_dts = []
 
     @property
     def output_filename(self):
@@ -21,6 +26,11 @@ class SendingLogger:
         self.f_real.clear()
         self.t_expect.clear()
         self.t_real.clear()
+        self.cycle_real_dts.clear()
+        self.cycle_expect_dts.clear()
+        self.request_dts.clear()
+        self.send_dts.clear()
+        self.interrupt_dts.clear()
 
 
     def save_database(self):
@@ -31,15 +41,24 @@ class SendingLogger:
 
         real_shifted_seconds = self.process_time_column()
 
-        df = pd.DataFrame({
+        a = {
             'Expect Time': self.t_expect,
             'Expect Freq, Hz': self.f_expect,
 
             'Real Time (Synchronized), Sec': real_shifted_seconds,
             'Real Freq, Hz': self.f_real,
 
-            'Real Time, Sec': self.t_real
-        })
+            'Real Time, Sec': self.t_real,
+
+            'Cycle dt real, Sec': self.cycle_real_dts,
+            'Cycle dt expect, Sec': self.cycle_expect_dts,
+
+            'Send dt, Sec': self.send_dts,
+            'Request dt, Sec': self.request_dts,
+            'Interrupt dt, Sec': self.interrupt_dts
+        }
+        df = pd.DataFrame.from_dict(a, orient='index')
+        df = df.transpose()
         df.to_excel(self.output_filename, index=False)
 
 
@@ -48,6 +67,19 @@ class SendingLogger:
         self.f_real.append(f_real)
         self.t_real.append(t_real)
         self.t_expect.append(t_expect)
+
+    def log_interrupt_dt(self, dt):
+        self.interrupt_dts.append(dt)
+
+    def log_cycle_time(self, dt_real, dt_expect):
+        self.cycle_real_dts.append(dt_real)
+        self.cycle_expect_dts.append(dt_expect)
+
+    def log_request_dt(self, dt):
+        self.request_dts.append(dt)
+
+    def log_send_dt(self, dt):
+        self.send_dts.append(dt)
 
     def process_time_column(self):
 

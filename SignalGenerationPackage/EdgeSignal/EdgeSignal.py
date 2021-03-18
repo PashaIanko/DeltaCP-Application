@@ -36,6 +36,8 @@ class EdgeSignal(Signal):
         AccelerationTime = self.SignalData.AccelerationTime
         DecelerationTime = self.SignalData.DecelerationTime
 
+        self.SignalData.WholePeriod = WholePeriod
+
         # Пересчёт необходимого времени разгона / замедления
         try:
             self.SignalData.NecessaryAccelerationTime = (self.SignalData.MaxFrequency - self.SignalData.MinFrequency) * \
@@ -186,6 +188,10 @@ class EdgeSignal(Signal):
         self.SignalData.DecelerationTime = val
         self.RecalcData()
         self.NotifyObservers()
+
+    @property
+    def WholePeriod(self):
+        return self.SignalData.WholePeriod
 
     @property
     def HighLevelFrequency(self):

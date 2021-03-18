@@ -30,7 +30,12 @@ class SignalVisualizer:
 
     def UpdateCurrentFrequency(self, x_val, y_val):
         if x_val is not None and y_val is not None:
-            self.Graph.add_point(x_val, y_val, color='black', marker='x', markersize=7)
+            if self.IfRestarted:
+                self.IfRestarted = False
+                self.Graph.plot(self.x, self.y, color='b', marker='.', markersize=7)
+                self.Graph.add_point(x_val, y_val, color='black', marker='x', markersize=7)
+            else:
+                self.Graph.add_point(x_val, y_val, color='black', marker='x', markersize=7)
 
     def Restart(self, TimeArray):
         self.Graph.clear()
