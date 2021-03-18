@@ -198,7 +198,6 @@ class PIDSendingOperator(SignalSendingOperator):
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
                     self.current_point = points[self.PointsIterator]
-                    self.prev_point = points[self.PointsIterator - 1]
 
                     if self.CycleRestarted:
                         self.CycleRestarted = False
