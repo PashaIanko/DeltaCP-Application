@@ -1,7 +1,7 @@
 from ApplicationModule import ApplicationModule
 from CallBackOperators.SetAndStopFrequencyOperator import SetAndStopFrequencyOperator
 from CallBackOperators.FrequencySliderAndTextOperator import FrequencySliderAndTextOperator
-#from CallBackOperators.FrequencySliderLimitsOperator import FrequencySliderLimitsOperator
+#from CallBackOperator.FrequencySliderLimitsOperator import FrequencySliderLimitsOperator
 
 class FrequencySettingModule(ApplicationModule):
 

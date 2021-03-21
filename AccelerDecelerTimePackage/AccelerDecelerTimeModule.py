@@ -10,7 +10,7 @@
 #
 #
 #     def InitCallBackOperators(self):
-#         self.CallBackOperators = \
+#         self.CallBackOperator = \
 #             [
 #                 TimeRegimeOperator(),
 #                 AccDecTimeOperator()
