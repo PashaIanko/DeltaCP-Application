@@ -24,10 +24,14 @@ class PlotCanvas(FigureCanvas):
         self.axes.set_yscale('linear')
         self.axes.set_title(self.title)
 
-    def plot(self, x, y, **kwargs):
-        self.axes.cla()
+    def plot(self, x, y, do_cla=True, **kwargs):
+        if do_cla:
+            self.axes.cla()  # Стереть всё предыдущее
+
         self.axes.grid(True, which='both', axis='both')
         self.axes.plot(x, y, **kwargs)
+        if 'label' in kwargs:
+            self.fig.legend()
         self.fig.canvas.draw_idle()
 
     def add_point(self, x, y, **kwargs):

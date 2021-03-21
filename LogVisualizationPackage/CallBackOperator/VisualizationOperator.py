@@ -32,14 +32,14 @@ class VisualizationOperator(CallBackOperator):
                 t_real = log_df['Real Time (Synchronized), Sec'].values
                 f_real = log_df['Real Freq, Hz'].values
 
-                log_plot.plot(t_expect, f_expect)
-                #log_plot.plot(t_real, f_real)
+                log_plot.plot(t_expect, f_expect, do_cla=False, label='Expect', marker='o', markersize=4)
+                log_plot.plot(t_real, f_real, do_cla=False, label='Real', marker='o', markersize=4)
 
         except FileNotFoundError:
             PopUpNotifier.Error(f'Cannot find file {logfile_dir}')
         except:
             import sys
-            print(sys.exc_info())  # TODO: wrong filename PopUpNotifier сделать
+            print(sys.exc_info())
 
     def check_columns_correctness(self, df):
         cols = df.columns
