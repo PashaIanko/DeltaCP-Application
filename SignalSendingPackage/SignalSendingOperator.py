@@ -268,7 +268,7 @@ class SignalSendingOperator(CallBackOperator):
 
         # restarting points Iterator, Visualisation and Sending Thread
         self.PointsIterator = 0
-        self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
+        self.SignalVisualizer.Restart(updated_x)  # SignalVisualizer отрисовывает X, Y, без реквестов
 
         self.CycleRestarted = True
 

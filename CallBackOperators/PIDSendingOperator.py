@@ -206,9 +206,7 @@ class PIDSendingOperator(SignalSendingOperator):
                     dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] -
                                      self.CommandExecutionTime - self.lag_portion)
 
-                    reset_b = time.time()
                     self.Timer.reset(dt_to_wait)
-                    print(f' reset dt = {time.time() - reset_b}')
                     self.PointsIterator += 1
 
                 if self.SendingStopped:
