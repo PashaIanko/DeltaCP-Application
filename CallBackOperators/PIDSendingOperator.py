@@ -205,7 +205,10 @@ class PIDSendingOperator(SignalSendingOperator):
                         self.CycleRestarted = False
                     dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] -
                                      self.CommandExecutionTime - self.lag_portion)
+
+                    reset_b = time.time()
                     self.Timer.reset(dt_to_wait)
+                    print(f' reset dt = {time.time() - reset_b}')
                     self.PointsIterator += 1
 
                 if self.SendingStopped:
@@ -222,9 +225,5 @@ class PIDSendingOperator(SignalSendingOperator):
         if not self.SendingStopped:
             current_point = self.current_point
             self.tasks_queue.put([Point(x=current_point.x, y=current_point.y, to_send=current_point.to_send), current_point.y == self.model.HighLevelFrequency])
-
-        t1 = time.time()
-        interrupt_dt = t1-t0
-        self.CommandExecutionTime = interrupt_dt
-        self.SendingLogger.log_interrupt_dt(interrupt_dt)
+        self.CommandExecutionTime = time.time() - t0
         self.FunctionWasCalled = True

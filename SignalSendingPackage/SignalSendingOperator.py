@@ -10,7 +10,6 @@ from SignalSendingPackage.SendingLogger import SendingLogger
 from time import sleep, time
 
 
-
 class SignalSendingOperator(CallBackOperator):
     def __init__(self, signal_main_window, plot_widget, DebugMode=True):
         super().__init__()
@@ -48,15 +47,14 @@ class SignalSendingOperator(CallBackOperator):
 
         self.CycleGap = 0.01  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
         self.CommandExecutionTime = 0.0  # Часть времени уходит на исполнение команды (отправку частоты на
-                                            # частотник, обновление отрисовки). Надо подобрать этот параметр,
-                                            # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
-                                            # на исполнение команды
+        # частотник, обновление отрисовки). Надо подобрать этот параметр,
+        # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
+        # на исполнение команды
         self.send_request_thread = None  # Параллельный поток, мониторящий очередь задач
 
         self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
         self.start_sending_time = 0
         self.cycle_counter = 0
-
 
     @abstractmethod
     def ExecuteSending(self, Time):
@@ -102,13 +100,12 @@ class SignalSendingOperator(CallBackOperator):
         # И отправка циклов (CyclesNumberSpinBox) были взаимоисключающими
         # Поэтому, коннектим взаимоисключающие отклики
         EndlessSendCheckbox.toggled.connect(lambda: self.EnableSendingRegime())  # Какой режим - бесконечной отправки
-                                                                                    # Или кол-во циклов
+        # Или кол-во циклов
 
         StartButton.clicked.connect(self.StartSendingSignal)
         PauseRadioButton.toggled.connect(self.PauseSending)
         ResumeRadioButton.toggled.connect(self.ResumeSending)
         StopButton.clicked.connect(self.StopSendingSignal)
-
 
     def EnableSendingRegime(self):
         EndlessSendradioButton = self.get_endless_send_radiobutton()
@@ -163,7 +160,6 @@ class SignalSendingOperator(CallBackOperator):
 
         # Сохраним файл лога
         self.SaveLog()
-
 
     def SaveLog(self):
         log_lineedit = self.get_log_filename_lineedit()
@@ -265,7 +261,6 @@ class SignalSendingOperator(CallBackOperator):
                         current_cycle_display.display(self.cycle_counter + 1)
                         self.RestartSending(updated_x)
 
-
     def RestartSending(self, updated_x):
         upd_val = SignalData.x[-1]
         self.update_time_stamps(upd_val)
@@ -277,10 +272,10 @@ class SignalSendingOperator(CallBackOperator):
 
         self.CycleRestarted = True
 
-
-        dt_diff = (time() - self.start_sending_time) - ((self.cycle_counter + 1) * self.model.WholePeriod)
+        dt_diff = (time() - self.start_sending_time) - ((self.cycle_counter) * self.model.WholePeriod)
         if dt_diff > 0:
             self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 1)
+            print(f'lag portion = {self.lag_portion}')
         self.ExecuteSending()
 
     @staticmethod
@@ -316,6 +311,8 @@ class SignalSendingOperator(CallBackOperator):
                 # мониторим, достигли ли требуемой начальной частоты
                 sleep(1)
                 current_freq = self.DeltaCPClient.RequestCurrentFrequency()
-                loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
-                if abs(current_freq - value) <= accuracy:  # TODO: Добавить Notifier если currentFreq==None, чтобы окошко вылезло
+                loggers['Debug'].debug(
+                    f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
+                if abs(
+                        current_freq - value) <= accuracy:  # TODO: Добавить Notifier если currentFreq==None, чтобы окошко вылезло
                     return
