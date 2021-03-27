@@ -47,14 +47,16 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
         self.CycleGap = 0.01  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
-        self.CommandExecutionTime = 0.2 #45  # Часть времени уходит на исполнение команды (отправку частоты на
+        self.CommandExecutionTime = 0.0  # Часть времени уходит на исполнение команды (отправку частоты на
                                             # частотник, обновление отрисовки). Надо подобрать этот параметр,
                                             # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
                                             # на исполнение команды
-        self.send_request_thread = None
+        self.send_request_thread = None  # Параллельный поток, мониторящий очередь задач
 
-        self.t_restart_begin = 0
-        self.t_restart_diff = 0
+        self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
+        self.start_sending_time = 0
+        self.cycle_counter = 0
+
 
     @abstractmethod
     def ExecuteSending(self, Time):
@@ -229,14 +231,14 @@ class SignalSendingOperator(CallBackOperator):
                 loggers['Debug'].debug(f'Prev sending thread is executing, cant launch one')
 
     def ThreadFunc(self):
-        self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
+        self.Timer = SignalTimer(interval=0.1, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
 
         updated_x = SignalData.x.copy()
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
         self.ExecuteSending()
 
-        cycle_counter = 0
+        self.cycle_counter = 0
         cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
@@ -249,19 +251,18 @@ class SignalSendingOperator(CallBackOperator):
             if self.CycleFinishedSuccessfully:
                 self.CycleFinishedSuccessfully = False
 
-                self.t_restart_begin = time()
-                cycle_counter += 1
+                self.cycle_counter += 1
 
                 if self.EndlessSendingEnabled:
-                    current_cycle_display.display(cycle_counter + 1)
+                    current_cycle_display.display(self.cycle_counter + 1)
                     self.RestartSending(updated_x)
 
                 if self.CycleSendingEnabled:
                     cycles_to_perform = cycle_number_widget.value()
-                    if cycle_counter >= cycles_to_perform:
+                    if self.cycle_counter >= cycles_to_perform:
                         return
                     else:
-                        current_cycle_display.display(cycle_counter + 1)
+                        current_cycle_display.display(self.cycle_counter + 1)
                         self.RestartSending(updated_x)
 
 
@@ -274,8 +275,12 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0
         self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
 
-        self.t_restart_diff = time() - self.t_restart_begin
         self.CycleRestarted = True
+
+
+        dt_diff = (time() - self.start_sending_time) - ((self.cycle_counter + 1) * self.model.WholePeriod)
+        if dt_diff > 0:
+            self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 1)
         self.ExecuteSending()
 
     @staticmethod

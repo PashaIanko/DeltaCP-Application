@@ -34,9 +34,6 @@ class PIDSendingOperator(SignalSendingOperator):
 
         self.tasks_queue = Queue()
 
-        self.t_cycle_diff = 0  # Разница между реальным и ожидаемым временем цикла (учёт поправки на временные задержки)
-        self.portion = 0
-
 
         # Model (модель) нужна, для того чтобы перед отправкой пересчитать необходимые времёна
         # разгона / замедления
@@ -70,8 +67,8 @@ class PIDSendingOperator(SignalSendingOperator):
                         self.CurrentFreq = 0
                     else:
                         t_before_request = time.time()
-                        self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-                        #self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister) / 100
+                        # self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
+                        self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister) / 100
                         self.SendingLogger.log_request_dt(time.time() - t_before_request)
 
                     self.SendingLogger.log(f_expect=pt.y, f_real=self.CurrentFreq,
@@ -165,15 +162,17 @@ class PIDSendingOperator(SignalSendingOperator):
     # overridden
     def ExecuteSending(self):
 
-        t_cycle_start = time.time()
-
         points = SignalData.point_array_with_requests
         DeltaTimes = SignalData.dx
         Dts_len = len(DeltaTimes)
 
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
-        self.PointsIterator = 0
+
+        if self.IsFirstCycle:
+            self.PointsIterator = 0
+        else:
+            self.PointsIterator = 1
         self.current_point = points[self.PointsIterator]
 
 
@@ -182,7 +181,7 @@ class PIDSendingOperator(SignalSendingOperator):
             preset_value = self.model.LowLevelFrequency
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
-            t_cycle_start = time.time()
+            self.start_sending_time = time.time()
 
 
         # После выставления начальной частоты - Ждём cycle gap и выставляем следующую точку
@@ -204,12 +203,8 @@ class PIDSendingOperator(SignalSendingOperator):
 
                     if self.CycleRestarted:
                         self.CycleRestarted = False
-                        dt_lag = self.t_cycle_diff + self.t_restart_diff
-                        self.portion = dt_lag / len(points)
-                        #dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] - self.t_cycle_diff - self.t_restart_diff)
-                        #print(f'dt_to_wait after restart: {dt_to_wait}, dt = {DeltaTimes[self.PointsIterator-1]}, dt_lag = {self.t_cycle_diff + self.t_restart_diff}')
-
-                    dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] - self.CommandExecutionTime - self.portion)
+                    dt_to_wait = max(0.01, DeltaTimes[self.PointsIterator - 1] -
+                                     self.CommandExecutionTime - self.lag_portion)
                     self.Timer.reset(dt_to_wait)
                     self.PointsIterator += 1
 
@@ -220,9 +215,6 @@ class PIDSendingOperator(SignalSendingOperator):
             if self.FunctionWasCalled == True:
                 self.FunctionWasCalled = False
                 self.CycleFinishedSuccessfully = True
-                t_cycle_end = time.time()
-                self.SendingLogger.log_cycle_time(t_cycle_end - t_cycle_start, self.model.WholePeriod)
-                self.t_cycle_diff = abs(self.model.WholePeriod - abs(t_cycle_end - t_cycle_start))
                 return
 
     def TestTimer(self):
