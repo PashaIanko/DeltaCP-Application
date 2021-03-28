@@ -53,6 +53,7 @@ class SignalSendingOperator(CallBackOperator):
         self.tasks_queue = None
         self.task_queue_thread = None  # Параллельный поток, мониторящий очередь задач
         self.wait_to_finish = False
+        self.task_queue_thread_started = False
 
         self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
         self.start_sending_time = 0
@@ -146,6 +147,8 @@ class SignalSendingOperator(CallBackOperator):
                 self.wait_to_finish = True
                 self.task_queue_thread.join()
                 self.wait_to_finish = False
+                self.task_queue_thread_started = False  # дождались завершения параллельного потока с помощью join(). Тред убился. Поэтому
+                                                        # выставляем флаг, что тред не стартовал, чтобы вновь его создать при нажатии "Start Sending"
             if self.tasks_queue is not None:
                 with self.tasks_queue.mutex:
                     self.tasks_queue.queue.clear()
