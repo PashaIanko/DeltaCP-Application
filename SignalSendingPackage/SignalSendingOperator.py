@@ -274,7 +274,7 @@ class SignalSendingOperator(CallBackOperator):
 
         dt_diff = (time() - self.start_sending_time) - ((self.cycle_counter) * self.model.WholePeriod)
         if dt_diff > 0:
-            self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 1)
+            self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 2)
             print(f'lag portion = {self.lag_portion}')
         self.ExecuteSending()
 
