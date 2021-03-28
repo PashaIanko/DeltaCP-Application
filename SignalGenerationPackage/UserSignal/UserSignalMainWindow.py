@@ -7,19 +7,6 @@ class UserSignalMainWindow(SignalMainWindow):
     def __init__(self):
         super().__init__()
 
-    # overridden
-    def init_plot_title(self):
-        self.plot_title = 'Trapezoid (constant points density)'
-
-    # overridden
-    def init_plot_sizes(self):
-        self.plot_height = UserSignalUIParameters.PlotHeight
-        self.plot_width = UserSignalUIParameters.PlotWidth
-
-    # overridden
-    def init_plot_positions(self):
-        self.plot_pos_x = UserSignalUIParameters.PlotXPosition
-        self.plot_pos_y = UserSignalUIParameters.PlotYPosition  # TODO: Избавиться от этих методов
 
     # overridden
     def init_user_interface(self):

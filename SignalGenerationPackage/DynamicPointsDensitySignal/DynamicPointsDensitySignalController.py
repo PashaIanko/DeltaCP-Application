@@ -28,7 +28,6 @@ class DynamicPointsDensitySignalController(SignalController):
     # overridden
     def init_observer(self):
         self.observer = DynamicPointsDensitySignalObserver(self.model, self.main_window.plot)
-        # TODO: Посмотри, этот метод везде одинаков, можно в родителя
 
     # overridden
     def init_main_window(self):
