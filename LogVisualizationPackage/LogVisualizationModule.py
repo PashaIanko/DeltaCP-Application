@@ -11,5 +11,5 @@ class LogVisualizationModule(ApplicationModule):
     def InitCallBackOperators(self):
         self.CallBackOperators = \
             [
-                VisualizationOperator()
+                VisualizationOperator(DebugMode=True)
             ]
