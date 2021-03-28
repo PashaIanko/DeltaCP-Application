@@ -47,7 +47,7 @@ class PIDSendingOperator(SignalSendingOperator):
 
     def SendRequestMonitor(self):
         while True:
-            if self.SendingStopped:
+            if self.SendingStopped or self.wait_to_finish:
                 return
             elif not self.tasks_queue.empty():
                 # Значит есть задача на отправку / запрос

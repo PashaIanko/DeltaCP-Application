@@ -52,6 +52,7 @@ class SignalSendingOperator(CallBackOperator):
         # на исполнение команды
         self.tasks_queue = None
         self.task_queue_thread = None  # Параллельный поток, мониторящий очередь задач
+        self.wait_to_finish = False
 
         self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
         self.start_sending_time = 0
@@ -142,7 +143,9 @@ class SignalSendingOperator(CallBackOperator):
         try:
             self.SendingStopped = True
             if self.task_queue_thread is not None:
+                self.wait_to_finish = True
                 self.task_queue_thread.join()
+                self.wait_to_finish = False
             if self.tasks_queue is not None:
                 with self.tasks_queue.mutex:
                     self.tasks_queue.queue.clear()
