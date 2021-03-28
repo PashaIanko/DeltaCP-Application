@@ -50,6 +50,7 @@ class SignalSendingOperator(CallBackOperator):
         # частотник, обновление отрисовки). Надо подобрать этот параметр,
         # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
         # на исполнение команды
+        self.tasks_queue = None
         self.task_queue_thread = None  # Параллельный поток, мониторящий очередь задач
 
         self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
@@ -138,29 +139,36 @@ class SignalSendingOperator(CallBackOperator):
             self.window.PauseSendingradioButton.setChecked(True)
 
     def StopSendingSignal(self):
-        self.SendingStopped = True
-        if self.task_queue_thread is not None:
-            self.task_queue_thread.join()
+        try:
+            self.SendingStopped = True
+            if self.task_queue_thread is not None:
+                self.task_queue_thread.join()
+            if self.tasks_queue is not None:
+                with self.tasks_queue.mutex:
+                    self.tasks_queue.queue.clear()
 
-        self.DeltaCPClient.SetFrequency(0)
-        self.DeltaCPClient.SendStop()
+            self.DeltaCPClient.SetFrequency(0)
+            self.DeltaCPClient.SendStop()
 
-        self.IsFirstCycle = True
-        self.lag_portion = 0  # Обнуление задержек по времени
+            self.IsFirstCycle = True
+            self.lag_portion = 0  # Обнуление задержек по времени
 
-        current_cycle_display = self.signal_main_window.get_LCD_display()
-        current_cycle_display.display(0)  # Обновить дисплей с текущим циклом - обратно на ноль
+            current_cycle_display = self.signal_main_window.get_LCD_display()
+            current_cycle_display.display(0)  # Обновить дисплей с текущим циклом - обратно на ноль
 
-        loggers['Debug'].debug(f'Stopping sending thread')
-        if not (self.SendingThread is None):
-            self.SendingThread.join()
-            self.SendingThread = None
+            loggers['Debug'].debug(f'Stopping sending thread')
+            if not (self.SendingThread is None):
+                self.SendingThread.join()
+                self.SendingThread = None
 
-        # Отрисуем на графике исходный сигнал
-        self.SignalVisualizer.ResetPlot()
+            # Отрисуем на графике исходный сигнал
+            self.SignalVisualizer.ResetPlot()
 
-        # Сохраним файл лога
-        self.SaveLog()
+            # Сохраним файл лога
+            self.SaveLog()
+        except:
+            import sys
+            print(sys.exc_info())
 
     def SaveLog(self):
         log_lineedit = self.get_log_filename_lineedit()
