@@ -50,7 +50,7 @@ class SignalSendingOperator(CallBackOperator):
         # частотник, обновление отрисовки). Надо подобрать этот параметр,
         # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
         # на исполнение команды
-        self.send_request_thread = None  # Параллельный поток, мониторящий очередь задач
+        self.task_queue_thread = None  # Параллельный поток, мониторящий очередь задач
 
         self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
         self.start_sending_time = 0
@@ -139,8 +139,8 @@ class SignalSendingOperator(CallBackOperator):
 
     def StopSendingSignal(self):
         self.SendingStopped = True
-        if self.send_request_thread is not None:
-            self.send_request_thread.join()
+        if self.task_queue_thread is not None:
+            self.task_queue_thread.join()
 
         self.DeltaCPClient.SetFrequency(0)
         self.DeltaCPClient.SendStop()

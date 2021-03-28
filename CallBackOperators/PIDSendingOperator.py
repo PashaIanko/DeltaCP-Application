@@ -27,12 +27,14 @@ class PIDSendingOperator(SignalSendingOperator):
         self.current_point = None
         self.model = model
         self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
-        self.send_request_thread = Thread(target=self.SendRequestMonitor)
+        self.task_queue_thread = Thread(target=self.SendRequestMonitor)
+
 
         self._set_upper_freq = True
         self.CurrentFreq = None
 
         self.tasks_queue = Queue()
+        self.task_queue_thread_started = False
 
 
         # Model (модель) нужна, для того чтобы перед отправкой пересчитать необходимые времёна
@@ -87,7 +89,9 @@ class PIDSendingOperator(SignalSendingOperator):
         necessary_t_deceleration = self.model.NecessaryDecelerationTime
         ready_to_start = self.check_acceleration_deceleration(necessary_t_acceleration, necessary_t_deceleration)
 
-        self.send_request_thread.start()
+        if not self.task_queue_thread_started:
+            self.task_queue_thread_started = True
+            self.task_queue_thread.start()
         if ready_to_start:
             # Раз готовы к старту - тогда отправляем на частотник
             # необходимые времёна разгона
