@@ -8,6 +8,7 @@ from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
 from SignalSendingPackage.SendingLogger import SendingLogger
 from time import sleep, time
+import copy
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -58,6 +59,9 @@ class SignalSendingOperator(CallBackOperator):
         self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
         self.start_sending_time = 0
         self.cycle_counter = 0
+
+        self.point_arr = None  # Массив точек для отправки. Изначально это копия SignalData.point_array_with_requests,
+        # далее он пересчитывается с каждым циклом
 
     @abstractmethod
     def ExecuteSending(self, Time):
@@ -245,9 +249,10 @@ class SignalSendingOperator(CallBackOperator):
         self.Timer = SignalTimer(interval=0.1, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
 
+        self.point_arr = copy.deepcopy(SignalData.point_array_with_requests)
         updated_x = SignalData.x.copy()
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
-        self.ExecuteSending()
+        self.ExecuteSending(self.point_arr)
 
         self.cycle_counter = 0
         cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
@@ -291,11 +296,10 @@ class SignalSendingOperator(CallBackOperator):
         if dt_diff > 0:
             self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 2)
             print(f'lag portion = {self.lag_portion}')
-        self.ExecuteSending()
+        self.ExecuteSending(self.point_arr)
 
-    @staticmethod
-    def update_time_stamps(upd_val):
-        for p in SignalData.point_array_with_requests:
+    def update_time_stamps(self, upd_val):
+        for p in self.point_arr:
             p.x += upd_val
 
     @staticmethod

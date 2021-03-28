@@ -166,9 +166,9 @@ class PIDSendingOperator(SignalSendingOperator):
             return True
 
     # overridden
-    def ExecuteSending(self):
+    def ExecuteSending(self, point_arr):
 
-        points = SignalData.point_array_with_requests
+        points = point_arr  # SignalData.point_array_with_requests
         DeltaTimes = SignalData.dx
         Dts_len = len(DeltaTimes)
 
