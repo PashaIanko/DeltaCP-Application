@@ -146,6 +146,7 @@ class SignalSendingOperator(CallBackOperator):
         self.DeltaCPClient.SendStop()
 
         self.IsFirstCycle = True
+        self.lag_portion = 0  # Обнуление задержек по времени
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
         current_cycle_display.display(0)  # Обновить дисплей с текущим циклом - обратно на ноль
