@@ -70,7 +70,9 @@ class PIDSendingOperator(SignalSendingOperator):
                     else:
                         t_before_request = time.time()
                         # self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
-                        self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister) / 100
+                        self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister)
+                        if self.CurrentFreq is not None:
+                            self.CurrentFreq /= 100
                         self.SendingLogger.log_request_dt(time.time() - t_before_request)
 
                     self.SendingLogger.log(f_expect=pt.y, f_real=self.CurrentFreq,
