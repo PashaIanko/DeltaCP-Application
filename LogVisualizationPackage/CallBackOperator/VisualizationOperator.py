@@ -1,6 +1,7 @@
 from CallBackOperator import CallBackOperator
 import pandas as pd
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
+import numpy as np
 
 class VisualizationOperator(CallBackOperator):
     def __init__(self, DebugMode=False):
@@ -19,6 +20,8 @@ class VisualizationOperator(CallBackOperator):
         UserInterface.VisualizeLogpushButton.clicked.connect(self.VisualizeLog)
         self.UserInterface = UserInterface
 
+    #TODO: удалить то, что ты не логируешь (dt всякие), а раньше логировал
+
     def VisualizeLog(self):
         logfile_dir = self.UserInterface.LogFilenamelineEdit.text() + '.xlsx'
 
@@ -26,6 +29,7 @@ class VisualizationOperator(CallBackOperator):
         log_plot.set_up_plot()
         real_t_label = self.UserInterface.RealTimelabel
         expect_t_label = self.UserInterface.ExpectTimelabel
+        sigma_label = self.UserInterface.StandardDeviationlabel
 
         try:
             log_df = pd.read_excel(logfile_dir)
@@ -41,11 +45,15 @@ class VisualizationOperator(CallBackOperator):
                 else:
                     f_real = log_df['Real Freq, Hz'].values
 
-                whole_t_real = self.calc_time_representation(t_real[-1])
-                whole_t_expect = self.calc_time_representation(t_expect[-1])
+                standard_deviation = self.calc_standard_deviation(f_real, f_expect)
+                sigma_label.setText(self.standard_deviation_to_text(standard_deviation))
 
-                expect_t_label.setText(whole_t_expect)
+                whole_t_real = self.calc_time_representation(t_real[-1])
                 real_t_label.setText(whole_t_real)
+
+                whole_t_expect = self.calc_time_representation(t_expect[-1])
+                expect_t_label.setText(whole_t_expect)
+
 
                 log_plot.plot(t_expect, f_expect, do_cla=False, label='Expect', marker='o', markersize=4)
                 log_plot.plot(t_real, f_real, do_cla=False, label='Real', marker='o', markersize=4)
@@ -55,6 +63,20 @@ class VisualizationOperator(CallBackOperator):
         except:
             import sys
             print(sys.exc_info())
+
+    @staticmethod
+    def standard_deviation_to_text(sigma):
+        if sigma is None:
+            return ' '
+        else:
+            return f'{round(sigma, 2)}'
+
+    @staticmethod
+    def calc_standard_deviation(arr1, arr2):
+        if len(arr1) == len(arr2) and len(arr1) > 0:
+            diffs_squared = [(i - j)**2 for i, j in zip(arr1, arr2) if (not np.isnan(i) and not np.isnan(j))]
+            return ((sum(diffs_squared)) / len(arr1)) ** (1/2)
+        return None
 
     @staticmethod
     def calc_time_representation(val_in_sec):
