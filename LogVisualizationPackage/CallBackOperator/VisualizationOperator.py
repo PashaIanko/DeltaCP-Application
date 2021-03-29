@@ -30,6 +30,7 @@ class VisualizationOperator(CallBackOperator):
         real_t_label = self.UserInterface.RealTimelabel
         expect_t_label = self.UserInterface.ExpectTimelabel
         sigma_label = self.UserInterface.StandardDeviationlabel
+        avg_command_delay_label = self.UserInterface.AverageCommandDelaylabel
 
         try:
             log_df = pd.read_excel(logfile_dir)
@@ -46,7 +47,10 @@ class VisualizationOperator(CallBackOperator):
                     f_real = log_df['Real Freq, Hz'].values
 
                 standard_deviation = self.calc_standard_deviation(f_real, f_expect)
-                sigma_label.setText(self.standard_deviation_to_text(standard_deviation))
+                sigma_label.setText(self.value_to_text(standard_deviation))
+
+                average_command_delay = self.calc_average_command_delay(t_expect, t_real)
+                avg_command_delay_label.setText(self.value_to_text(average_command_delay))
 
                 whole_t_real = self.calc_time_representation(t_real[-1])
                 real_t_label.setText(whole_t_real)
@@ -65,11 +69,18 @@ class VisualizationOperator(CallBackOperator):
             print(sys.exc_info())
 
     @staticmethod
-    def standard_deviation_to_text(sigma):
-        if sigma is None:
+    def calc_average_command_delay(arr1, arr2):
+        if len(arr1) == len(arr2) and len(arr1) > 0:
+            delays = [abs(i - j) for i, j in zip(arr1, arr2) if (not np.isnan(i) and not np.isnan(j))]
+            return (sum(delays)) / (len(arr1))
+        return None
+
+    @staticmethod
+    def value_to_text(value):
+        if value is None:
             return ' '
         else:
-            return f'{round(sigma, 2)}'
+            return f'{round(value, 2)}'
 
     @staticmethod
     def calc_standard_deviation(arr1, arr2):
