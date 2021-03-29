@@ -11,7 +11,8 @@ class VisualizationOperator(CallBackOperator):
             'Expect Time',
             'Expect Freq, Hz',
             'Real Time (Synchronized), Sec',
-            'Real Freq, Hz'
+            'Real Freq, Hz',
+            'Cycle dt delay, Sec'
         ]  # Необходимые имена колонок
 
 
@@ -31,6 +32,7 @@ class VisualizationOperator(CallBackOperator):
         expect_t_label = self.UserInterface.ExpectTimelabel
         sigma_label = self.UserInterface.StandardDeviationlabel
         avg_command_delay_label = self.UserInterface.AverageCommandDelaylabel
+        cycle_delay_label = self.UserInterface.CycleDelaylabel
 
         try:
             log_df = pd.read_excel(logfile_dir)
@@ -40,6 +42,7 @@ class VisualizationOperator(CallBackOperator):
                 t_expect = log_df['Expect Time'].values
                 f_expect = log_df['Expect Freq, Hz'].values
                 t_real = log_df['Real Time (Synchronized), Sec'].values
+                cycle_delays = log_df['Cycle dt delay, Sec'].values
 
                 if self.DebugMode:
                     f_real = f_expect
@@ -48,6 +51,9 @@ class VisualizationOperator(CallBackOperator):
 
                 standard_deviation = self.calc_standard_deviation(f_real, f_expect)
                 sigma_label.setText(self.value_to_text(standard_deviation))
+
+                average_cycle_dt_delay = self.calc_average_cycle_dt_delay(cycle_delays)
+                cycle_delay_label.setText(self.value_to_text(average_cycle_dt_delay))
 
                 average_command_delay = self.calc_average_command_delay(t_expect, t_real)
                 avg_command_delay_label.setText(self.value_to_text(average_command_delay))
@@ -67,6 +73,13 @@ class VisualizationOperator(CallBackOperator):
         except:
             import sys
             print(sys.exc_info())
+
+    @staticmethod
+    def calc_average_cycle_dt_delay(cycle_delays):
+        valid_delays = [i for i in cycle_delays if not (np.isnan(i))]
+        if len(valid_delays) > 0:
+            return sum(valid_delays) / len(valid_delays)
+        return None
 
     @staticmethod
     def calc_average_command_delay(arr1, arr2):
