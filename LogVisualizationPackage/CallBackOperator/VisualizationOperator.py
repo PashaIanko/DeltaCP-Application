@@ -3,7 +3,8 @@ import pandas as pd
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class VisualizationOperator(CallBackOperator):
-    def __init__(self):
+    def __init__(self, DebugMode=False):
+        self.DebugMode = DebugMode
         self.UserInterface = None
         self.NecessaryColumns = [
             'Expect Time',
@@ -34,7 +35,11 @@ class VisualizationOperator(CallBackOperator):
                 t_expect = log_df['Expect Time'].values
                 f_expect = log_df['Expect Freq, Hz'].values
                 t_real = log_df['Real Time (Synchronized), Sec'].values
-                f_real = log_df['Real Freq, Hz'].values
+
+                if self.DebugMode:
+                    f_real = f_expect
+                else:
+                    f_real = log_df['Real Freq, Hz'].values
 
                 whole_t_real = self.calc_time_representation(t_real[-1])
                 whole_t_expect = self.calc_time_representation(t_expect[-1])

@@ -88,12 +88,6 @@ class UserSignalUIParameters:
     VerticalOffsetSliderMin = VerticalOffsetMin * VerticalOffsetCalcConstant
     VerticalOffsetSliderMax = VerticalOffsetMax * VerticalOffsetCalcConstant
 
-    # PLOT PROPERTIES
-    PlotHeight = 5
-    PlotWidth = 5
-    PlotXPosition = 0
-    PlotYPosition = 320
-
     # REQUEST FREQUENCY
     RequestFreqLineEditAccuracy = 2
     RequestFreqCalcConstant = 100

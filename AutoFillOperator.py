@@ -26,7 +26,7 @@ class AutoFillOperator(ABC):
 
 
     @abstractmethod
-    def ConnectCallBack(self, window):  # TODO: Для autoFill кнопочку delete preset
+    def ConnectCallBack(self, window):
         pass
 
     def init_autofill_parameters(self):

@@ -6,17 +6,6 @@ class EdgeSignalMainWindow(SignalMainWindow):
     def __init__(self):
         super().__init__()
 
-    # overridden
-    def init_plot_title(self):
-        pass
-
-    # overridden
-    def init_plot_sizes(self):
-        pass
-
-    # overridden
-    def init_plot_positions(self): # TODO: удалить эти plot_* методы
-        pass
 
     # overridden
     def init_user_interface(self):

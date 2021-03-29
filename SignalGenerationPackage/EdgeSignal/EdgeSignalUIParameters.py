@@ -74,7 +74,5 @@ class EdgeSignalUIParameters:
     RequestFreqSliderMin = 0.1 * RequestFreqCalcConstant
     RequestFreqSliderMax = 1.1 * RequestFreqCalcConstant
 
-    # TODO: В классах типа UIParameters есть #Plot Properties - они больше не нужны, удалить
-
     def __init__(self):
         pass

@@ -51,12 +51,6 @@ class SinusUIParameters:
     PointsNumberSliderMin = PointsNumberSliderMin * PointsNumberCalcConstant
     PointsNumberSliderMax = PointsNumberSliderMax * PointsNumberCalcConstant
 
-    # SINUS PLOT POSITION
-    SinusPlotXPosition = 30.0
-    SinusPlotYPosition = 210.0
-    SinusPlotWidth = 5
-    SinusPlotHeight = 5
-
     # REQUEST FREQUENCY
     RequestFreqLineEditAccuracy = 2
     RequestFreqCalcConstant = 10

@@ -8,7 +8,7 @@ from SignalGenerationPackage.SignalData import SignalData
 from LoggersConfig import loggers
 from SignalSendingPackage.SendingLogger import SendingLogger
 from time import sleep, time
-
+import copy
 
 
 class SignalSendingOperator(CallBackOperator):
@@ -47,14 +47,21 @@ class SignalSendingOperator(CallBackOperator):
         self.PointsIterator = 0  # Just Counter to iterate over [x, y] arrays of SignalData
 
         self.CycleGap = 0.01  # Сколько секунд ожидать перед отправкой следующего цикла? (При непрерывной отправке)
-        self.CommandExecutionTime = 0.2 #45  # Часть времени уходит на исполнение команды (отправку частоты на
-                                            # частотник, обновление отрисовки). Надо подобрать этот параметр,
-                                            # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
-                                            # на исполнение команды
-        self.send_request_thread = None
+        self.CommandExecutionTime = 0.0  # Часть времени уходит на исполнение команды (отправку частоты на
+        # частотник, обновление отрисовки). Надо подобрать этот параметр,
+        # и начинать исполнение команды на dt раньше, чтобы учесть задержку по времени
+        # на исполнение команды
+        self.tasks_queue = None
+        self.task_queue_thread = None  # Параллельный поток, мониторящий очередь задач
+        self.wait_to_finish = False
+        self.task_queue_thread_started = False
 
-        self.t_restart_begin = 0
-        self.t_restart_diff = 0
+        self.lag_portion = 0  # Отправку каждой команды в следующем цикле делаем на lag_portion быстрее, компенсируя задержки по времени
+        self.start_sending_time = 0
+        self.cycle_counter = 0
+
+        self.point_arr = None  # Массив точек для отправки. Изначально это копия SignalData.point_array_with_requests,
+        # далее он пересчитывается с каждым циклом
 
     @abstractmethod
     def ExecuteSending(self, Time):
@@ -100,13 +107,12 @@ class SignalSendingOperator(CallBackOperator):
         # И отправка циклов (CyclesNumberSpinBox) были взаимоисключающими
         # Поэтому, коннектим взаимоисключающие отклики
         EndlessSendCheckbox.toggled.connect(lambda: self.EnableSendingRegime())  # Какой режим - бесконечной отправки
-                                                                                    # Или кол-во циклов
+        # Или кол-во циклов
 
         StartButton.clicked.connect(self.StartSendingSignal)
         PauseRadioButton.toggled.connect(self.PauseSending)
         ResumeRadioButton.toggled.connect(self.ResumeSending)
         StopButton.clicked.connect(self.StopSendingSignal)
-
 
     def EnableSendingRegime(self):
         EndlessSendradioButton = self.get_endless_send_radiobutton()
@@ -139,29 +145,40 @@ class SignalSendingOperator(CallBackOperator):
             self.window.PauseSendingradioButton.setChecked(True)
 
     def StopSendingSignal(self):
-        self.SendingStopped = True
-        if self.send_request_thread is not None:
-            self.send_request_thread.join()
+        try:
+            self.SendingStopped = True
+            if self.task_queue_thread is not None:
+                self.wait_to_finish = True
+                self.task_queue_thread.join()
+                self.wait_to_finish = False
+                self.task_queue_thread_started = False  # дождались завершения параллельного потока с помощью join(). Тред убился. Поэтому
+                                                        # выставляем флаг, что тред не стартовал, чтобы вновь его создать при нажатии "Start Sending"
+            if self.tasks_queue is not None:
+                with self.tasks_queue.mutex:
+                    self.tasks_queue.queue.clear()
 
-        self.DeltaCPClient.SetFrequency(0)
-        self.DeltaCPClient.SendStop()
+            self.DeltaCPClient.SetFrequency(0)
+            self.DeltaCPClient.SendStop()
 
-        self.IsFirstCycle = True
+            self.IsFirstCycle = True
+            self.lag_portion = 0  # Обнуление задержек по времени
 
-        current_cycle_display = self.signal_main_window.get_LCD_display()
-        current_cycle_display.display(0)  # Обновить дисплей с текущим циклом - обратно на ноль
+            current_cycle_display = self.signal_main_window.get_LCD_display()
+            current_cycle_display.display(0)  # Обновить дисплей с текущим циклом - обратно на ноль
 
-        loggers['Debug'].debug(f'Stopping sending thread')
-        if not (self.SendingThread is None):
-            self.SendingThread.join()
-            self.SendingThread = None
+            loggers['Debug'].debug(f'Stopping sending thread')
+            if not (self.SendingThread is None):
+                self.SendingThread.join()
+                self.SendingThread = None
 
-        # Отрисуем на графике исходный сигнал
-        self.SignalVisualizer.ResetPlot()
+            # Отрисуем на графике исходный сигнал
+            self.SignalVisualizer.ResetPlot()
 
-        # Сохраним файл лога
-        self.SaveLog()
-
+            # Сохраним файл лога
+            self.SaveLog()
+        except:
+            import sys
+            print(sys.exc_info())
 
     def SaveLog(self):
         log_lineedit = self.get_log_filename_lineedit()
@@ -229,14 +246,15 @@ class SignalSendingOperator(CallBackOperator):
                 loggers['Debug'].debug(f'Prev sending thread is executing, cant launch one')
 
     def ThreadFunc(self):
-        self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
+        self.Timer = SignalTimer(interval=0.1, function=self.TestTimer)
         # TODO: Check that TimeFrom <= TimeTo
 
+        self.point_arr = copy.deepcopy(SignalData.point_array_with_requests)
         updated_x = SignalData.x.copy()
         self.SignalVisualizer.RefreshData(SignalData.x, SignalData.y)
-        self.ExecuteSending()
+        self.ExecuteSending(self.point_arr)
 
-        cycle_counter = 0
+        self.cycle_counter = 0
         cycle_number_widget = self.signal_main_window.get_cycles_number_widget()
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
@@ -249,21 +267,19 @@ class SignalSendingOperator(CallBackOperator):
             if self.CycleFinishedSuccessfully:
                 self.CycleFinishedSuccessfully = False
 
-                self.t_restart_begin = time()
-                cycle_counter += 1
+                self.cycle_counter += 1
 
                 if self.EndlessSendingEnabled:
-                    current_cycle_display.display(cycle_counter + 1)
+                    current_cycle_display.display(self.cycle_counter + 1)
                     self.RestartSending(updated_x)
 
                 if self.CycleSendingEnabled:
                     cycles_to_perform = cycle_number_widget.value()
-                    if cycle_counter >= cycles_to_perform:
+                    if self.cycle_counter >= cycles_to_perform:
                         return
                     else:
-                        current_cycle_display.display(cycle_counter + 1)
+                        current_cycle_display.display(self.cycle_counter + 1)
                         self.RestartSending(updated_x)
-
 
     def RestartSending(self, updated_x):
         upd_val = SignalData.x[-1]
@@ -272,15 +288,18 @@ class SignalSendingOperator(CallBackOperator):
 
         # restarting points Iterator, Visualisation and Sending Thread
         self.PointsIterator = 0
-        self.SignalVisualizer.Restart(updated_x)  # SignalVisuzlizer отрисовывает X, Y, без реквестов
+        self.SignalVisualizer.Restart(updated_x)  # SignalVisualizer отрисовывает X, Y, без реквестов
 
-        self.t_restart_diff = time() - self.t_restart_begin
         self.CycleRestarted = True
-        self.ExecuteSending()
 
-    @staticmethod
-    def update_time_stamps(upd_val):
-        for p in SignalData.point_array_with_requests:
+        dt_diff = (time() - self.start_sending_time) - ((self.cycle_counter) * self.model.WholePeriod)
+        if dt_diff > 0:
+            self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 2)
+            print(f'lag portion = {self.lag_portion}')
+        self.ExecuteSending(self.point_arr)
+
+    def update_time_stamps(self, upd_val):
+        for p in self.point_arr:
             p.x += upd_val
 
     @staticmethod
@@ -311,6 +330,8 @@ class SignalSendingOperator(CallBackOperator):
                 # мониторим, достигли ли требуемой начальной частоты
                 sleep(1)
                 current_freq = self.DeltaCPClient.RequestCurrentFrequency()
-                loggers['Debug'].debug(f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
-                if abs(current_freq - value) <= accuracy:  # TODO: Добавить Notifier если currentFreq==None, чтобы окошко вылезло
+                loggers['Debug'].debug(
+                    f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
+                if abs(
+                        current_freq - value) <= accuracy:  # TODO: Добавить Notifier если currentFreq==None, чтобы окошко вылезло
                     return

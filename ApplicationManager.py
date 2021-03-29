@@ -15,10 +15,8 @@ class ApplicationManager:
             [
                 ConnectionModule(),
                 FrequencySettingModule(),
-                # AccelerDecelerTimeModule(), # TODO: Удалить этот модуль
                 SignalGenerationModule(),
                 LogVisualizationModule()
-                # SignalSendingModule()  # TODO: Удалить SignalSendingModule
             ]
 
         self.MainWindow = QtWidgets.QMainWindow()

@@ -18,25 +18,12 @@ class SignalMainWindow(ABC):
         self.plot_title = 'No title'
 
         # Процедура конструктора
-        self.init_plot_positions()
-        self.init_plot_sizes()
-        self.init_plot_title()
         self.init_user_interface()  # TODO: self.UserInterface и прочие атрибуты должны хотя бы None быть объявлены в родителе
         self.setup_user_interface()
         self.init_plot()
 
 
-    @abstractmethod
-    def init_plot_title(self):
-        pass
 
-    @abstractmethod
-    def init_plot_sizes(self):
-        pass  # width, height
-
-    @abstractmethod
-    def init_plot_positions(self):
-        pass  # pos_x, pos_y
 
     @abstractmethod
     def init_user_interface(self):
