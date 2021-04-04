@@ -10,12 +10,7 @@ class SignalMainWindow(ABC):
 
         # plot parameters
         self.plot = None
-        self.plot_width = 0
-        self.plot_height = 0
-        self.plot_pos_x = 0
-        self.plot_pos_y = 0
         self.user_interface = None
-        self.plot_title = 'No title'
 
         # Процедура конструктора
         self.init_user_interface()  # TODO: self.UserInterface и прочие атрибуты должны хотя бы None быть объявлены в родителе
