@@ -247,7 +247,6 @@ class SignalSendingOperator(CallBackOperator):
 
     def ThreadFunc(self):
         self.Timer = SignalTimer(interval=0.1, function=self.TestTimer)
-        # TODO: Check that TimeFrom <= TimeTo
 
         self.point_arr = copy.deepcopy(SignalData.point_array_with_requests)
         updated_x = SignalData.x.copy()
@@ -334,5 +333,5 @@ class SignalSendingOperator(CallBackOperator):
                 loggers['Debug'].debug(
                     f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
                 if abs(
-                        current_freq - value) <= accuracy:  # TODO: Добавить Notifier если currentFreq==None, чтобы окошко вылезло
+                        current_freq - value) <= accuracy:
                     return

@@ -13,7 +13,7 @@ class SignalMainWindow(ABC):
         self.user_interface = None
 
         # Процедура конструктора
-        self.init_user_interface()  # TODO: self.UserInterface и прочие атрибуты должны хотя бы None быть объявлены в родителе
+        self.init_user_interface()
         self.setup_user_interface()
         self.init_plot()
 
