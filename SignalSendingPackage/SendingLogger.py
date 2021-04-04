@@ -7,11 +7,11 @@ class SendingLogger:
         self.f_expect = []
         self.t_real = []
         self.t_expect = []
-        self.cycle_real_dts = []
-        self.cycle_expect_dts = []
+        #self.cycle_real_dts = []
+        #self.cycle_expect_dts = []
         self.request_dts = []
         self.send_dts = []
-        self.interrupt_dts = []
+        #self.interrupt_dts = []
         self.cycle_dt_delays = []
 
     @property
@@ -27,11 +27,8 @@ class SendingLogger:
         self.f_real.clear()
         self.t_expect.clear()
         self.t_real.clear()
-        self.cycle_real_dts.clear()
-        self.cycle_expect_dts.clear()
         self.request_dts.clear()
         self.send_dts.clear()
-        self.interrupt_dts.clear()
         self.cycle_dt_delays.clear()
 
 
@@ -49,16 +46,12 @@ class SendingLogger:
 
             'Real Time (Synchronized), Sec': real_shifted_seconds,
             'Real Freq, Hz': self.f_real,
-
             'Real Time, Sec': self.t_real,
 
-            'Cycle dt real, Sec': self.cycle_real_dts,
-            'Cycle dt expect, Sec': self.cycle_expect_dts,
-            'Cycle dt delay, Sec': self.cycle_dt_delays,  # Разница между ожидаемым и реальным временем цикла
+            'Cycle dt delay, Sec': self.cycle_dt_delays,  # Разница между ожидаемым и реальным временем цикла (текущее время - (колво циклов * длительность цикла))
 
             'Send dt, Sec': self.send_dts,
             'Request dt, Sec': self.request_dts,
-            'Interrupt dt, Sec': self.interrupt_dts,
         }
         df = pd.DataFrame.from_dict(a, orient='index')
         df = df.transpose()
@@ -70,13 +63,6 @@ class SendingLogger:
         self.f_real.append(f_real)
         self.t_real.append(t_real)
         self.t_expect.append(t_expect)
-
-    def log_interrupt_dt(self, dt):
-        self.interrupt_dts.append(dt)
-
-    def log_cycle_time(self, dt_real, dt_expect):
-        self.cycle_real_dts.append(dt_real)
-        self.cycle_expect_dts.append(dt_expect)
 
     def log_request_dt(self, dt):
         self.request_dts.append(dt)

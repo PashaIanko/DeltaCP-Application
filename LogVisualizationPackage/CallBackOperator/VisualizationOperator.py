@@ -53,10 +53,10 @@ class VisualizationOperator(CallBackOperator):
                 sigma_label.setText(self.value_to_text(standard_deviation))
 
                 average_cycle_dt_delay = self.calc_average_cycle_dt_delay(cycle_delays)
-                cycle_delay_label.setText(self.value_to_text(average_cycle_dt_delay))
+                cycle_delay_label.setText(self.calc_time_representation(average_cycle_dt_delay))
 
                 average_command_delay = self.calc_average_command_delay(t_expect, t_real)
-                avg_command_delay_label.setText(self.value_to_text(average_command_delay))
+                avg_command_delay_label.setText(self.calc_time_representation(average_command_delay))
 
                 whole_t_real = self.calc_time_representation(t_real[-1])
                 real_t_label.setText(whole_t_real)
@@ -104,6 +104,8 @@ class VisualizationOperator(CallBackOperator):
 
     @staticmethod
     def calc_time_representation(val_in_sec):
+        if val_in_sec is None or np.isnan(val_in_sec):
+            return ' '
         hrs = int(val_in_sec / 3600)
         mins = int((val_in_sec - 3600 * hrs) / 60)
         secs = round(val_in_sec - 3600 * hrs - 60 * mins, 2)
