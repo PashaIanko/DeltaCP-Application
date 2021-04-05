@@ -62,7 +62,7 @@ class PIDSendingOperator(SignalSendingOperator):
                     t_before_write = time.time()
                     self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, val_to_set)
                     self.SendingLogger.log_send_dt(time.time() - t_before_write)
-                    self.SignalVisualizer.UpdateSetFrequency(pt.x, val_to_set / 100)
+                    # self.SignalVisualizer.UpdateSetFrequency(pt.x, val_to_set / 100)
                 else:
                     # Значит опрашиваем
                     if self.DebugMode:

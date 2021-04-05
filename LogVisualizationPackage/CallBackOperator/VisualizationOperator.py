@@ -15,13 +15,9 @@ class VisualizationOperator(CallBackOperator):
             'Cycle dt delay, Sec'
         ]  # Необходимые имена колонок
 
-
-
     def ConnectCallBack(self, UserInterface):
         UserInterface.VisualizeLogpushButton.clicked.connect(self.VisualizeLog)
         self.UserInterface = UserInterface
-
-    #TODO: удалить то, что ты не логируешь (dt всякие), а раньше логировал
 
     def VisualizeLog(self):
         logfile_dir = self.UserInterface.LogFilenamelineEdit.text() + '.xlsx'
