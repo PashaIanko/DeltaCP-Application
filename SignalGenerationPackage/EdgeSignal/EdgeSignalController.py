@@ -88,6 +88,6 @@ class EdgeSignalController(SignalController):
 
     # overridden
     def append_sending_operator(self):
-        self.callback_operators.append(PIDSendingOperator(self.main_window, self.plot_widget, model=self.model, DebugMode=True))
+        self.callback_operators.append(PIDSendingOperator(self.main_window, self.plot_widget, model=self.model, DebugMode=False, SendRetry=True))
         # Подключится к виджетам окна с генерацией сигнала.
         # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)
