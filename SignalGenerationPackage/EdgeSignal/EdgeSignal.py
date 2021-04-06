@@ -72,11 +72,11 @@ class EdgeSignal(Signal):
 
     def get_Y_arr(self):
         # Изначальный массив
-        LowFreq = self.SignalData.LowLevelFrequency  # TODO: Переписать через атрибуты
-        HiFreq = self.SignalData.HighLevelFrequency
-        PlateauTime = self.SignalData.PlateauTime
-        StartTime = self.SignalData.StartTime
-        EndTime = self.SignalData.EndTime
+        LowFreq = self.LowLevelFrequency
+        HiFreq = self.HighLevelFrequency
+        PlateauTime = self.PlateauTime
+        StartTime = self.StartTime
+        EndTime = self.EndTime
         res = [
             LowFreq,
             LowFreq,

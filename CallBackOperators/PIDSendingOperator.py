@@ -21,22 +21,24 @@ class PIDSendingOperator(SignalSendingOperator):
     # целевую частоту "Наперёд". Разгон при этом регулирует сам частотный преобразователь, т.к. мы
     # уже пересчитали оптимальные времёна разгона и занесли их в регистр
 
-    def __init__(self, signal_main_window, plot_widget, model, DebugMode):
+    def __init__(self, signal_main_window, plot_widget, model, DebugMode, SendRetry):
         super().__init__(signal_main_window, plot_widget, DebugMode)
 
         self.current_point = None
         self.model = model
         self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
-        #self.task_queue_thread = Thread(target=self.SendRequestMonitor)
 
+        self.UpperFreq = None
+        self.LowerFreq = None
 
         self._set_upper_freq = True
         self.CurrentFreq = None
 
         self.tasks_queue = Queue()
+        self._sent_upper = False
+        self._sent_lower = False
 
-
-
+        self.SendRetry = SendRetry
         # Model (модель) нужна, для того чтобы перед отправкой пересчитать необходимые времёна
         # разгона / замедления
 
@@ -44,6 +46,10 @@ class PIDSendingOperator(SignalSendingOperator):
         # достигнем её. Например, если первое значение = 30 Гц. Зададим и подождём, пока частотник достигнет
         # её. Только после этого продолжаем отправку.
 
+    def SetFrequency(self, val_to_set):
+        t_before_write = time.time()
+        self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, val_to_set)
+        self.SendingLogger.log_send_dt(time.time() - t_before_write)
 
     def SendRequestMonitor(self):
         while True:
@@ -55,24 +61,35 @@ class PIDSendingOperator(SignalSendingOperator):
 
                 if pt.to_send:
                     if set_upper_freq:
-                        val_to_set = int(self.model.HighLevelFrequency * 100)
+                        self.SetFrequency(self.UpperFreq)
+                        self._sent_upper = True
                     else:
-                        val_to_set = int(self.model.LowLevelFrequency * 100)
-
-                    t_before_write = time.time()
-                    self.DeltaCPClient.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, val_to_set)
-                    self.SendingLogger.log_send_dt(time.time() - t_before_write)
-                    self.SignalVisualizer.UpdateSetFrequency(pt.x, val_to_set / 100)
+                        self.SetFrequency(self.LowerFreq)
+                        self._sent_lower = True
                 else:
                     # Значит опрашиваем
                     if self.DebugMode:
                         self.CurrentFreq = 0
                     else:
                         t_before_request = time.time()
-                        # self.CurrentFreq = self.DeltaCPClient.RequestCurrentFrequency()
                         self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister)
                         if self.CurrentFreq is not None:
                             self.CurrentFreq /= 100
+
+                            if self.SendRetry:
+                                # На случай, если команда задания частоты не прошла,
+                                # необходимо повторять отправку до тех пор, пока
+                                # опрошенная частота не начнёт отличаться от LowLevelFrequency
+                                # или HighLevelFrequency (в зависимости от того, что мы неуспешно
+                                # попытались задать)
+                                if self._sent_upper and self.CurrentFreq == self.LowerFreq:
+                                    self.SetFrequency(self.UpperFreq)
+                                else:
+                                    self._sent_upper = False  # Сбросили флаг, значит отправили успешно
+                                if self._sent_lower and self.CurrentFreq == self.UpperFreq:
+                                    self.SetFrequency(self.LowerFreq)
+                                else:
+                                    self._sent_lower = False
                         self.SendingLogger.log_request_dt(time.time() - t_before_request)
 
                     self.SendingLogger.log(f_expect=pt.y, f_real=self.CurrentFreq,
@@ -84,6 +101,10 @@ class PIDSendingOperator(SignalSendingOperator):
 
     # Переопределённый метод, т.к. немного отличается (Надо задать t_разгона, t_замедления перед отправкой)
     def StartSendingSignal(self):
+
+        # Обновим данные модели
+        self.UpperFreq = int(self.model.HighLevelFrequency * 100)
+        self.LowerFreq = int(self.model.LowLevelFrequency * 100)
 
         # Проверим - готовы начать, или желаемое ускорение / замедление
         # превышает критическое
