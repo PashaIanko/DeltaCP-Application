@@ -2,10 +2,9 @@ from AutoFillOperator import AutoFillOperator
 
 
 class AutoFillCallBackOperator(AutoFillOperator):
-    def __init__(self, window, slider_constants, param_names, sliders, model):
+    def __init__(self, window, param_names, sliders, model):
         super().__init__(
             window,
-            slider_constants,
             param_names,
             sliders,
             model,

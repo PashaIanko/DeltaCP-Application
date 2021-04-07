@@ -49,10 +49,6 @@ class SignalController(ABC):
         pass
 
     @abstractmethod
-    def init_slider_constants(self):
-        pass
-
-    @abstractmethod
     def init_sliders(self):
         pass
 

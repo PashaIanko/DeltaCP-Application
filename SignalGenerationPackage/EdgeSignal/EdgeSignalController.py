@@ -44,19 +44,6 @@ class EdgeSignalController(SignalController):
         ]
 
     # overridden
-    def init_slider_constants(self):
-        self.slider_constants = [
-            EdgeSignalUIParameters.StartTimeCalcConstant,
-            EdgeSignalUIParameters.AccelerationTimeCalcConstant,
-            EdgeSignalUIParameters.PlateauTimeCalcConstant,
-            EdgeSignalUIParameters.DecelerationTimeCalcConstant,
-            EdgeSignalUIParameters.LowLevelFrequencyCalcConstant,
-            EdgeSignalUIParameters.HighLevelFrequencyCalcConstant,
-            EdgeSignalUIParameters.EndTimeCalcConstant,
-            EdgeSignalUIParameters.RequestFreqCalcConstant
-        ]
-
-    # overridden
     def init_sliders(self):
         ui = self.main_window.user_interface
 
@@ -85,7 +72,7 @@ class EdgeSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator(self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.high_freq_range),
                 LowLevelFrequencyCallBackOperator(self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.low_freq_range),
                 RequestFrequencyCallBackOperator(self.main_window.user_interface, self.model),
-                AutoFillCallBackOperator(self.main_window.user_interface, self.slider_constants, self.param_names, self.sliders, model=None)
+                AutoFillCallBackOperator(self.main_window.user_interface, self.param_names, self.sliders, model=None)
             ]
 
     # overridden

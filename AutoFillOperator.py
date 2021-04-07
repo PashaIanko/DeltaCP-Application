@@ -4,7 +4,7 @@ from LoggersConfig import loggers
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class AutoFillOperator(ABC):
-    def __init__(self, window, slider_constants, param_names, sliders, model, configs_path):
+    def __init__(self, window, param_names, sliders, model, configs_path):
         super().__init__()
         self.window = window
         self.model = model
@@ -14,10 +14,9 @@ class AutoFillOperator(ABC):
 
         self.autofill_parameters = None
 
-        # list of signal parameters, sliders & constants
+        # list of signal parameters, sliders
         self.param_names = param_names
         self.sliders = sliders
-        self.constants = slider_constants
         self.values_to_set = None
 
         # Contructor procedure:
@@ -31,7 +30,7 @@ class AutoFillOperator(ABC):
 
     def init_autofill_parameters(self):
         self.autofill_parameters = [
-            [self.values_to_set[i], self.constants[i], self.sliders[i]] for i in range(len(self.constants))
+            [self.values_to_set[i], self.sliders[i]] for i in range(len(self.sliders))
         ]
 
     @abstractmethod
@@ -97,13 +96,12 @@ class AutoFillOperator(ABC):
         self.configs_data.to_excel(self.configs_path, index=False)
 
     def read_values_from_gui(self):
-        return [slider.value() / normalize_const for slider, normalize_const in zip(self.sliders, self.constants)]
+        return [slider.value() for slider in self.sliders]
 
     def set_signal_parameters(self, value_widgets):
         for v in value_widgets:
             value_to_set = v[0]
-            constant = v[1]
-            slider = v[2]
-            slider.setValue(value_to_set * constant)
+            slider = v[1]
+            slider.setValue(value_to_set)
 
 
