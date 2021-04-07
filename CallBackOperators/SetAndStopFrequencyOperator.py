@@ -49,6 +49,10 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         self.client.SendStop()
 
 
+    # overridden
+    def value_changed(self, val):
+        pass
+
     # def RequestCurrentFrequency(self):
     #     #  Узнать истинную частоту в данный момент времени
     #     try:

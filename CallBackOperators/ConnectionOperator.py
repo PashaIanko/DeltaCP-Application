@@ -52,3 +52,6 @@ class ConnectionOperator(CallBackOperator):
             PopUpNotifier.Info(f'Client connection successful!')
         else:
             PopUpNotifier.Error(f'Client connection failed!')
+
+    def value_changed(self, val):
+        pass

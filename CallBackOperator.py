@@ -3,9 +3,14 @@ from PyQt5.QtGui import QDoubleValidator
 
 
 class CallBackOperator(ABC):
-    def __init__(self, model=None):
+    def __init__(self, model=None, value_range=None):
         self.window = None
         self.model = model
+        self.value_range = value_range
+
+    @abstractmethod
+    def value_changed(self, val):
+        pass
 
     @abstractmethod
     def ConnectCallBack(self, window):
@@ -52,5 +57,13 @@ class CallBackOperator(ABC):
 
         line_edit.setText(str(text_to_set))
         update_model_func(value_to_set)
+
+    @staticmethod
+    def squeeze(val, min, max):
+        return (val - min) / (max - min)
+
+    @staticmethod
+    def stretch(val, min, max):
+        return min + val * (max - min)
 
 

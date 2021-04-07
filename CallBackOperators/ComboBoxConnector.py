@@ -47,3 +47,6 @@ class ComboBoxOperator(CallBackOperator):
         arg = self.window.COMPortspinBox.value()
         self.ConnectionParameters.SetCOMPort(arg)
 
+    def value_changed(self, val):
+        pass
+

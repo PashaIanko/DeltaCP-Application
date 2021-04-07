@@ -115,3 +115,8 @@ class VisualizationOperator(CallBackOperator):
                 return False
         return True
 
+
+    # overridden
+    def value_changed(self, val):
+        pass
+

@@ -68,3 +68,7 @@ class AutoConnectOperator(CallBackOperator):
                 combo_box.addItems([val])
             combo_box.setCurrentText(val)
 
+    # overridden
+    def value_changed(self, val):
+        pass
+

@@ -25,3 +25,8 @@ class SignalTypeOperator(CallBackOperator):
         elif signal_text == 'edge signal':
             self.SignalController = EdgeSignalController()
         # TODO: убрать ветвление, вставить словарь
+
+
+    # overridden
+    def value_changed(self, val):
+        pass

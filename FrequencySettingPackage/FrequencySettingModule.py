@@ -1,7 +1,7 @@
 from ApplicationModule import ApplicationModule
 from CallBackOperators.SetAndStopFrequencyOperator import SetAndStopFrequencyOperator
 from CallBackOperators.FrequencySliderAndTextOperator import FrequencySliderAndTextOperator
-#from CallBackOperator.FrequencySliderLimitsOperator import FrequencySliderLimitsOperator
+from Ranges import Ranges
 
 class FrequencySettingModule(ApplicationModule):
 
@@ -13,6 +13,6 @@ class FrequencySettingModule(ApplicationModule):
         self.CallBackOperators = \
             [
                 SetAndStopFrequencyOperator(),  # Controlls the "Set Frequency" and "Stop Frequency" buttons
-                FrequencySliderAndTextOperator(),  # To connect callbacks from slider and TextField
+                FrequencySliderAndTextOperator(ValueRange=Ranges.frequency_range),  # To connect callbacks from slider and TextField
                 #FrequencySliderLimitsOperator()
             ]
