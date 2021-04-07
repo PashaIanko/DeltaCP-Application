@@ -15,6 +15,8 @@ from SignalGenerationPackage.EdgeSignal.CallBacks.StartTimeCallBackOperator impo
 from SignalGenerationPackage.EdgeSignal.CallBacks.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.EdgeSignal.CallBacks.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
 
+from Ranges import EdgeSignalRanges
+
 
 class EdgeSignalController(SignalController):
 
@@ -75,15 +77,15 @@ class EdgeSignalController(SignalController):
     def init_callback_operators(self):
         self.callback_operators = \
             [
-                StartTimeCallBackOperator(self.model),
-                AccelerationTimeCallBackOperator(self.model),
-                PlateauTimeCallBackOperator(self.model),
-                DecelerationTimeCallBackOperator(self.model),
-                EndTimeCallBackOperator(self.model),
-                HighLevelFrequencyCallBackOperator(self.model),
-                LowLevelFrequencyCallBackOperator(self.model),
-                RequestFrequencyCallBackOperator(self.model),
-                AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None)
+                StartTimeCallBackOperator       (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.t_start_range),
+                AccelerationTimeCallBackOperator(self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.t_acceleration_range),
+                PlateauTimeCallBackOperator     (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.t_plateau_range),
+                DecelerationTimeCallBackOperator(self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.t_deceleration_range),
+                EndTimeCallBackOperator(self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.t_end_range),
+                HighLevelFrequencyCallBackOperator(self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.high_freq_range),
+                LowLevelFrequencyCallBackOperator(self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.low_freq_range),
+                RequestFrequencyCallBackOperator(self.main_window.user_interface, self.model),
+                #AutoFillCallBackOperator(self.slider_constants, self.param_names, self.sliders, model=None)
             ]
 
     # overridden

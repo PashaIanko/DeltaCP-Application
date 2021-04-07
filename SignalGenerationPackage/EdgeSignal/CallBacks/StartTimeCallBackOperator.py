@@ -1,42 +1,27 @@
 from CallBackOperator import CallBackOperator
 from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters as UIParameters
 
+# TODO: После того, как переработали код CallBack Operator ов, классы UIParameters стали не нужны - их удалить
+
 
 class StartTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self, window, model, value_range):
+        super().__init__(window, model, value_range)
+
 
     # overridden
-    def ConnectCallBack(self, window):
-        self.window = window
+    def init_line_edit(self):
+        self.line_edit = self.window.StartTimelineEdit
 
-        self.setup_callback_and_synchronize_slider(
-            validator_min=          UIParameters.StartTimeSliderMin,
-            validator_max=          UIParameters.StartTimeSliderMax,
-            validator_accuracy=     UIParameters.StartTimeLineEditAccuracy,
-            line_edit=              window.StartTimelineEdit,
-            slider_min=             UIParameters.StartTimeSliderMin,
-            slider_max=             UIParameters.StartTimeSliderMax,
-            slider=                 window.StartTimehorizontalSlider,
-            update_slider_func=     self.update_start_time_slider,
-            update_line_edit_func=  self.update_start_time_line_edit
-        )
+    # overridden
+    def init_slider(self):
+        self.slider = self.window.StartTimehorizontalSlider
 
-    def update_start_time_slider(self):
-        self.update_slider(
-            line_edit=self.window.StartTimelineEdit,
-            slider=self.window.StartTimehorizontalSlider,
-            calc_constant=UIParameters.StartTimeCalcConstant
-        )
+    # overridden
+    def ConnectCallBack(self):
+        self.SynchronizeSliderandText()
 
-    def update_start_time_line_edit(self):
-        self.update_line_edit(
-            line_edit=self.window.StartTimelineEdit,
-            slider=self.window.StartTimehorizontalSlider,
-            calc_constant=UIParameters.StartTimeCalcConstant,
-            update_model_func=self.update_start_time
-        )
-
-    def update_start_time(self, val):
+    # overridden
+    def value_changed(self, val):
         self.model.StartTime = val

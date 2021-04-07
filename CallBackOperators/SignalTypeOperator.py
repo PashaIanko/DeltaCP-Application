@@ -14,7 +14,7 @@ class SignalTypeOperator(CallBackOperator):
         self.window.SignalTypecomboBox.currentIndexChanged.connect(self.StartSignalGeneration)
 
     def StartSignalGeneration(self):
-        signal_text = self.UserInterface.SignalTypecomboBox.currentText()
+        signal_text = self.window.SignalTypecomboBox.currentText()
         if signal_text == 'sin':
             self.SignalController = SinusSignalController()
         elif signal_text == 'user signal':

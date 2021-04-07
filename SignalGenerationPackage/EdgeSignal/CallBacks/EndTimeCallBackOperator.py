@@ -1,42 +1,23 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters as UIParameters
 
 
 class EndTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self, window, model, value_range):
+        super().__init__(window, model, value_range)
 
     # overridden
-    def ConnectCallBack(self, window):
-        self.window = window
+    def init_slider(self):
+        self.slider = self.window.EndTimehorizontalSlider
 
-        self.setup_callback_and_synchronize_slider(
-            validator_min=UIParameters.EndTimeSliderMin,
-            validator_max=UIParameters.EndTimeSliderMax,
-            validator_accuracy=UIParameters.EndTimeLineEditAccuracy,
-            line_edit=window.EndTimelineEdit,
-            slider_min=UIParameters.EndTimeSliderMin,
-            slider_max=UIParameters.EndTimeSliderMax,
-            slider=window.EndTimehorizontalSlider,
-            update_slider_func=self.update_end_time_slider,
-            update_line_edit_func=self.update_end_time_line_edit
-        )
+    # overridden
+    def init_line_edit(self):
+        self.line_edit = self.window.EndTimelineEdit
 
-    def update_end_time_slider(self):
-        self.update_slider(
-            line_edit=self.window.EndTimelineEdit,
-            slider=self.window.EndTimehorizontalSlider,
-            calc_constant=UIParameters.EndTimeCalcConstant
-        )
+    # overridden
+    def ConnectCallBack(self):
+        self.SynchronizeSliderandText()
 
-    def update_end_time_line_edit(self):
-        self.update_line_edit(
-            line_edit=self.window.EndTimelineEdit,
-            slider=self.window.EndTimehorizontalSlider,
-            calc_constant=UIParameters.EndTimeCalcConstant,
-            update_model_func=self.update_end_time
-        )
-
-    def update_end_time(self, val):
+    # overridden
+    def value_changed(self, val):
         self.model.EndTime = val

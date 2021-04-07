@@ -254,3 +254,15 @@ class PIDSendingOperator(SignalSendingOperator):
             self.tasks_queue.put([Point(x=current_point.x, y=current_point.y, to_send=current_point.to_send), current_point.y == self.model.HighLevelFrequency])
         self.CommandExecutionTime = time.time() - t0
         self.FunctionWasCalled = True
+
+    # overridden
+    def value_changed(self, val):
+        pass  # You dont need these methods for the logic of this class
+
+    # overridden
+    def init_slider(self):
+        pass # You dont need these methods for the logic of this class
+
+    # overridden
+    def init_line_edit(self):
+        pass # You dont need these methods for the logic of this class

@@ -1,42 +1,24 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters as UIParameters
 
 
 class DecelerationTimeCallBackOperator(CallBackOperator):
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self, window, model, value_range):
+        super().__init__(window, model, value_range)
+
 
     # overridden
-    def ConnectCallBack(self, window):
-        self.window = window
+    def init_line_edit(self):
+        self.line_edit = self.window.DecelerationTimelineEdit
 
-        self.setup_callback_and_synchronize_slider(
-            validator_min=UIParameters.DecelerationTimeSliderMin,
-            validator_max=UIParameters.DecelerationTimeSliderMax,
-            validator_accuracy=UIParameters.DecelerationTimeLineEditAccuracy,
-            line_edit=window.DecelerationTimelineEdit,
-            slider_min=UIParameters.DecelerationTimeSliderMin,
-            slider_max=UIParameters.DecelerationTimeSliderMax,
-            slider=window.DecelerationTimehorizontalSlider,
-            update_slider_func=self.update_deceleration_time_slider,
-            update_line_edit_func=self.update_deceleration_time_line_edit
-        )
+    # overridden
+    def init_slider(self):
+        self.slider = self.window.DecelerationTimehorizontalSlider
 
-    def update_deceleration_time_slider(self):
-        self.update_slider(
-            line_edit=self.window.DecelerationTimelineEdit,
-            slider=self.window.DecelerationTimehorizontalSlider,
-            calc_constant=UIParameters.DecelerationTimeCalcConstant
-        )
+    # overridden
+    def ConnectCallBack(self):
+        self.SynchronizeSliderandText()
 
-    def update_deceleration_time_line_edit(self):
-        self.update_line_edit(
-            line_edit=self.window.DecelerationTimelineEdit,
-            slider=self.window.DecelerationTimehorizontalSlider,
-            calc_constant=UIParameters.DecelerationTimeCalcConstant,
-            update_model_func=self.update_deceleration_time
-        )
-
-    def update_deceleration_time(self, val):
+    # overridden
+    def value_changed(self, val):
         self.model.DecelerationTime = val

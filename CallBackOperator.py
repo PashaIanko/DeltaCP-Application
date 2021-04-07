@@ -128,5 +128,17 @@ class CallBackOperator(ABC):
         return self.stretch(tmp, self.value_range.min, self.value_range.max)
 
 
+    def SynchronizeSliderandText(self):
 
+        ValueValidator = QDoubleValidator()
+        ValueValidator.setRange(self.value_range.min,
+                                self.value_range.max,
+                                self.value_range.decimals)
 
+        self.line_edit.setValidator(ValueValidator)
+
+        self.slider.setMaximum(self.value_range.max)
+        self.slider.setMinimum(self.value_range.min)
+
+        self.slider.valueChanged.connect(self.slider_value_changed)
+        self.line_edit.textEdited.connect(self.text_changed)
