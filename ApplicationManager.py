@@ -16,7 +16,7 @@ class ApplicationManager:
                 ConnectionModule(),
                 FrequencySettingModule(),
                 SignalGenerationModule(),
-                #LogVisualizationModule()
+                LogVisualizationModule()
             ]
 
 
