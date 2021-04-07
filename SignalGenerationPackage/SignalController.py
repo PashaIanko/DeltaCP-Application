@@ -24,7 +24,6 @@ class SignalController(ABC):
         # названий параметров сигнала в excel файлах. Это необходимо для Auto-Fill, и сохранения
         # пресетов
         self.init_param_names()
-        self.init_slider_constants()
         self.init_plot_widget()
         self.init_sliders()
 
