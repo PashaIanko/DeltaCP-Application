@@ -4,15 +4,15 @@ from LoggersConfig import loggers
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class AutoFillOperator(ABC):
-    def __init__(self, slider_constants, param_names, sliders, model, configs_path):
+    def __init__(self, window, slider_constants, param_names, sliders, model, configs_path):
         super().__init__()
+        self.window = window
         self.model = model
         self.configs_path = configs_path
         self.configs_data = pd.read_excel(self.configs_path)
         self.configs_data.index = self.configs_data['Config Name']
 
         self.autofill_parameters = None
-        self.window = None
 
         # list of signal parameters, sliders & constants
         self.param_names = param_names
