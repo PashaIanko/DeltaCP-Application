@@ -3,10 +3,11 @@ from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignal
 
 class RequestFrequencyCallBackOperator(CallBackOperator):
 
-    def __init__(self, main_window, model):
-        super().__init__(window=main_window, model=model, value_range=None)
+    def __init__(self, main_window, model, value_range):
+        super().__init__(window=main_window, model=model, value_range=value_range)
 
     def ConnectCallBack(self):
+        # self.SynchronizeSliderandText()
 
         self.setup_callback_and_synchronize_slider(
             validator_min=UIParameters.RequestFreqSliderMin,
@@ -40,12 +41,12 @@ class RequestFrequencyCallBackOperator(CallBackOperator):
 
     # overridden
     def init_slider(self):
-        pass
+        self.slider = self.window.RequestFrequencyhorizontalSlider
 
     # overridden
     def init_line_edit(self):
-        pass
+        self.line_edit = self.window.RequestFrequencylineEdit
 
     # overridden
     def value_changed(self, val):
-        pass
+        self.model.request_freq = val
