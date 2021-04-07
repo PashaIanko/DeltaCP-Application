@@ -9,10 +9,9 @@ class FrequencySettingModule(ApplicationModule):
         super().__init__()
 
     # overridden
-    def InitCallBackOperators(self):
+    def InitCallBackOperators(self, user_interface):
         self.CallBackOperators = \
             [
-                SetAndStopFrequencyOperator(),  # Controlls the "Set Frequency" and "Stop Frequency" buttons
-                FrequencySliderAndTextOperator(ValueRange=Ranges.frequency_range),  # To connect callbacks from slider and TextField
-                #FrequencySliderLimitsOperator()
+                SetAndStopFrequencyOperator(user_interface),  # Controlls the "Set Frequency" and "Stop Frequency" buttons
+                FrequencySliderAndTextOperator(user_interface, value_range=Ranges.frequency_range),  # To connect callbacks from slider and TextField
             ]

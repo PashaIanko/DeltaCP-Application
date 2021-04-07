@@ -5,17 +5,16 @@ from LoggersConfig import loggers
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class ConnectionOperator(CallBackOperator):
-    def __init__(self):
-        self.window = None
+    def __init__(self, window, model=None, value_range=None):
+        super().__init__(window, model, value_range)
 
         # Singletons:
         self.ConnectionParameters = ConnectionParameters()
         self.DeltaCPClient = DeltaCPClient()
 
 
-    def ConnectCallBack(self, window):
-        window.ConnectpushButton.clicked.connect(self.Connect)
-        self.window = window
+    def ConnectCallBack(self):
+        self.window.ConnectpushButton.clicked.connect(self.Connect)
 
     def Connect(self):
         already_connected = self.DeltaCPClient.if_connected
@@ -53,5 +52,14 @@ class ConnectionOperator(CallBackOperator):
         else:
             PopUpNotifier.Error(f'Client connection failed!')
 
+    # overridden
     def value_changed(self, val):
+        pass
+
+    # overridden
+    def init_line_edit(self):
+        pass
+
+    # overridden
+    def init_slider(self):
         pass

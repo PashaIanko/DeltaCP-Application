@@ -7,25 +7,21 @@ import sys
 
 
 class SetAndStopFrequencyOperator(CallBackOperator):
-    def __init__(self):
-        self.window = None
+    def __init__(self, window, model=None, value_range=None):
+        super().__init__(window, model, value_range)
         self.client = DeltaCPClient()
 
 
-    def ConnectCallBack(self, window):
-        window.SetFrequencypushButton.clicked.connect(self.SetFrequency)
-        window.StartFrequencypushButton.clicked.connect(self.SendStartCommand)
-        window.StopFrequencypushButton.clicked.connect(self.SendStopCommand)
-        # window.RequestCurrentFrequencypushButton.clicked.connect(self.RequestCurrentFrequency)
-        # window.RequestSetFrequencypushButton.clicked.connect(self.RequestSetFrequency)
-        self.window = window
-
+    def ConnectCallBack(self):
+        self.window.SetFrequencypushButton.clicked.connect(self.SetFrequency)
+        self.window.StartFrequencypushButton.clicked.connect(self.SendStartCommand)
+        self.window.StopFrequencypushButton.clicked.connect(self.SendStopCommand)
 
     def SendStartCommand(self):
         self.client.SendStart()
 
     def SetFrequency(self):
-        lineEditText = self.window.OutputFrequencylineEdit.text()
+        lineEditText = self.line_edit.text()
 
         if (len(lineEditText) == 0):
             lineEditText = '0.0'
@@ -48,6 +44,13 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         self.client.SetFrequency(0)
         self.client.SendStop()
 
+    # overridden
+    def init_line_edit(self):
+        self.line_edit = self.window.OutputFrequencylineEdit
+
+    # overridden
+    def init_slider(self):
+        pass
 
     # overridden
     def value_changed(self, val):

@@ -16,8 +16,9 @@ class ApplicationManager:
                 ConnectionModule(),
                 FrequencySettingModule(),
                 SignalGenerationModule(),
-                LogVisualizationModule()
+                #LogVisualizationModule()
             ]
+
 
         self.MainWindow = QtWidgets.QMainWindow()
         self.UserInterface = Ui_MainWindow()

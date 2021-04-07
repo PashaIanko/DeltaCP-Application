@@ -3,17 +3,36 @@ from PyQt5.QtGui import QDoubleValidator
 
 
 class CallBackOperator(ABC):
-    def __init__(self, model=None, value_range=None):
-        self.window = None
+    def __init__(self, window=None, model=None, value_range=None):
+        self.window = window
+
+        self.slider = None
+        self.line_edit = None
         self.model = model
         self.value_range = value_range
+
+        self.changing_value = False
+        self.value_range = value_range
+
+        self.init_slider()
+        self.init_line_edit()
+
+    @abstractmethod
+    def init_slider(self):
+        pass  # Это для CallBackOperator'ов, ответственных за синхронизацию слайдера и текстового поля.
+                # Если ваш оператор с такими не работает, просто переопределите метод и напишите pass, вам он не нужен
+
+    @abstractmethod
+    def init_line_edit(self):
+        pass  # Это для CallBackOperator'ов, ответственных за синхронизацию слайдера и текстового поля.
+                # Если ваш оператор с такими не работает, просто переопределите метод и напишите pass, вам он не нужен
 
     @abstractmethod
     def value_changed(self, val):
         pass
 
     @abstractmethod
-    def ConnectCallBack(self, window):
+    def ConnectCallBack(self):
         pass
 
     @staticmethod
@@ -65,5 +84,49 @@ class CallBackOperator(ABC):
     @staticmethod
     def stretch(val, min, max):
         return min + val * (max - min)
+
+    def text_changed(self):
+        if self.changing_value:
+            return
+        self.changing_value = True
+
+        val = self.get_line_edit_value()
+        if val is not None:
+            self.set_slider_value(val)
+            self.value_changed(val)
+
+        self.changing_value = False
+
+
+    def set_slider_value(self, val):
+        tmp = self.squeeze(val, self.value_range.min, self.value_range.max)
+        self.slider.setValue(self.stretch(tmp, self.slider.minimum(), self.slider.maximum()))
+
+
+    def get_line_edit_value(self):
+        if not self.line_edit.hasAcceptableInput():
+            return None
+        return self.line_edit.locale().toDouble(self.line_edit.text())[0]
+
+    def slider_value_changed(self):
+        if self.changing_value:
+            return
+        self.changing_value = True
+
+        value = self.get_slider_value()
+        self.set_line_edit_value(value)
+        self.value_changed(value)
+
+        self.changing_value = False
+
+    def set_line_edit_value(self, val):
+        self.line_edit.setText(self.line_edit.locale().toString(float(val), 'f', self.value_range.decimals))
+
+
+    def get_slider_value(self):
+        tmp = self.squeeze(self.slider.value(), self.slider.minimum(), self.slider.maximum())
+        return self.stretch(tmp, self.value_range.min, self.value_range.max)
+
+
 
 

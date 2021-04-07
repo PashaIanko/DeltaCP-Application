@@ -6,8 +6,10 @@ class SignalGenerationModule(ApplicationModule):
     def __init__(self):
         super().__init__()
 
-    def InitCallBackOperators(self):
+
+    # overridden
+    def InitCallBackOperators(self, user_interface):
         self.CallBackOperators = \
             [
-                SignalTypeOperator()
+                SignalTypeOperator(user_interface)
             ]

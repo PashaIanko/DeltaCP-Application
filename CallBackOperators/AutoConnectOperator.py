@@ -8,16 +8,15 @@ import pandas as pd
 
 
 class AutoConnectOperator(CallBackOperator):
-    def __init__(self):
-        self.window = None
+    def __init__(self, window, model=None, value_range=None):
+        super().__init__(window, model, value_range)
         self.ConnectionParameters = ConnectionParameters()
         self.DeltaCPClient = DeltaCPClient()
         self.ConnectionConfigs = pd.read_excel(".\\Connection_Configs\\Connection_Configs.xlsx")
 
-
-    def ConnectCallBack(self, window):
-        window.AutoConnectpushButton.clicked.connect(self.AutoConnect)
-        self.window = window
+    # overridden
+    def ConnectCallBack(self):
+        self.window.AutoConnectpushButton.clicked.connect(self.AutoConnect)
 
     def AutoConnect(self):
         already_connected = self.DeltaCPClient.if_connected
@@ -70,5 +69,13 @@ class AutoConnectOperator(CallBackOperator):
 
     # overridden
     def value_changed(self, val):
+        pass
+
+    # overridden
+    def init_slider(self):
+        pass
+
+    # overridden
+    def init_line_edit(self):
         pass
 

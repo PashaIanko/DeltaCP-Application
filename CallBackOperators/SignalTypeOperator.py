@@ -5,14 +5,13 @@ from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySign
 from SignalGenerationPackage.EdgeSignal.EdgeSignalController import EdgeSignalController
 
 class SignalTypeOperator(CallBackOperator):
-    def __init__(self):
-        self.UserInterface = None
+    def __init__(self, window, model=None, value_range=None):
+        super().__init__(window, model, value_range)
 
 
 
-    def ConnectCallBack(self, UserInterface):
-        UserInterface.SignalTypecomboBox.currentIndexChanged.connect(self.StartSignalGeneration)
-        self.UserInterface = UserInterface
+    def ConnectCallBack(self):
+        self.window.SignalTypecomboBox.currentIndexChanged.connect(self.StartSignalGeneration)
 
     def StartSignalGeneration(self):
         signal_text = self.UserInterface.SignalTypecomboBox.currentText()
@@ -26,7 +25,14 @@ class SignalTypeOperator(CallBackOperator):
             self.SignalController = EdgeSignalController()
         # TODO: убрать ветвление, вставить словарь
 
-
     # overridden
     def value_changed(self, val):
+        pass
+
+    # overridden
+    def init_line_edit(self):
+        pass
+
+    # overridden
+    def init_slider(self):
         pass

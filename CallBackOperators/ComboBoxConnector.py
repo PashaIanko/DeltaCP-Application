@@ -3,19 +3,25 @@ from ConnectionPackage.ConnectionParameters import ConnectionParameters
 
 class ComboBoxOperator(CallBackOperator):
 
-    def __init__(self):
-        self.window = None
+    def __init__(self, window, model=None, value_range=None):
+        super().__init__(window, model, value_range)
         self.ConnectionParameters = ConnectionParameters()
 
-    def ConnectCallBack(self, window):
-        window.BaudRatecomboBox.currentIndexChanged.connect(self.SetBaudRate)
-        window.COMPortspinBox.valueChanged.connect(self.SetCOMPort)
-        window.ProtocolcomboBox.currentIndexChanged.connect(self.SetProtocol)
-        window.ByteSizecomboBox.currentIndexChanged.connect(self.SetByteSize)
-        window.ParitycomboBox.currentIndexChanged.connect(self.SetParity)
-        window.StopBitscomboBox.currentIndexChanged.connect(self.SetStopBits)
-        self.window = window
+    def ConnectCallBack(self):
+        self.window.BaudRatecomboBox.currentIndexChanged.connect(self.SetBaudRate)
+        self.window.COMPortspinBox.valueChanged.connect(self.SetCOMPort)
+        self.window.ProtocolcomboBox.currentIndexChanged.connect(self.SetProtocol)
+        self.window.ByteSizecomboBox.currentIndexChanged.connect(self.SetByteSize)
+        self.window.ParitycomboBox.currentIndexChanged.connect(self.SetParity)
+        self.window.StopBitscomboBox.currentIndexChanged.connect(self.SetStopBits)
 
+    # overridden
+    def init_line_edit(self):
+        pass
+
+    # overridden
+    def init_slider(self):
+        pass
 
     def SetProtocol(self):
         arg = self.window.ProtocolcomboBox.currentText()
