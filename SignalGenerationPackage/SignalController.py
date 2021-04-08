@@ -24,7 +24,6 @@ class SignalController(ABC):
         # названий параметров сигнала в excel файлах. Это необходимо для Auto-Fill, и сохранения
         # пресетов
         self.init_param_names()
-        self.init_slider_constants()
         self.init_plot_widget()
         self.init_sliders()
 
@@ -49,16 +48,12 @@ class SignalController(ABC):
         pass
 
     @abstractmethod
-    def init_slider_constants(self):
-        pass
-
-    @abstractmethod
     def init_sliders(self):
         pass
 
     def connect_all_callbacks(self):
         for conn in self.callback_operators:
-            conn.ConnectCallBack(self.main_window.user_interface)
+            conn.ConnectCallBack()
 
     @abstractmethod
     def init_model(self):

@@ -4,9 +4,10 @@ from PopUpNotifier.PopUpNotifier import PopUpNotifier
 import numpy as np
 
 class VisualizationOperator(CallBackOperator):
-    def __init__(self, DebugMode=False):
+    def __init__(self, user_interface, DebugMode=False):
+        super().__init__(user_interface, model=None, value_range=None)
         self.DebugMode = DebugMode
-        self.UserInterface = None
+
         self.NecessaryColumns = [
             'Expect Time',
             'Expect Freq, Hz',
@@ -15,20 +16,19 @@ class VisualizationOperator(CallBackOperator):
             'Cycle dt delay, Sec'
         ]  # Необходимые имена колонок
 
-    def ConnectCallBack(self, UserInterface):
-        UserInterface.VisualizeLogpushButton.clicked.connect(self.VisualizeLog)
-        self.UserInterface = UserInterface
+    def ConnectCallBack(self):
+        self.window.VisualizeLogpushButton.clicked.connect(self.VisualizeLog)
 
     def VisualizeLog(self):
-        logfile_dir = self.UserInterface.LogFilenamelineEdit.text() + '.xlsx'
+        logfile_dir = self.window.LogFilenamelineEdit.text() + '.xlsx'
 
-        log_plot = self.UserInterface.LogPlot
+        log_plot = self.window.LogPlot
         log_plot.set_up_plot()
-        real_t_label = self.UserInterface.RealTimelabel
-        expect_t_label = self.UserInterface.ExpectTimelabel
-        sigma_label = self.UserInterface.StandardDeviationlabel
-        avg_command_delay_label = self.UserInterface.AverageCommandDelaylabel
-        cycle_delay_label = self.UserInterface.CycleDelaylabel
+        real_t_label = self.window.RealTimelabel
+        expect_t_label = self.window.ExpectTimelabel
+        sigma_label = self.window.StandardDeviationlabel
+        avg_command_delay_label = self.window.AverageCommandDelaylabel
+        cycle_delay_label = self.window.CycleDelaylabel
 
         try:
             log_df = pd.read_excel(logfile_dir)
@@ -115,3 +115,15 @@ class VisualizationOperator(CallBackOperator):
                 return False
         return True
 
+
+    # overridden
+    def value_changed(self, val):
+        pass
+
+    # overridden
+    def init_slider(self):
+        pass
+
+    # overridden
+    def init_line_edit(self):
+        pass

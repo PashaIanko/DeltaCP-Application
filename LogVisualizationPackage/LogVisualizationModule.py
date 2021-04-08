@@ -8,8 +8,8 @@ class LogVisualizationModule(ApplicationModule):
         super().__init__()
 
     # overridden
-    def InitCallBackOperators(self):
+    def InitCallBackOperators(self, user_interface):
         self.CallBackOperators = \
             [
-                VisualizationOperator(DebugMode=False)
+                VisualizationOperator(user_interface, DebugMode=False)
             ]

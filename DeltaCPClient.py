@@ -81,7 +81,8 @@ class DeltaCPClient(ModbusClient):
             hh = self.Client.read_holding_registers(address, count=1, unit=1)
             return hh.registers[0]
         except AttributeError:
-            loggers['Debug'].debug(f'DeltaCPClient: ReadRegister: Client is None (not constructed)')
+            loggers['Debug'].debug(f'DeltaCPClient: ReadRegister: {sys.exc_info()}')
+            #loggers['Debug'].debug(f'DeltaCPClient: ReadRegister: Client is None (not constructed)')
         except:
             loggers['Debug'].debug(f'DeltaCPClient: ReadRegister: {sys.exc_info()}')
 

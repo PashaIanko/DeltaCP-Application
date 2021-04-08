@@ -19,6 +19,7 @@ class ApplicationManager:
                 LogVisualizationModule()
             ]
 
+
         self.MainWindow = QtWidgets.QMainWindow()
         self.UserInterface = Ui_MainWindow()
         self.UserInterface.setupUi(self.MainWindow)

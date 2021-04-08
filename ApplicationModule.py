@@ -8,14 +8,14 @@ class ApplicationModule(ABC):
         self.CallBackOperators = []
 
     def Run(self, UserInterface):
-        self.InitCallBackOperators()
         self.UserInterface = UserInterface
+        self.InitCallBackOperators(self.UserInterface)
         self.ConnectAllCallBacks()
 
     @abstractmethod
-    def InitCallBackOperators(self):
+    def InitCallBackOperators(self, user_interface):
         pass
 
     def ConnectAllCallBacks(self):
         for conn in self.CallBackOperators:
-            conn.ConnectCallBack(self.UserInterface)
+            conn.ConnectCallBack()

@@ -1,42 +1,23 @@
 from CallBackOperator import CallBackOperator
-from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters as UIParameters
 
 
 class HighLevelFrequencyCallBackOperator(CallBackOperator):
 
-    def __init__(self, model):
-        super().__init__(model)
+    def __init__(self, window, model, value_range):
+        super().__init__(window, model, value_range)
 
     # overridden
-    def ConnectCallBack(self, window):
-        self.window = window
+    def init_line_edit(self):
+        self.line_edit = self.window.HighLevelFrequencylineEdit
 
-        self.setup_callback_and_synchronize_slider(
-            validator_min=UIParameters.HighLevelFrequencySliderMin,
-            validator_max=UIParameters.HighLevelFrequencySliderMax,
-            validator_accuracy=UIParameters.HighLevelFrequencyLineEditAccuracy,
-            line_edit=window.HighLevelFrequencylineEdit,
-            slider_min=UIParameters.HighLevelFrequencySliderMin,
-            slider_max=UIParameters.HighLevelFrequencySliderMax,
-            slider=window.HighLevelFrequencyhorizontalSlider,
-            update_slider_func=self.update_high_level_freq_slider,
-            update_line_edit_func=self.update_high_level_freq_line_edit
-        )
+    # overridden
+    def init_slider(self):
+        self.slider = self.window.HighLevelFrequencyhorizontalSlider
 
-    def update_high_level_freq_slider(self):
-        self.update_slider(
-            line_edit=self.window.HighLevelFrequencylineEdit,
-            slider=self.window.HighLevelFrequencyhorizontalSlider,
-            calc_constant=UIParameters.HighLevelFrequencyCalcConstant
-        )
+    # overridden
+    def ConnectCallBack(self):
+        self.SynchronizeSliderandText()
 
-    def update_high_level_freq_line_edit(self):
-        self.update_line_edit(
-            line_edit=self.window.HighLevelFrequencylineEdit,
-            slider=self.window.HighLevelFrequencyhorizontalSlider,
-            calc_constant=UIParameters.HighLevelFrequencyCalcConstant,
-            update_model_func=self.update_high_level_freq
-        )
-
-    def update_high_level_freq(self, val):
+    # overridden
+    def value_changed(self, val):
         self.model.HighLevelFrequency = val

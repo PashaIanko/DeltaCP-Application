@@ -4,26 +4,30 @@ from FrequencySettingPackage.FrequencySettingGUIParameters import FrequencySetti
 
 
 class FrequencySliderAndTextOperator(CallBackOperator):
-    def __init__(self):
-        self.window = None
+    def __init__(self, model=None, value_range=None):
+        super().__init__(model, model, value_range)
 
 
-    def ConnectCallBack(self, window):
-        self.window = window
+    # overridden
+    def init_slider(self):
+        self.slider = self.window.FrequencySetSlider
 
+    # overridden
+    def init_line_edit(self):
+        self.line_edit = self.window.OutputFrequencylineEdit
+
+    def ConnectCallBack(self):
         FrequencyValueValidator = QDoubleValidator()
         FrequencyValueValidator.setRange(FrequencySettingGUIParameters.FrequencySliderMin,
                                          FrequencySettingGUIParameters.FrequencySliderMax,
                                          FrequencySettingGUIParameters.FrequencyLineEditAccuracy)
-        window.OutputFrequencylineEdit.setValidator(FrequencyValueValidator)
+        self.line_edit.setValidator(FrequencyValueValidator)
 
-        window.FrequencySetSlider.setMaximum(FrequencySettingGUIParameters.FrequencySliderMax)
-        window.FrequencySetSlider.setMinimum(FrequencySettingGUIParameters.FrequencySliderMin)
+        self.slider.setMaximum(FrequencySettingGUIParameters.FrequencySliderMax)
+        self.slider.setMinimum(FrequencySettingGUIParameters.FrequencySliderMin)
 
-
-        window.OutputFrequencylineEdit.textEdited.connect(self.UpdateFrequencySlider)
-        window.FrequencySetSlider.valueChanged.connect(self.UpdateFrequencyLineEdit)
-
+        self.slider.valueChanged.connect(self.slider_value_changed)
+        self.line_edit.textEdited.connect(self.text_changed)
 
     def UpdateFrequencySlider(self):
         lineEditText = self.window.OutputFrequencylineEdit.text()
@@ -43,6 +47,10 @@ class FrequencySliderAndTextOperator(CallBackOperator):
                                                                 # are for correct scaling on the slider
         text_to_set = str(value_to_set).replace('.', ',')
         self.window.OutputFrequencylineEdit.setText(str(text_to_set))
+
+    # overridden
+    def value_changed(self, val):
+        pass
 
 
 

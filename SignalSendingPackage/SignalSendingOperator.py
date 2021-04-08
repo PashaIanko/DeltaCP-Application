@@ -13,7 +13,7 @@ import copy
 
 class SignalSendingOperator(CallBackOperator):
     def __init__(self, signal_main_window, plot_widget, DebugMode=True):
-        super().__init__()
+        super().__init__(signal_main_window, model=None, value_range=None)
 
         # Поскольку виджеты для отправки сигнала находятся на окошке
         # для генерации сигнала (user_interface), названия
@@ -92,8 +92,7 @@ class SignalSendingOperator(CallBackOperator):
         return self.signal_main_window.get_cycle_send_radiobutton()
 
     # overridden
-    def ConnectCallBack(self, window):
-        self.window = window
+    def ConnectCallBack(self):
 
         # Абстрактные методы, т.к. названия виджетов могут отличаться
         # для разных окошек сигналов
