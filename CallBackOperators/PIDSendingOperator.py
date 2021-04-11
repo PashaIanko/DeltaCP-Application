@@ -73,28 +73,29 @@ class PIDSendingOperator(SignalSendingOperator):
                     # Значит опрашиваем
                     t_before_request = time.time()
                     self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister, self.DebugMode)
+                    self.SendingLogger.log_request_dt(time.time() - t_before_request)
                     if self.CurrentFreq is not None:
                         self.CurrentFreq /= 100
-
                         if self.SendRetry:
                             # На случай, если команда задания частоты не прошла,
                             # необходимо повторять отправку до тех пор, пока
                             # опрошенная частота не начнёт отличаться от LowLevelFrequency
                             # или HighLevelFrequency (в зависимости от того, что мы неуспешно
                             # попытались задать)
-                            if self._sent_upper and self.CurrentFreq == self.model.LowLevelFrequency:
-                                self.SetFrequency(self.UpperFreq)
-                                self.SignalVisualizer.UpdateSetFrequency(pt.x, self.model.HighLevelFrequency)
-                            if self._sent_lower and self.CurrentFreq == self.model.HighLevelFrequency:
-                                self.SetFrequency(self.LowerFreq)
-                                self.SignalVisualizer.UpdateSetFrequency(pt.x, self.model.LowLevelFrequency)
-                        self.SendingLogger.log_request_dt(time.time() - t_before_request)
-
+                            self.RetrySending(pt)
                     self.SendingLogger.log(f_expect=pt.y, f_real=self.CurrentFreq,
                                            t_expect=pt.x,
                                            t_real=datetime.datetime.now().time())
                     self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
 
+
+    def RetrySending(self, point):
+        if self._sent_upper and self.CurrentFreq == self.model.LowLevelFrequency:
+            self.SetFrequency(self.UpperFreq)
+            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
+        if self._sent_lower and self.CurrentFreq == self.model.HighLevelFrequency:
+            self.SetFrequency(self.LowerFreq)
+            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.LowLevelFrequency)
 
     # Переопределённый метод, т.к. немного отличается (Надо задать t_разгона, t_замедления перед отправкой)
     def StartSendingSignal(self):
