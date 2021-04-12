@@ -39,6 +39,9 @@ class PIDSendingOperator(SignalSendingOperator):
         self._sent_lower = False
 
         self.SendRetry = SendRetry
+        self.RetryAccuracy = 0.5  # Если изменение следующей опрошенной частоты
+        # менее чем на self.RetryAccuracy, то повторяем опрос
+
         # Model (модель) нужна, для того чтобы перед отправкой пересчитать необходимые времёна
         # разгона / замедления
 
@@ -90,10 +93,11 @@ class PIDSendingOperator(SignalSendingOperator):
 
 
     def RetrySending(self, point):
-        if self._sent_upper and self.CurrentFreq == self.model.LowLevelFrequency:
+        if self._sent_upper and abs(self.CurrentFreq - self.model.LowLevelFrequency) <= self.RetryAccuracy:
             self.SetFrequency(self.UpperFreq)
             self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
-        if self._sent_lower and self.CurrentFreq == self.model.HighLevelFrequency:
+
+        if self._sent_lower and abs(self.CurrentFreq - self.model.HighLevelFrequency) <= self.RetryAccuracy:
             self.SetFrequency(self.LowerFreq)
             self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.LowLevelFrequency)
 
