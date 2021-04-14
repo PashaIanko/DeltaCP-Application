@@ -1,8 +1,14 @@
 class ValueRange:
-    def __init__(self, min, max, decimals):
+    def __init__(self, min, max, decimals, calc_constant=100):
+
+        # Если decimals == 2, то calc_constant должна быть 100
+        # (Пределы слайдера умножаются на 10^(decimals))
         self.min = min
         self.max = max
         self.decimals = decimals
+        self.calc_constant = calc_constant
+        self.slider_min = min * calc_constant
+        self.slider_max = max * calc_constant
 
 
 class Ranges:
