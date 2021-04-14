@@ -12,6 +12,7 @@ class SignalController(ABC):
         self.param_names = None
         self.slider_constants = None
         self.line_edits = None
+        self.sliders = None
 
         self.plot_widget = None  # Окошечко с графиком, где будем отрисовывать
 
@@ -26,6 +27,7 @@ class SignalController(ABC):
         self.init_param_names()
         self.init_plot_widget()
         self.init_line_edits()
+        self.init_sliders()
 
         # После этого инициируем операторы, в том числе AutoFillOperator, SavePresetOperator
         # и оператор, который будет заниматься отправкой сигнала
@@ -33,6 +35,10 @@ class SignalController(ABC):
         self.append_sending_operator()
         self.connect_all_callbacks()
         self.show_gui()
+
+    @abstractmethod
+    def init_sliders(self):
+        pass
 
     @abstractmethod
     def init_line_edits(self):

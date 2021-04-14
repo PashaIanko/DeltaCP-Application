@@ -57,6 +57,20 @@ class EdgeSignalController(SignalController):
             ui.RequestFrequencylineEdit
         ]
 
+    # overridden
+    def init_sliders(self):
+        ui = self.main_window.user_interface
+        self.sliders = [
+            ui.StartTimehorizontalSlider,
+            ui.AccelerationTimehorizontalSlider,
+            ui.PlateauTimehorizontalSlider,
+            ui.DecelerationTimehorizontalSlider,
+            ui.LowLevelFrequencyhorizontalSlider,
+            ui.HighLevelFrequencyhorizontalSlider,
+            ui.EndTimehorizontalSlider,
+            ui.RequestFrequencyhorizontalSlider,
+        ]
+
     def init_plot_widget(self):
         self.plot_widget = self.main_window.user_interface.plot_widget
 
