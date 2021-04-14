@@ -4,7 +4,7 @@ from LoggersConfig import loggers
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class AutoFillOperator(ABC):
-    def __init__(self, window, param_names, line_edits, model, configs_path):
+    def __init__(self, window, param_names, line_edits, sliders, model, configs_path):
         super().__init__()
         self.window = window
         self.model = model
@@ -17,6 +17,7 @@ class AutoFillOperator(ABC):
         # list of signal parameters, sliders
         self.param_names = param_names
         self.line_edits = line_edits
+        self.sliders = sliders
         self.values_to_set = None
 
         # Contructor procedure:
@@ -30,7 +31,7 @@ class AutoFillOperator(ABC):
 
     def init_autofill_parameters(self):
         self.autofill_parameters = [
-            [self.values_to_set[i], self.line_edits[i]] for i in range(len(self.line_edits))
+            [self.values_to_set[i], self.sliders[i]] for i in range(len(self.line_edits))
         ]
 
     @abstractmethod
@@ -80,12 +81,12 @@ class AutoFillOperator(ABC):
             user_decision = PopUpNotifier.PresetDeleteQuestion(current_config_name)
             if user_decision == True:
                 self.RemovePreset(current_config_name)
-                self.ResetLineEdits()  # Чтобы после удаления пресета "обнулить" график, оставшийся от удалённого пресета
+                self.ResetSliders()  # Чтобы после удаления пресета "обнулить" график, оставшийся от удалённого пресета
         else:
             PopUpNotifier.Warning(f'Preset {current_config_name} was not found in preset base!')
 
-    def ResetLineEdits(self):
-        [line_edit.setText('0') for line_edit in self.line_edits]
+    def ResetSliders(self):
+        [slider.setValue(0) for slider in self.sliders]
 
     def WriteNewPreset(self, preset_name):
         values_to_add = self.read_values_from_gui()
@@ -103,7 +104,7 @@ class AutoFillOperator(ABC):
     def set_signal_parameters(self, value_widgets):
         for v in value_widgets:
             value_to_set = v[0]
-            line_edit = v[1]
-            line_edit.setText(str(value_to_set).replace('.', ','))
+            slider = v[1]
+            slider.setValue(value_to_set)
 
 

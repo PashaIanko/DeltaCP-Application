@@ -2,11 +2,12 @@ from AutoFillOperator import AutoFillOperator
 
 
 class AutoFillCallBackOperator(AutoFillOperator):
-    def __init__(self, window, param_names, line_edits, model):
+    def __init__(self, window, param_names, line_edits, sliders, model):
         super().__init__(
             window,
             param_names,
             line_edits,
+            sliders,
             model,
             configs_path=".\\SignalGenerationConfigs\\EdgeSignalConfigs\\SignalConfigs.xlsx")
 
