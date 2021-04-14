@@ -97,9 +97,7 @@ class AutoFillOperator(ABC):
         self.configs_data.to_excel(self.configs_path, index=False)
 
     def read_values_from_gui(self):
-        line_edits = [pair.line_edit for pair in self.slider_text_pairs]
-        for line_edit in line_edits:
-            print(f'LINE EDIT: {line_edit.text()}')
+        line_edits = [pair.line_edit for pair in self.slider_text_pairs]  # TODO: рассчитать self.line_edits, self.sliders ещё на этапе конструктора, убрать пересчёт этих массивов из методов
         return [float(line_edit.text().replace(',', '.')) for line_edit in line_edits]
 
     def set_signal_parameters(self, value_widgets):
