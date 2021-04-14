@@ -104,6 +104,6 @@ class AutoFillOperator(ABC):
         for v in value_widgets:
             value_to_set = v[0]
             line_edit = v[1]
-            line_edit.setText(str(value_to_set))
+            line_edit.setText(str(value_to_set).replace('.', ','))
 
 
