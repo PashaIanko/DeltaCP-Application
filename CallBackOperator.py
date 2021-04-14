@@ -104,6 +104,8 @@ class CallBackOperator(ABC):
 
 
     def get_line_edit_value(self):
+        if self.line_edit.text() == '':
+            return 0
         if not self.line_edit.hasAcceptableInput():
             return None
         return self.line_edit.locale().toDouble(self.line_edit.text())[0]
