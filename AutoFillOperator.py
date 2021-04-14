@@ -4,7 +4,7 @@ from LoggersConfig import loggers
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
 class AutoFillOperator(ABC):
-    def __init__(self, window, param_names, line_edits, sliders, model, configs_path):
+    def __init__(self, window, param_names, slider_text_pairs, model, configs_path):
         super().__init__()
         self.window = window
         self.model = model
@@ -16,8 +16,7 @@ class AutoFillOperator(ABC):
 
         # list of signal parameters, sliders
         self.param_names = param_names
-        self.line_edits = line_edits
-        self.sliders = sliders
+        self.slider_text_pairs = slider_text_pairs
         self.values_to_set = None
 
         # Contructor procedure:
@@ -31,7 +30,7 @@ class AutoFillOperator(ABC):
 
     def init_autofill_parameters(self):
         self.autofill_parameters = [
-            [self.values_to_set[i], self.sliders[i]] for i in range(len(self.line_edits))
+            [self.values_to_set[i] * self.slider_text_pairs[i].calc_constant, self.slider_text_pairs[i].slider] for i in range(len(self.slider_text_pairs))
         ]
 
     @abstractmethod
@@ -86,7 +85,8 @@ class AutoFillOperator(ABC):
             PopUpNotifier.Warning(f'Preset {current_config_name} was not found in preset base!')
 
     def ResetSliders(self):
-        [slider.setValue(0) for slider in self.sliders]
+        sliders = [pair.slider for pair in self.slider_text_pairs]
+        [slider.setValue(0) for slider in sliders]
 
     def WriteNewPreset(self, preset_name):
         values_to_add = self.read_values_from_gui()
@@ -97,9 +97,10 @@ class AutoFillOperator(ABC):
         self.configs_data.to_excel(self.configs_path, index=False)
 
     def read_values_from_gui(self):
-        for line_edit in self.line_edits:
+        line_edits = [pair.line_edit for pair in self.slider_text_pairs]
+        for line_edit in line_edits:
             print(f'LINE EDIT: {line_edit.text()}')
-        return [float(line_edit.text().replace(',', '.')) for line_edit in self.line_edits]
+        return [float(line_edit.text().replace(',', '.')) for line_edit in line_edits]
 
     def set_signal_parameters(self, value_widgets):
         for v in value_widgets:

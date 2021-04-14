@@ -1,4 +1,4 @@
-class EdgeSignalUIParameters:
+class EdgeSignalUIParameters:  # TODO: Удалить этот класс
 
     # ACCELERATION TIME
     AccelerationTimeMin = 0.1
