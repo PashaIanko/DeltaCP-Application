@@ -20,6 +20,11 @@ class DeltaCPClient(ModbusClient):
         self.if_created = False
         self.Client = None
 
+        # Если выставлен SendingOperator работает в режиме DebugMode=True (т.е. не
+        # подключены к частотнику, просто дебажим код), то команда опроса истинной частоты возвращает
+        # self.SimulationValue, а не опрошенное значение регистра (Это нужно для отладки)
+        self.SimulationValue = 200 # 0
+
 
     def CreateClient(self,
             Protocol, COMPort, Timeout, StopBits, ByteSize, Parity, BaudRate ):
@@ -76,7 +81,9 @@ class DeltaCPClient(ModbusClient):
             import sys
             loggers['Debug'].debug(f'DeltaCPClient: WriteRegister: Exception {sys.exc_info()}')
 
-    def ReadRegister(self, address):
+    def ReadRegister(self, address, DebugMode=False):
+        if DebugMode:
+            return self.SimulationValue
         try:
             hh = self.Client.read_holding_registers(address, count=1, unit=1)
             return hh.registers[0]
