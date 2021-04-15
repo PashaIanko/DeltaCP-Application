@@ -17,7 +17,7 @@ cvdata==0.0.3
 cycler==0.10.0
 decorator==4.4.2
 defusedxml==0.6.0
-Django==3.0.5
+Django==3.0.14
 django-bootstrap==0.2.4
 django-bootstrap4==1.1.1
 entrypoints==0.3
