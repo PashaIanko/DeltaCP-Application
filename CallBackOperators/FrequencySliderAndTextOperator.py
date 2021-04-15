@@ -17,17 +17,7 @@ class FrequencySliderAndTextOperator(CallBackOperator):
         self.line_edit = self.window.OutputFrequencylineEdit
 
     def ConnectCallBack(self):
-        FrequencyValueValidator = QDoubleValidator()
-        FrequencyValueValidator.setRange(FrequencySettingGUIParameters.FrequencySliderMin,
-                                         FrequencySettingGUIParameters.FrequencySliderMax,
-                                         FrequencySettingGUIParameters.FrequencyLineEditAccuracy)
-        self.line_edit.setValidator(FrequencyValueValidator)
-
-        self.slider.setMaximum(FrequencySettingGUIParameters.FrequencySliderMax)
-        self.slider.setMinimum(FrequencySettingGUIParameters.FrequencySliderMin)
-
-        self.slider.valueChanged.connect(self.slider_value_changed)
-        self.line_edit.textEdited.connect(self.text_changed)
+        self.SynchronizeSliderandText()
 
     def UpdateFrequencySlider(self):
         lineEditText = self.window.OutputFrequencylineEdit.text()

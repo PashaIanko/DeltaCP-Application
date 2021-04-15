@@ -2,7 +2,6 @@ from SignalGenerationPackage.SignalController import SignalController
 from SignalGenerationPackage.EdgeSignal.EdgeSignal import EdgeSignal
 from SignalGenerationPackage.EdgeSignal.EdgeSignalObserver import EdgeSignalObserver
 from SignalGenerationPackage.EdgeSignal.EdgeSignalMainWindow import EdgeSignalMainWindow
-from SignalGenerationPackage.EdgeSignal.EdgeSignalUIParameters import EdgeSignalUIParameters
 from CallBackOperators.PIDSendingOperator import PIDSendingOperator
 
 from SignalGenerationPackage.EdgeSignal.CallBacks.AccelerationTimeCallBackOperator import AccelerationTimeCallBackOperator
@@ -16,6 +15,7 @@ from SignalGenerationPackage.EdgeSignal.CallBacks.AutoFillCallBackOperator impor
 from SignalGenerationPackage.EdgeSignal.CallBacks.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
 
 from Ranges import EdgeSignalRanges
+from SignalGenerationPackage.SliderTextPair import SliderTextPair
 
 
 class EdgeSignalController(SignalController):
@@ -44,19 +44,46 @@ class EdgeSignalController(SignalController):
         ]
 
     # overridden
-    def init_sliders(self):
+    def init_slider_text_pairs(self):
         ui = self.main_window.user_interface
-
-        self.sliders = [
-            ui.StartTimehorizontalSlider,
-            ui.AccelerationTimehorizontalSlider,
-            ui.PlateauTimehorizontalSlider,
-            ui.DecelerationTimehorizontalSlider,
-            ui.LowLevelFrequencyhorizontalSlider,
-            ui.HighLevelFrequencyhorizontalSlider,
-            ui.EndTimehorizontalSlider,
-            ui.RequestFrequencyhorizontalSlider
+        self.slider_text_pairs = [
+            SliderTextPair(ui.StartTimehorizontalSlider, ui.StartTimelineEdit, EdgeSignalRanges.t_start_range.calc_constant),
+            SliderTextPair(ui.AccelerationTimehorizontalSlider, ui.AccelerationTimelineEdit, EdgeSignalRanges.t_acceleration_range.calc_constant),
+            SliderTextPair(ui.PlateauTimehorizontalSlider, ui.PlateauTimelineEdit, EdgeSignalRanges.t_plateau_range.calc_constant),
+            SliderTextPair(ui.DecelerationTimehorizontalSlider, ui.DecelerationTimelineEdit, EdgeSignalRanges.t_deceleration_range.calc_constant),
+            SliderTextPair(ui.LowLevelFrequencyhorizontalSlider, ui.LowLevelFrequencylineEdit, EdgeSignalRanges.low_freq_range.calc_constant),
+            SliderTextPair(ui.HighLevelFrequencyhorizontalSlider, ui.HighLevelFrequencylineEdit, EdgeSignalRanges.high_freq_range.calc_constant),
+            SliderTextPair(ui.EndTimehorizontalSlider, ui.EndTimelineEdit, EdgeSignalRanges.t_end_range.calc_constant),
+            SliderTextPair(ui.RequestFrequencyhorizontalSlider, ui.RequestFrequencylineEdit, EdgeSignalRanges.request_freq_range.calc_constant)
         ]
+
+    # # overridden
+    # def init_line_edits(self):
+    #     ui = self.main_window.user_interface
+    #     self.line_edits = [
+    #         ui.StartTimelineEdit,
+    #         ui.AccelerationTimelineEdit,
+    #         ui.PlateauTimelineEdit,
+    #         ui.DecelerationTimelineEdit,
+    #         ui.LowLevelFrequencylineEdit,
+    #         ui.HighLevelFrequencylineEdit,
+    #         ui.EndTimelineEdit,
+    #         ui.RequestFrequencylineEdit
+    #     ]
+    #
+    # # overridden
+    # def init_sliders(self):
+    #     ui = self.main_window.user_interface
+    #     self.sliders = [
+    #         ui.StartTimehorizontalSlider,
+    #         ui.AccelerationTimehorizontalSlider,
+    #         ui.PlateauTimehorizontalSlider,
+    #         ui.DecelerationTimehorizontalSlider,
+    #         ui.LowLevelFrequencyhorizontalSlider,
+    #         ui.HighLevelFrequencyhorizontalSlider,
+    #         ui.EndTimehorizontalSlider,
+    #         ui.RequestFrequencyhorizontalSlider,
+    #     ]
 
     def init_plot_widget(self):
         self.plot_widget = self.main_window.user_interface.plot_widget
@@ -72,7 +99,7 @@ class EdgeSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator  (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.high_freq_range),
                 LowLevelFrequencyCallBackOperator   (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.low_freq_range),
                 RequestFrequencyCallBackOperator    (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.request_freq_range),
-                AutoFillCallBackOperator            (self.main_window.user_interface, self.param_names, self.sliders, model=None)
+                AutoFillCallBackOperator            (self.main_window.user_interface, self.param_names, self.slider_text_pairs, model=None)
             ]
 
     # overridden
