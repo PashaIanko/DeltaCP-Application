@@ -98,7 +98,16 @@ class AutoFillOperator(ABC):
 
     def read_values_from_gui(self):
         line_edits = [pair.line_edit for pair in self.slider_text_pairs]  # TODO: рассчитать self.line_edits, self.sliders ещё на этапе конструктора, убрать пересчёт этих массивов из методов
-        return [float(line_edit.text().replace(',', '.')) for line_edit in line_edits]
+        values = []
+        for line_edit in line_edits:
+            text = line_edit.text()
+            if text == '':
+                val = 0
+            else:
+                val = float(text.replace(',', '.'))
+            values.append(val)
+        return values
+
 
     def set_signal_parameters(self, value_widgets):
         for v in value_widgets:

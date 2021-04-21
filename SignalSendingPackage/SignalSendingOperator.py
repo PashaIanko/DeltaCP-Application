@@ -331,6 +331,6 @@ class SignalSendingOperator(CallBackOperator):
                 current_freq = self.DeltaCPClient.RequestCurrentFrequency()
                 loggers['Debug'].debug(
                     f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
-                if abs(
-                        current_freq - value) <= accuracy:
+
+                if not (current_freq is None) and abs(current_freq - value) <= accuracy:
                     return
