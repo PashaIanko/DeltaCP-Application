@@ -31,18 +31,19 @@ class SetAndStopFrequencyOperator(CallBackOperator):
         #  Отправлять int число == 1000 (Два нуля приписали)
         value_to_send = int(float(lineEditText) * 100)
         try:
-            t1 = time()
+            # t1 = time()
             self.client.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister,
                                       value_to_send)
-            t2 = time()
-            print(f'dt = {t2-t1}')
+            # t2 = time()
         except:
             loggers['Debug'].debug(f'SetFrequency: {sys.exc_info()}')
 
 
     def SendStopCommand(self):
         self.client.SetFrequency(0)
+        self.slider.setValue(0)
         self.client.SendStop()
+
 
     # overridden
     def init_line_edit(self):
@@ -50,7 +51,7 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
     # overridden
     def init_slider(self):
-        pass
+        self.slider = self.window.FrequencySetSlider
 
     # overridden
     def value_changed(self, val):
