@@ -41,8 +41,9 @@ class SetAndStopFrequencyOperator(CallBackOperator):
 
     def SendStopCommand(self):
         self.client.SetFrequency(0)
-        self.client.SendStop()
         self.slider.setValue(0)
+        self.client.SendStop()
+
 
     # overridden
     def init_line_edit(self):
