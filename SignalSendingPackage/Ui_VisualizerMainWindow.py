@@ -30,8 +30,8 @@ class Ui_VisualizerMainWindow(object):
         self.verticalLayout.addWidget(self.frame_2)
         self.frame = PlotCanvas(self.centralwidget)
         self.frame.setMinimumSize(QtCore.QSize(0, 500))
-        # self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel) # TODO: Постоянно во всех Ui_*** классах приходится комментить эти строки. Сделать что-нибудь
-        # self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.verticalLayout.addWidget(self.frame)
         MainWindow.setCentralWidget(self.centralwidget)
