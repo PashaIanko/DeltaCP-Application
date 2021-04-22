@@ -1,6 +1,4 @@
 from CallBackOperator import CallBackOperator
-from PyQt5.QtGui import QDoubleValidator, QIntValidator
-from FrequencySettingPackage.FrequencySettingGUIParameters import FrequencySettingGUIParameters
 
 
 class FrequencySliderAndTextOperator(CallBackOperator):
@@ -22,8 +20,4 @@ class FrequencySliderAndTextOperator(CallBackOperator):
     # overridden
     def value_changed(self, val):
         pass
-
-
-
-
 
