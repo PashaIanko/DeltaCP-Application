@@ -322,10 +322,11 @@ class SignalSendingOperator(CallBackOperator):
         value_to_send = int(value * 100)
         self.DeltaCPClient.SetFrequency(value_to_send)
 
-        if self.DebugMode:
-            return
-        else:
-            self.RequestFreqUntilEqual(value)
+        #if self.DebugMode:
+        #    return
+        #else:
+        #    self.RequestFreqUntilEqual(value)
+        self.RequestFreqUntilEqual(value)
 
 
     def RequestFreqUntilEqual(self, value):
@@ -341,7 +342,7 @@ class SignalSendingOperator(CallBackOperator):
 
         while True:
             sleep(dt_to_wait)
-            current_freq = self.DeltaCPClient.RequestCurrentFrequency()
+            current_freq = self.DeltaCPClient.RequestCurrentFrequency(DebugMode=self.DebugMode)
             loggers['Debug'].debug(f'RequestFreqUntilEqual: F_current = {current_freq} Hz')
 
             if not (current_freq is None) and abs(current_freq - value) <= accuracy:
@@ -355,7 +356,7 @@ class SignalSendingOperator(CallBackOperator):
                 # просто частотный преобразователь ещё не успел разогнаться. Тогда, задавать частоту
                 # повторно имеет смысл только при current_freq == prev_freq
                 if (prev_freq is not None) and (current_freq is not None):
-                    if (prev_freq - current_freq) <= accuracy:
+                    if (prev_freq - current_freq) <= accuracy:  # т.е. если предыдущая частота совпадает с текущей, то задаём ещё раз
                         loggers['Debug'].debug(f'RequestFreqUntilEqual: Retrying to set frequency')
                         self.DeltaCPClient.SetFrequency(value_to_send)
 
