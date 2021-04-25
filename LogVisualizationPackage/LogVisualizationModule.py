@@ -1,6 +1,6 @@
 from ApplicationModule import ApplicationModule
 from LogVisualizationPackage.CallBackOperator.VisualizationOperator import VisualizationOperator
-
+from DebugConfigs import DebugConfigs
 
 class LogVisualizationModule(ApplicationModule):
 
@@ -11,5 +11,5 @@ class LogVisualizationModule(ApplicationModule):
     def InitCallBackOperators(self, user_interface):
         self.CallBackOperators = \
             [
-                VisualizationOperator(user_interface, DebugMode=False)
+                VisualizationOperator(user_interface, DebugMode=DebugConfigs.VisualizationOperatorDebug)
             ]
