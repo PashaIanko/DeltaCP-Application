@@ -322,16 +322,16 @@ class SignalSendingOperator(CallBackOperator):
         value_to_send = int(value * 100)
         self.DeltaCPClient.SetFrequency(value_to_send)
 
-        #if self.DebugMode:
-        #    return
-        #else:
-        #    self.RequestFreqUntilEqual(value)
-        self.RequestFreqUntilEqual(value)
+        if self.DebugMode:
+            return
+        else:
+            self.RequestFreqUntilEqual(value)
+
 
 
     def RequestFreqUntilEqual(self, value):
         accuracy = 0.05
-        dt_to_wait = 0.7  # Время, которое подождём, прежде чем опять запросить частоту, чтобы сравнить
+        dt_to_wait = 1.0  # Время, которое подождём, прежде чем опять запросить частоту, чтобы сравнить
                             # с предустановленной
         requests_limit = 3  # Может быть такое, что задание частоты (SetFrequency) не пройдёт с первого раза
                             # Тогда, спустя retries попыток опросить частоту, будем задавать её повторно
