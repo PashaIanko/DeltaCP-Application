@@ -79,7 +79,7 @@ class PIDSendingOperator(SignalSendingOperator):
                     self.SendingLogger.log_request_dt(time.time() - t_before_request)
                     if self.CurrentFreq is not None:
                         self.CurrentFreq /= 100
-                        loggers['Debug'].debug(f'Requested Freq = {self.CurrentFreq} Hz')
+                        # loggers['Debug'].debug(f'Requested Freq = {self.CurrentFreq} Hz')
                         if self.SendRetry:
                             # На случай, если команда задания частоты не прошла,
                             # необходимо повторять отправку до тех пор, пока

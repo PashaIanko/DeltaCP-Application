@@ -1,3 +1,3 @@
 class DebugConfigs:
-    PIDOperatorDebug = True  # DebugMode = True or False
-    VisualizationOperatorDebug = True  # DebugMode для класса VisualizationOperator
+    PIDOperatorDebug = False  # DebugMode = True or False
+    VisualizationOperatorDebug = False  # DebugMode для класса VisualizationOperator
