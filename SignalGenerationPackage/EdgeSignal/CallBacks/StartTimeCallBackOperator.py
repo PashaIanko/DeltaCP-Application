@@ -1,9 +1,6 @@
 from CallBackOperator import CallBackOperator
 
 
-# TODO: После того, как переработали код CallBack Operator ов, классы UIParameters стали не нужны - их удалить
-
-
 class StartTimeCallBackOperator(CallBackOperator):
 
     def __init__(self, window, model, value_range):

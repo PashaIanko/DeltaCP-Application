@@ -10,10 +10,12 @@ class AutoFillCallBackOperator(AutoFillOperator):
             model,
             configs_path=".\\SignalGenerationConfigs\\EdgeSignalConfigs\\SignalConfigs.xlsx")
 
+    # overridden
     def ConnectCallBack(self):
         self.window.AutoFillpushButton.clicked.connect(self.AutoFill)
         self.window.SavePresetpushButton.clicked.connect(self.SavePreset)
         self.window.DeletePresetpushButton.clicked.connect(self.DeletePreset)
 
-    def get_config_name(self):
-        return self.window.ConfigFileNamelineEdit.text()
+    # overridden
+    def init_config_line_edit(self):
+        self.config_line_edit = self.window.ConfigFileNamelineEdit

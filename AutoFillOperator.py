@@ -3,6 +3,7 @@ import pandas as pd
 from LoggersConfig import loggers
 from PopUpNotifier.PopUpNotifier import PopUpNotifier
 
+
 class AutoFillOperator(ABC):
     def __init__(self, window, param_names, slider_text_pairs, model, configs_path):
         super().__init__()
@@ -13,29 +14,39 @@ class AutoFillOperator(ABC):
         self.configs_data.index = self.configs_data['Config Name']
 
         self.autofill_parameters = None
+        self.config_line_edit = None  # текстовое поле с именем конфига
 
         # list of signal parameters, sliders
         self.param_names = param_names
         self.slider_text_pairs = slider_text_pairs
+        self.sliders = [pair.slider for pair in self.slider_text_pairs]
+        self.line_edits = [pair.line_edit for pair in self.slider_text_pairs]
         self.values_to_set = None
 
         # Contructor procedure:
         self.config_name = None
         self.config_params = None
-
+        self.init_config_line_edit()
 
     @abstractmethod
-    def ConnectCallBack(self, window):
+    def init_config_line_edit(self):
+        pass
+
+    @abstractmethod
+    def ConnectCallBack(self):
         pass
 
     def init_autofill_parameters(self):
         self.autofill_parameters = [
-            [self.values_to_set[i] * self.slider_text_pairs[i].calc_constant, self.slider_text_pairs[i].slider] for i in range(len(self.slider_text_pairs))
+            [self.values_to_set[i] * self.slider_text_pairs[i].calc_constant, self.slider_text_pairs[i].slider] for i in
+            range(len(self.slider_text_pairs))
         ]
 
-    @abstractmethod
     def get_config_name(self):
-        pass
+        return self.config_line_edit.text()
+
+    def set_config_name(self, config_name):
+        return self.config_line_edit.setText(config_name)
 
     def init_config_params(self):
         self.config_params = self.configs_data.loc[self.config_name]
@@ -80,13 +91,13 @@ class AutoFillOperator(ABC):
             user_decision = PopUpNotifier.PresetDeleteQuestion(current_config_name)
             if user_decision == True:
                 self.RemovePreset(current_config_name)
-                self.ResetSliders()  # Чтобы после удаления пресета "обнулить" график, оставшийся от удалённого пресета
+                self.ResetSliders(1)  # Чтобы после удаления пресета "обнулить" график, оставшийся от удалённого пресета
+                self.set_config_name("")  # Обнулить имя конфига
         else:
             PopUpNotifier.Warning(f'Preset {current_config_name} was not found in preset base!')
 
-    def ResetSliders(self):
-        sliders = [pair.slider for pair in self.slider_text_pairs]
-        [slider.setValue(0) for slider in sliders]
+    def ResetSliders(self, default_val):
+        [slider.setValue(default_val) for slider in self.sliders]
 
     def WriteNewPreset(self, preset_name):
         values_to_add = self.read_values_from_gui()
@@ -97,9 +108,8 @@ class AutoFillOperator(ABC):
         self.configs_data.to_excel(self.configs_path, index=False)
 
     def read_values_from_gui(self):
-        line_edits = [pair.line_edit for pair in self.slider_text_pairs]  # TODO: рассчитать self.line_edits, self.sliders ещё на этапе конструктора, убрать пересчёт этих массивов из методов
         values = []
-        for line_edit in line_edits:
+        for line_edit in self.line_edits:
             text = line_edit.text()
             if text == '':
                 val = 0
@@ -114,5 +124,4 @@ class AutoFillOperator(ABC):
             value_to_set = v[0]
             slider = v[1]
             slider.setValue(value_to_set)
-
 

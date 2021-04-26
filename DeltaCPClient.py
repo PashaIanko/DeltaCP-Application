@@ -121,7 +121,9 @@ class DeltaCPClient(ModbusClient):
     def SetFrequency(self, value):
         self.WriteRegister(DeltaCPRegisters.FrequencyCommandRegister, value)
 
-    def RequestCurrentFrequency(self):
+    def RequestCurrentFrequency(self, DebugMode=False):
+        if DebugMode:
+            return self.SimulationValue
         res = self.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister)
         if res is not None:
             return res / 100

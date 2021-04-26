@@ -16,6 +16,7 @@ from SignalGenerationPackage.EdgeSignal.CallBacks.RequestFrequencyCallBackOperat
 
 from Ranges import EdgeSignalRanges
 from SignalGenerationPackage.SliderTextPair import SliderTextPair
+from DebugConfigs import DebugConfigs
 
 
 class EdgeSignalController(SignalController):
@@ -104,6 +105,7 @@ class EdgeSignalController(SignalController):
 
     # overridden
     def append_sending_operator(self):
-        self.callback_operators.append(PIDSendingOperator(self.main_window, self.plot_widget, model=self.model, DebugMode=False, SendRetry=True))
+        self.callback_operators.append(PIDSendingOperator(self.main_window, self.plot_widget, model=self.model,
+                                                          DebugMode=DebugConfigs.PIDOperatorDebug, SendRetry=True))
         # Подключится к виджетам окна с генерацией сигнала.
         # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)

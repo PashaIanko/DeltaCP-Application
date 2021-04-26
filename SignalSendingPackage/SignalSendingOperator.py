@@ -294,7 +294,7 @@ class SignalSendingOperator(CallBackOperator):
         self.SendingLogger.log_cycle_dt_delay(dt_diff)
         if dt_diff > 0:
             self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 2)
-            print(f'lag portion = {self.lag_portion}')
+            loggers['Debug'].debug(f'lag portion = {self.lag_portion}')
         self.ExecuteSending(self.point_arr)
 
     def update_time_stamps(self, upd_val):
@@ -318,19 +318,48 @@ class SignalSendingOperator(CallBackOperator):
 
     def PresetFrequency(self, value):
         # Перед запуском, если частота ненулевая - убедиться, предварительно задать требуемую начальную частоту
-        value_to_send = int(value * 100)  # Привести к инту, иначе pymodbus выдаёт ошибку
+          # Привести к инту, иначе pymodbus выдаёт ошибку
+        value_to_send = int(value * 100)
         self.DeltaCPClient.SetFrequency(value_to_send)
-        accuracy = 0.05
 
         if self.DebugMode:
             return
         else:
-            while True:
-                # мониторим, достигли ли требуемой начальной частоты
-                sleep(1)
-                current_freq = self.DeltaCPClient.RequestCurrentFrequency()
-                loggers['Debug'].debug(
-                    f'ForwardSendingOperator: PresetFrequency: Current freq = {current_freq}, val to send = {value}')
+            self.RequestFreqUntilEqual(value)
 
-                if not (current_freq is None) and abs(current_freq - value) <= accuracy:
-                    return
+
+
+    def RequestFreqUntilEqual(self, value):
+        accuracy = 0.05
+        dt_to_wait = 1.7  # Время, которое подождём, прежде чем опять запросить частоту, чтобы сравнить
+                            # с предустановленной
+        requests_limit = 4  # Может быть такое, что задание частоты (SetFrequency) не пройдёт с первого раза
+                            # Тогда, спустя retries попыток опросить частоту, будем задавать её повторно
+        requests_number = 0
+        prev_freq = None
+        value_to_send = int(value * 100)
+
+
+        while True:
+            sleep(dt_to_wait)
+            current_freq = self.DeltaCPClient.RequestCurrentFrequency(DebugMode=self.DebugMode)
+            # loggers['Debug'].debug(f'RequestFreqUntilEqual: F_current = {current_freq} Hz')
+
+            if not (current_freq is None) and abs(current_freq - value) <= accuracy:
+                return  # Значит, с точностью до accuracy уже достигли частоты
+
+            requests_number += 1
+            if requests_number == requests_limit:
+                requests_number = 0
+                # На случай, если предзадана большАя частота (например, 30 Гц), и разгон до неё
+                # маленький - может быть ситуация, при которой команда задания частоты прошла успешно,
+                # просто частотный преобразователь ещё не успел разогнаться. Тогда, задавать частоту
+                # повторно имеет смысл только при current_freq == prev_freq
+                if (prev_freq is not None) and (current_freq is not None):
+                    loggers['Debug'].debug(f'Waiting limit reached: F_prev = {prev_freq}, F_current = {current_freq}')
+                    if abs(prev_freq - current_freq) <= accuracy:  # т.е. если предыдущая частота совпадает с текущей, то задаём ещё раз
+                        loggers['Debug'].debug(f'RequestFreqUntilEqual: Retrying to set frequency')
+                        self.DeltaCPClient.SetFrequency(value_to_send)
+
+            prev_freq = current_freq
+            # loggers['Debug'].debug(f'RequestFreqUntilEqual: F_prev = {prev_freq} Hz')
