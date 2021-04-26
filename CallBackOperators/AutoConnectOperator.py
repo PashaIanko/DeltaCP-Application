@@ -12,7 +12,7 @@ class AutoConnectOperator(CallBackOperator):
         super().__init__(window, model, value_range)
         self.ConnectionParameters = ConnectionParameters()
         self.DeltaCPClient = DeltaCPClient()
-        self.ConnectionConfigs = pd.read_excel(".\\Connection_Configs\\Connection_Configs.xlsx")
+        self.ConnectionConfigs = pd.read_excel(".\\ConnectionConfigs\\ConnectionConfigs.xlsx")
 
     # overridden
     def ConnectCallBack(self):
@@ -53,7 +53,7 @@ class AutoConnectOperator(CallBackOperator):
                 PopUpNotifier.Info(msg_success)
                 return
 
-        msg = f'Auto Connect unsuccessful. Please write other configs into Connection_Configs.xlsx' \
+        msg = f'Auto Connect unsuccessful. Please write other configs into ConnectionConfigs.xlsx' \
               f' file or set parameters manually'
         loggers['Application'].info(msg)
         PopUpNotifier.Warning(msg)
