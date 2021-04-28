@@ -41,7 +41,7 @@ class EdgeSignalController(SignalController):
         self.param_names = [
             'Start Time', 'Acceleration Time', 'Plateau Time',
             'Deceleration Time', 'Low Level Frequency', 'High Level Frequency',
-            'End Time', 'Request Frequency'  # TODO: в таком же месте для UserSignal убрать Vertical Offset
+            'End Time', 'Request Frequency'
         ]
 
     # overridden
@@ -58,37 +58,11 @@ class EdgeSignalController(SignalController):
             SliderTextPair(ui.RequestFrequencyhorizontalSlider, ui.RequestFrequencylineEdit, EdgeSignalRanges.request_freq_range.calc_constant)
         ]
 
-    # # overridden
-    # def init_line_edits(self):
-    #     ui = self.main_window.user_interface
-    #     self.line_edits = [
-    #         ui.StartTimelineEdit,
-    #         ui.AccelerationTimelineEdit,
-    #         ui.PlateauTimelineEdit,
-    #         ui.DecelerationTimelineEdit,
-    #         ui.LowLevelFrequencylineEdit,
-    #         ui.HighLevelFrequencylineEdit,
-    #         ui.EndTimelineEdit,
-    #         ui.RequestFrequencylineEdit
-    #     ]
-    #
-    # # overridden
-    # def init_sliders(self):
-    #     ui = self.main_window.user_interface
-    #     self.sliders = [
-    #         ui.StartTimehorizontalSlider,
-    #         ui.AccelerationTimehorizontalSlider,
-    #         ui.PlateauTimehorizontalSlider,
-    #         ui.DecelerationTimehorizontalSlider,
-    #         ui.LowLevelFrequencyhorizontalSlider,
-    #         ui.HighLevelFrequencyhorizontalSlider,
-    #         ui.EndTimehorizontalSlider,
-    #         ui.RequestFrequencyhorizontalSlider,
-    #     ]
-
+    # overridden
     def init_plot_widget(self):
         self.plot_widget = self.main_window.user_interface.plot_widget
 
+    # overridden
     def init_callback_operators(self):
         self.callback_operators = \
             [

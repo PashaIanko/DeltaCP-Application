@@ -23,6 +23,8 @@ class SignalTypeOperator(CallBackOperator):
             self.SignalController = DynamicPointsDensitySignalController()
         elif signal_text == 'edge signal':
             self.SignalController = EdgeSignalController()
+        elif signal_text == 'experiment schedule':
+            pass
         # TODO: убрать ветвление, вставить словарь
 
     # overridden
