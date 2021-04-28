@@ -344,6 +344,7 @@ class Ui_MainWindow(object):
         self.SignalTypecomboBox.addItem("")
         self.SignalTypecomboBox.setItemText(0, "")
         self.SignalTypecomboBox.addItem("")
+        self.SignalTypecomboBox.addItem("")
         self.horizontalLayout_8.addWidget(self.SignalTypecomboBox)
         self.gridLayout_10.addWidget(self.frame_18, 1, 0, 1, 1)
         self.frame_17 = QtWidgets.QFrame(self.frame_20)
@@ -517,7 +518,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.aaa.setCurrentIndex(0)
+        self.aaa.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -559,6 +560,7 @@ class Ui_MainWindow(object):
                             _translate("MainWindow", "Output Frequency Setting"))
         self.label_4.setText(_translate("MainWindow", "Signal type:"))
         self.SignalTypecomboBox.setItemText(1, _translate("MainWindow", "edge signal"))
+        self.SignalTypecomboBox.setItemText(2, _translate("MainWindow", "experiment schedule"))
         self.aaa.setTabText(self.aaa.indexOf(self.FrequencySignalSetting),
                             _translate("MainWindow", "Frequency Signal Setting"))
         self.LogFilenamelineEdit.setText(_translate("MainWindow", "SendingLogs/"))
