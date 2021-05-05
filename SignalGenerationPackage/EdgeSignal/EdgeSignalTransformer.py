@@ -1,6 +1,7 @@
 from SignalGenerationPackage.Point import Point
+from SignalGenerationPackage.SignalTransformer import SignalTransformer
 
-class EdgeSignalTransformer:
+class EdgeSignalTransformer (SignalTransformer):
     # На этапе SignalGeneration мы создаём сигнал
     # Но перед отправкой, необходимо его преобразовать -
     # т.е. сдвинуть сигнал "влево" для отправки наперёд,
@@ -9,8 +10,9 @@ class EdgeSignalTransformer:
     # Этим преобразованием и занимается Transformer
 
     def __init__(self, SignalData):
-        self.SignalData = SignalData
+        super().__init__(SignalData)
 
+    # overridden
     def TransformSignal(self):
         # Как должна выглядеть оптимизированная
         # Трапеция, если все времёна != 0

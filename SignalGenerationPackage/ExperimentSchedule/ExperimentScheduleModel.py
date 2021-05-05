@@ -1,5 +1,6 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleData import ExperimentScheduleData
+from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleTransformer import ExperimentScheduleTransformer
 
 
 class ExperimentScheduleModel(Signal):
