@@ -1,4 +1,7 @@
 from SignalGenerationPackage.SignalController import SignalController
+from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleModel import ExperimentScheduleModel
+from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleObserver import ExperimentScheduleObserver
+from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleMainWindow import ExperimentScheduleMainWindow
 
 class ExperimentScheduleController(SignalController):
     def __init__(self):
@@ -6,15 +9,15 @@ class ExperimentScheduleController(SignalController):
 
     # overridden
     def init_model(self):
-        pass
+        self.model = ExperimentScheduleModel()
 
     # overridden
     def init_observer(self):
-        pass
+        self.observer = ExperimentScheduleObserver(self.model, self.main_window.plot)
 
     # overridden
     def init_main_window(self):
-        pass
+        self.main_window = ExperimentScheduleMainWindow()
 
     # overridden
     def init_param_names(self):

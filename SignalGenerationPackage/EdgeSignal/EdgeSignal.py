@@ -94,7 +94,7 @@ class EdgeSignal(Signal):
         return res
 
     def get_X_arr(self):
-        StartTime = self.SignalData.StartTime
+        StartTime = self.SignalData.StartTime  # TODO: Заменить всё на properties, которые уже прописаны у этого объекта
         AccTime = self.SignalData.AccelerationTime
         PlateauTime = self.SignalData.PlateauTime
         DecTime = self.SignalData.DecelerationTime
