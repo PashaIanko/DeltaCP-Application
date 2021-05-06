@@ -3,6 +3,7 @@ from SignalGenerationPackage.Sinus.SinusSignalController import SinusSignalContr
 from SignalGenerationPackage.UserSignal.UserSignalController import UserSignalController
 from SignalGenerationPackage.DynamicPointsDensitySignal.DynamicPointsDensitySignalController import DynamicPointsDensitySignalController
 from SignalGenerationPackage.EdgeSignal.EdgeSignalController import EdgeSignalController
+from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleController import ExperimentScheduleController
 
 class SignalTypeOperator(CallBackOperator):
     def __init__(self, window, model=None, value_range=None):
@@ -24,7 +25,7 @@ class SignalTypeOperator(CallBackOperator):
         elif signal_text == 'edge signal':
             self.SignalController = EdgeSignalController()
         elif signal_text == 'experiment schedule':
-            pass
+            self.SignalController = ExperimentScheduleController()
         # TODO: убрать ветвление, вставить словарь
 
     # overridden
