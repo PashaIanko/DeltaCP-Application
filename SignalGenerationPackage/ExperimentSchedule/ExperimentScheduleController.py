@@ -3,6 +3,8 @@ from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleModel import E
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleObserver import ExperimentScheduleObserver
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleMainWindow import ExperimentScheduleMainWindow
 from SignalGenerationPackage.ExperimentSchedule.CallBacks.ScheduleAutoFillOperator import ScheduleAutoFillOperator
+from CallBackOperators.PIDSendingOperator import PIDSendingOperator
+from DebugConfigs import DebugConfigs
 
 class ExperimentScheduleController(SignalController):
     def __init__(self):
@@ -50,4 +52,8 @@ class ExperimentScheduleController(SignalController):
 
     # overridden
     def append_sending_operator(self):
-        pass
+        self.callback_operators.append(
+            PIDSendingOperator(self.main_window, self.plot_widget, model=self.model, DebugMode=DebugConfigs.PIDOperatorDebug,
+                               SendRetry=True
+            )
+        )
