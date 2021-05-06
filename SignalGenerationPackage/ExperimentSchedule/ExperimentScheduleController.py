@@ -2,6 +2,7 @@ from SignalGenerationPackage.SignalController import SignalController
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleModel import ExperimentScheduleModel
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleObserver import ExperimentScheduleObserver
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleMainWindow import ExperimentScheduleMainWindow
+from SignalGenerationPackage.ExperimentSchedule.CallBacks.ScheduleAutoFillOperator import ScheduleAutoFillOperator
 
 class ExperimentScheduleController(SignalController):
     def __init__(self):
@@ -21,19 +22,31 @@ class ExperimentScheduleController(SignalController):
 
     # overridden
     def init_param_names(self):
-        pass
+        self.param_names = [
+            'Frequencies',
+            'Seconds',
+            'Request every N seconds'
+        ]
 
     # overridden
     def init_slider_text_pairs(self):
-        pass
+        self.slider_text_pairs = [
+            # Никаких слайдеров не предусмотрено
+            # на интерфейсе расписания эксперимента
+        ]
 
     # overridden
     def init_plot_widget(self):
-        pass
+        self.plot_widget = self.main_window.user_interface.plot_widget
 
     # overridden
     def init_callback_operators(self):
-        pass
+        self.callback_operators = [
+            ScheduleAutoFillOperator(self.main_window.user_interface, self.param_names, model=self.model,
+                                     configs_folder=".\\SignalGenerationConfigs\\ExperimentScheduleConfigs\\")
+            # Путь только до папки, файл открывается по новой, в зависимости от имени файла
+            # с расписанием, введённым пользователем
+        ]
 
     # overridden
     def append_sending_operator(self):

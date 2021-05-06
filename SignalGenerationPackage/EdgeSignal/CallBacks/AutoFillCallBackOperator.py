@@ -2,13 +2,14 @@ from AutoFillOperator import AutoFillOperator
 
 
 class AutoFillCallBackOperator(AutoFillOperator):
-    def __init__(self, window, param_names, slider_text_pairs, model):
+    def __init__(self, window, param_names, slider_text_pairs, model, configs_path):
         super().__init__(
             window,
             param_names,
             slider_text_pairs,
             model,
-            configs_path=".\\SignalGenerationConfigs\\EdgeSignalConfigs\\SignalConfigs.xlsx")
+            configs_path
+        )
 
     # overridden
     def ConnectCallBack(self):
