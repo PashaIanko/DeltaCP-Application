@@ -1,4 +1,4 @@
-
+import pandas as pd
 
 class ScheduleAutoFillOperator:
     def __init__(self, window, param_names, model, configs_folder):
@@ -13,4 +13,5 @@ class ScheduleAutoFillOperator:
         self.window.AutoFillpushButton.clicked.connect(self.AutoFill)
 
     def AutoFill(self):
-        pass
+        config_filepath = self.configs_folder + self.config_line_edit.text() + '.xlsx'
+        configs_data = pd.read_excel(config_filepath)
