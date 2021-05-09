@@ -109,7 +109,7 @@ class ExperimentScheduleModel(Signal):
                     # Да, None это костыль. При отправке (SignalSendingOperator),
                     # если значение 'y' == None, то не отправляем, а только запрашиваем
                     # частоту
-                    y_new = [y_prev] + [None] * (len(x_new) - 2) + [y_next]
+                    y_new = [y_prev] + [y_prev] * (len(x_new) - 2) + [y_next]
 
                     # Ещё один костыль - лист из булевых флагов to_send - отправлять мы
                     # будем или опрашивать
@@ -126,7 +126,9 @@ class ExperimentScheduleModel(Signal):
 
     # overridden
     def AddRequests_Y(self):
-        pass
+        pass  # Не нужно добавлять промежуточных, это просто плато, на этапе Add_reauests_X() я уже добавил
+                # значения Y
+
 
     @property
     def whole_length(self):
