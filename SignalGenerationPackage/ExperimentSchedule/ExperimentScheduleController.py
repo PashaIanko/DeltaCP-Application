@@ -25,7 +25,8 @@ class ExperimentScheduleController(SignalController):
     # overridden
     def init_param_names(self):
         self.param_names = [
-            'Frequencies',
+            'Frequencies',  # Эти параметры передаются на AutoFill Operator, чтобы
+            # понять, соответствуют ли параметры в екселе тем, которые мы ожидаем на вход
             'Seconds',
             'Request every N seconds'
         ]

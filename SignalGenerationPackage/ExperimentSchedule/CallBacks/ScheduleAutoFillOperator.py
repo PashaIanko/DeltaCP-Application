@@ -36,7 +36,9 @@ class ScheduleAutoFillOperator:
             seconds = configs_df['Seconds'].values
             request_freq = configs_df['Request every N seconds'].values[0]
 
-
+            self.model.frequencies = frequencies
+            self.model.seconds = seconds
+            self.model.request_every_N_sec = request_freq
 
         else:
             PopUpNotifier.Error(
@@ -44,4 +46,4 @@ class ScheduleAutoFillOperator:
             )
 
         # Закроем файл
-        del self.configs_df
+        del configs_df
