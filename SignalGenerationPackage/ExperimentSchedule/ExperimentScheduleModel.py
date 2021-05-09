@@ -3,6 +3,7 @@ from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleData import Ex
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleTransformer import ExperimentScheduleTransformer
 from SignalGenerationPackage.SignalData import SignalData
 from SignalGenerationPackage.Point import Point
+import numpy as np
 
 
 class ExperimentScheduleModel(Signal):
@@ -61,6 +62,7 @@ class ExperimentScheduleModel(Signal):
 
         request_every_N_sec = self.request_every_N_sec
         point_arr = SignalData.transformed_point_array
+        len_x = len(point_arr)
 
         for prev_idx in range(0, len(point_arr) - 1):
             next_idx = prev_idx + 1
@@ -73,15 +75,54 @@ class ExperimentScheduleModel(Signal):
             y_next = point_arr[next_idx].y
             to_send_next = point_arr[next_idx].to_send
 
-            dx = x_next - x_prev
+            dx_current = x_next - x_prev
 
-            if dx >= request_every_N_sec:
-                N_requests = int(dx / request_every_N_sec)
-                if N_requests == 0:
-                    pass
+            if dx_current <= request_every_N_sec and next_idx == len_x - 1:
+                # Значит, нет необходимости вставлять точки для опроса - текущий dx_current и так достаточно мал
+                # На последней итерации вставляем крайние точки
+                self.extend_edge_points([x_prev, x_next], [y_prev, y_next], to_send_list=[to_send_prev, to_send_next])
+            elif dx_current <= request_every_N_sec and next_idx < len_x - 1:
+                # Итерация не последняя - только левые крайние точки добавляем
+                self.extend_edge_points([x_prev], [y_prev], to_send_list=[to_send_prev])
 
+            elif dx_current > request_every_N_sec:
+                # Значит, надо вставить точки для опроса
+                # Сколько точек вставить:
+                N = int(dx_current / request_every_N_sec)
 
+                if N == 0:
+                    # Так совпало - тогда только крайние точки вставляем
+                    if next_idx < len_x - 1:
+                        # итерация не последняя
+                        self.extend_edge_points([x_prev], [y_prev], to_send_list=[to_send_prev])
+                    else:
+                        # итерация последняя - добавляем края
+                        self.extend_edge_points([x_prev, x_next], [y_prev, y_next],
+                                                to_send_list=[to_send_prev, to_send_next])
+                else:
+                    # Тогда вставим несколько промежуточных точек:
+                    # Массив x для вставки:
+                    # N + 2 в linspace - т.к. N - только промежуточные, а тут linspace c учётом крайних
+                    x_new = np.linspace(x_prev, x_next, N + 2, endpoint=True)
 
+                    # Массив y для вставки:
+                    # Да, None это костыль. При отправке (SignalSendingOperator),
+                    # если значение 'y' == None, то не отправляем, а только запрашиваем
+                    # частоту
+                    y_new = [y_prev] + [None] * (len(x_new) - 2) + [y_next]
+
+                    # Ещё один костыль - лист из булевых флагов to_send - отправлять мы
+                    # будем или опрашивать
+                    to_send_list = [to_send_prev] + [False] * (len(x_new) - 2) + [to_send_next]
+
+                    # Если не последняя итерация - то необходимо исключить последнюю точку
+                    # из массивов X и Y
+                    # А если последняя - то она включится
+                    if next_idx != len_x - 1:
+                        x_new = x_new[0:-1]
+                        y_new = y_new[0:-1]
+                        to_send_list = to_send_list[0:-1]
+                    self.extend_edge_points(x_new, y_new, to_send_list)
 
     # overridden
     def AddRequests_Y(self):
