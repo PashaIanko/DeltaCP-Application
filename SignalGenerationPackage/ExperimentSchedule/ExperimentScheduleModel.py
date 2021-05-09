@@ -1,6 +1,8 @@
 from SignalGenerationPackage.Signal import Signal
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleData import ExperimentScheduleData
 from SignalGenerationPackage.ExperimentSchedule.ExperimentScheduleTransformer import ExperimentScheduleTransformer
+from SignalGenerationPackage.SignalData import SignalData
+from SignalGenerationPackage.Point import Point
 
 
 class ExperimentScheduleModel(Signal):
@@ -24,11 +26,38 @@ class ExperimentScheduleModel(Signal):
 
     # overridden
     def UpdateSignalData(self):
-        print(f'In UpdateSignalData')
+        self.whole_length = sum(self.seconds)
+        point_array = self.get_point_array()
+        SignalData.point_array = point_array
+
+    def get_point_array(self):
+        res = []
+        X_arr = self.get_X_arr()  # TODO: Дублируемый код с EdgeSignal. Они оба наследуются от
+                                    # модели, поэтому часть методов сделать абстрактными (например, get_X_arr, get_Y_arr)
+        Y_arr = self.get_Y_arr()
+
+        for x, y in zip(X_arr, Y_arr):
+            res.append(Point(x=x, y=y, to_send=True))
+
+    def get_X_arr(self):
+        res = [0]  # начальная точка отсчёта
+        for i in range(0, len(self.seconds)):
+            res.append(sum(self.seconds[0:i+1]))
+        return res
+
+
 
     # overridden
     def AddRequests_Y(self):
         pass
+
+    @property
+    def whole_length(self):
+        return self.SignalData.whole_length
+
+    @whole_length.setter
+    def whole_length(self, val):
+        self.SignalData.whole_length = val
 
     @property
     def frequencies(self):
@@ -37,6 +66,8 @@ class ExperimentScheduleModel(Signal):
     @frequencies.setter
     def frequencies(self, freq_arr):
         self.SignalData.frequencies = freq_arr
+        self.RecalcData()
+        self.NotifyObservers()
 
     @property
     def seconds(self):
@@ -45,6 +76,8 @@ class ExperimentScheduleModel(Signal):
     @seconds.setter
     def seconds(self, seconds_arr):
         self.SignalData.seconds = seconds_arr
+        self.RecalcData()
+        self.NotifyObservers()
 
     @property
     def request_every_N_sec(self):
@@ -53,3 +86,5 @@ class ExperimentScheduleModel(Signal):
     @request_every_N_sec.setter
     def request_every_N_sec(self, val):
         self.SignalData.request_every_N_sec = val
+        self.RecalcData()
+        self.NotifyObservers()

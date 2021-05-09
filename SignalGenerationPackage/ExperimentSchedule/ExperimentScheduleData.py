@@ -8,3 +8,4 @@ class ExperimentScheduleData(SignalData):
         self.frequencies = []  # Держать частоту self.frequencies[i]
         self.seconds = []       # в течение self.seconds[i] секунд
         self.request_every_N_sec = 0  # Один из параметров ексель файла
+        self.whole_length = 0
