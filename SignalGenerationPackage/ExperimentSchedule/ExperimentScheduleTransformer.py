@@ -16,7 +16,7 @@ class ExperimentScheduleTransformer(SignalTransformer):
 
         points_len = len(point_arr)
         for i in range(points_len):
-            if i == 0 or i == points_len - 1:  # Первую и последнюю точки отправлять не надо
+            if i == points_len - 1:  # Первую и последнюю точки отправлять не надо
                 p = Point(x=point_arr[i].x, y=point_arr[i].y, to_send=False)
             else:
                 # Структура сигнала - набор "полочек", плато
