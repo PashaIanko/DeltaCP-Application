@@ -11,6 +11,10 @@ class ExperimentScheduleModel(Signal):
 
     def __init__(self):
         super().__init__()
+        self.PlatoOffset = 0.01  # Это необходимо для
+        # get_X_arr() функции. Для построения плато из заданных частот (
+        # две точки на стыках плато будут лежать почти рядом, на расстоянии PlatoOffset
+        # по оси X)
 
     # overridden
     def InitSendingTransformer(self):
@@ -32,20 +36,30 @@ class ExperimentScheduleModel(Signal):
 
     def get_point_array(self):
         res = []
-        X_arr = self.get_X_arr()  # TODO: Дублируемый код с EdgeSignal. Они оба наследуются от
-                                    # модели, поэтому часть методов сделать абстрактными (например, get_X_arr, get_Y_arr)
+        X_arr = self.get_X_arr()  # TODO: Дублируемый код с EdgeSignal. Они оба наследуются модели, поэтому часть методов сделать абстрактными (например, get_X_arr, get_Y_arr)
         Y_arr = self.get_Y_arr()
-
         for x, y in zip(X_arr, Y_arr):
             res.append(Point(x=x, y=y, to_send=True))
+        return res
 
     def get_X_arr(self):
         res = [0]  # начальная точка отсчёта
         for i in range(0, len(self.seconds)):
+            res.append(sum(self.seconds[0:i + 1]) - self.PlatoOffset)
             res.append(sum(self.seconds[0:i+1]))
         return res
 
+    def get_Y_arr(self):
+        res = []
+        for f in self.frequencies:
+            res.extend([f, f])  # Частоты дублируются для создания "полочек" на графике, плато
+        res.append(self.frequencies[-1])
+        return res
 
+
+    def AddRequests_X(self):  # TODO: сделать этот метод абстрактным
+        request_freq = self.request_every_N_sec
+        point_arr = SignalData.transformed_point_array
 
     # overridden
     def AddRequests_Y(self):
