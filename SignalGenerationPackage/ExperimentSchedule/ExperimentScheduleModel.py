@@ -58,8 +58,30 @@ class ExperimentScheduleModel(Signal):
 
 
     def AddRequests_X(self):  # TODO: сделать этот метод абстрактным
-        request_freq = self.request_every_N_sec
+
+        request_every_N_sec = self.request_every_N_sec
         point_arr = SignalData.transformed_point_array
+
+        for prev_idx in range(0, len(point_arr) - 1):
+            next_idx = prev_idx + 1
+
+            x_prev = point_arr[prev_idx].x
+            y_prev = point_arr[prev_idx].y
+            to_send_prev = point_arr[prev_idx].to_send
+
+            x_next = point_arr[next_idx].x
+            y_next = point_arr[next_idx].y
+            to_send_next = point_arr[next_idx].to_send
+
+            dx = x_next - x_prev
+
+            if dx >= request_every_N_sec:
+                N_requests = int(dx / request_every_N_sec)
+                if N_requests == 0:
+                    pass
+
+
+
 
     # overridden
     def AddRequests_Y(self):
