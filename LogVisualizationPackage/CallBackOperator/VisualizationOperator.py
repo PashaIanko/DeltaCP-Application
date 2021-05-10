@@ -7,6 +7,8 @@ class VisualizationOperator(CallBackOperator):
     def __init__(self, user_interface, DebugMode=False):
         super().__init__(user_interface, model=None, value_range=None)
         self.DebugMode = DebugMode
+        self.TrapezoidDir = 'TrapezoidLogs\\'
+        self.ScheduleDir = 'ScheduleLogs\\'
 
 
         self.NecessaryColumns = [
@@ -21,7 +23,12 @@ class VisualizationOperator(CallBackOperator):
         self.window.VisualizeLogpushButton.clicked.connect(self.VisualizeLog)
 
     def VisualizeLog(self):
-        logfile_dir = self.window.LogFilenamelineEdit.text() + '.xlsx'
+        filename = self.window.LogFilenamelineEdit.text() + '.xlsx'
+
+        if self.window.TrapezoidradioButton.isChecked():
+            logfile_dir = self.TrapezoidDir + filename
+        elif self.window.ScheduleradioButton.isChecked():
+            logfile_dir = self.ScheduleDir + filename
 
         log_plot = self.window.LogPlot
         log_plot.set_up_plot()
