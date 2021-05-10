@@ -83,7 +83,6 @@ class ScheduleSendingOperator(SignalSendingOperator):
                                            t_real=datetime.datetime.now().time())
                     self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
 
-
     def setup_set_flag(self):
         self._set_frequency = True
         self._requested_frequency = False  # Взаимоисключающие
@@ -109,8 +108,8 @@ class ScheduleSendingOperator(SignalSendingOperator):
         # Раз готовы к старту - тогда отправляем на частотник
         # необходимые времёна разгона
         self.SendingLogger.start_database()
-        self.DeltaCPClient.SetAccelerationTime1(self.AccelerationTime)
-        self.DeltaCPClient.SetDecelerationTime1(self.DecelerationTime)
+        self.DeltaCPClient.SetAccelerationTime1(self.AccelerationTime)  # TODO: Взять время с GUI и выставить его, заданное пользователем
+        self.DeltaCPClient.SetDecelerationTime1(self.DecelerationTime)  # TODO: Взять время с GUI и выставить его, заданное пользователем
 
 
         current_cycle_display = self.signal_main_window.get_LCD_display()
