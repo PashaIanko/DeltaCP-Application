@@ -8,6 +8,7 @@ class VisualizationOperator(CallBackOperator):
         super().__init__(user_interface, model=None, value_range=None)
         self.DebugMode = DebugMode
 
+
         self.NecessaryColumns = [
             'Expect Time',
             'Expect Freq, Hz',
