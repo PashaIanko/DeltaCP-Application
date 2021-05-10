@@ -99,6 +99,15 @@ class ScheduleSendingOperator(SignalSendingOperator):
             self.SetFrequency(set_freq)  # перезадаём последнюю заданную частоту
             self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
 
+    def get_time_from_gui(self, line_edit):
+        text = line_edit.text()
+        if len(text) == 0:
+            return 0
+        if ',' in text:
+            return float(text.replace(',', '.'))
+        else:
+            return float(text)
+
     # Переопределённый метод, т.к. немного отличается (Надо задать t_разгона, t_замедления перед отправкой)
     def StartSendingSignal(self):
 
@@ -110,8 +119,10 @@ class ScheduleSendingOperator(SignalSendingOperator):
         # Раз готовы к старту - тогда отправляем на частотник
         # необходимые времёна разгона
         self.SendingLogger.start_database()
-        self.DeltaCPClient.SetAccelerationTime1(self.AccelerationTime)  # TODO: Взять время с GUI и выставить его, заданное пользователем
-        self.DeltaCPClient.SetDecelerationTime1(self.DecelerationTime)  # TODO: Взять время с GUI и выставить его, заданное пользователем
+        t_acceleration = self.get_time_from_gui(self.signal_main_window.get_acceleration_time_line_edit())
+        t_deceleration = self.get_time_from_gui(self.signal_main_window.get_deceleration_time_line_edit())
+        self.DeltaCPClient.SetAccelerationTime1(t_acceleration)
+        self.DeltaCPClient.SetDecelerationTime1(t_deceleration)
 
 
         current_cycle_display = self.signal_main_window.get_LCD_display()

@@ -48,3 +48,9 @@ class ExperimentScheduleMainWindow(SignalMainWindow):
     # overridden
     def get_log_filename_lineedit(self):
         return self.user_interface.LogFilenamelineEdit
+
+    def get_acceleration_time_line_edit(self):
+        return self.user_interface.AccelerationTimelineEdit
+
+    def get_deceleration_time_line_edit(self):
+        return self.user_interface.DecelerationTimelineEdit
