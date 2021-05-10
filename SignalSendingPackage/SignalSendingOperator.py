@@ -279,6 +279,10 @@ class SignalSendingOperator(CallBackOperator):
                         current_cycle_display.display(self.cycle_counter + 1)
                         self.RestartSending(updated_x)
 
+    @abstractmethod
+    def get_signal_length(self):
+        pass
+
     def RestartSending(self, updated_x):
         upd_val = SignalData.x[-1]
         self.update_time_stamps(upd_val)
@@ -290,7 +294,7 @@ class SignalSendingOperator(CallBackOperator):
 
         self.CycleRestarted = True
 
-        dt_diff = (time() - self.start_sending_time) - ((self.cycle_counter) * self.model.whole_length)
+        dt_diff = (time() - self.start_sending_time) - ((self.cycle_counter) * self.get_signal_length())
         self.SendingLogger.log_cycle_dt_delay(dt_diff)
         if dt_diff > 0:
             self.lag_portion = dt_diff / (len(SignalData.point_array_with_requests) - 2)
@@ -316,16 +320,14 @@ class SignalSendingOperator(CallBackOperator):
         self.RestartVisualization(Time)
         self.ExecuteSending(Time)
 
-    def PresetFrequency(self, value):
+    def PresetFrequency(self, value, x_coord):
         # Перед запуском, если частота ненулевая - убедиться, предварительно задать требуемую начальную частоту
           # Привести к инту, иначе pymodbus выдаёт ошибку
         value_to_send = int(value * 100)
         self.DeltaCPClient.SetFrequency(value_to_send)
-
-        if self.DebugMode:
-            return
-        else:
+        if not self.DebugMode:
             self.RequestFreqUntilEqual(value)
+        self.SignalVisualizer.UpdateSetFrequency(x_coord, value)
 
 
 

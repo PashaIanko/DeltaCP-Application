@@ -22,8 +22,9 @@ class ScheduleSendingOperator(SignalSendingOperator):
         self.model = model
         #self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
 
-        self.CurrentFreq = None
-        self.SetFreq = None
+        self.CurrentFreq = None  # Текущая опрошенная частота
+        self.SetFreq = None  # Частота, заданная в текущем шаге
+        self.PrevSetFreq = None  # Частота, заданная на предыдущем шаге
         self.tasks_queue = Queue()
 
         self.SendRetry = SendRetry
@@ -82,6 +83,7 @@ class ScheduleSendingOperator(SignalSendingOperator):
                                            t_expect=pt.x,
                                            t_real=datetime.datetime.now().time())
                     self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
+                self.PrevSetFreq = pt.y
 
     def setup_set_flag(self):
         self._set_frequency = True
@@ -93,7 +95,7 @@ class ScheduleSendingOperator(SignalSendingOperator):
 
     def RetrySending(self, point):
         set_freq = self.SetFreq
-        if self._requested_frequency and abs(self.CurrentFreq - set_freq) <= self.RetryAccuracy:
+        if self._requested_frequency and abs(self.CurrentFreq - self.PrevSetFreq) <= self.RetryAccuracy:
             self.SetFrequency(set_freq)  # перезадаём последнюю заданную частоту
             self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
 
@@ -144,22 +146,18 @@ class ScheduleSendingOperator(SignalSendingOperator):
 
         self.FunctionWasCalled = False  # Line is important! For multithreading
 
-        if self.IsFirstCycle:
-            self.PointsIterator = 0
-        else:
-            self.PointsIterator = 1
-        self.current_point = points[self.PointsIterator]
-
-
         # На первом прогоне надо предварительно выставить начальную частоту
         if self.IsFirstCycle == True:
             preset_value = self.model.frequencies[0]
             self.IsFirstCycle = False
-            self.PresetFrequency(preset_value)
+            self.PresetFrequency(preset_value, points[0].x)
             self.setup_set_flag()  # Задали самую первую частоту -> выставили флаги
-            self.CurrentFreq = preset_value
+            self.PrevSetFreq = preset_value
             self.start_sending_time = time.time()
-
+            self.PointsIterator = 1
+        else:
+            self.PointsIterator = 0
+        self.current_point = points[self.PointsIterator]
 
         # После выставления начальной частоты - Ждём cycle gap и выставляем следующую точку
         if self.Timer.if_started == True:  # Если уже дали старт таймеру на предудущем цикле
@@ -172,7 +170,6 @@ class ScheduleSendingOperator(SignalSendingOperator):
         if Dts_len != 0:  # If the Time array has only one point, then we've already accomplished it in
                           # the method self.Timer.run()
 
-            self.PointsIterator = 1
             while self.PointsIterator <= Dts_len:
                 if self.FunctionWasCalled and not self.SendingOnPause and not self.SendingStopped:
                     self.FunctionWasCalled = False
@@ -214,3 +211,7 @@ class ScheduleSendingOperator(SignalSendingOperator):
     # overridden
     def init_line_edit(self):
         pass # You dont need these methods for the logic of this class
+
+    # overridden
+    def get_signal_length(self):
+        return self.model.whole_length

@@ -212,7 +212,7 @@ class PIDSendingOperator(SignalSendingOperator):
         if self.IsFirstCycle == True:
             preset_value = self.model.LowLevelFrequency
             self.IsFirstCycle = False
-            self.PresetFrequency(preset_value)
+            self.PresetFrequency(preset_value, points[0].x)
             self.start_sending_time = time.time()
 
 
@@ -269,3 +269,7 @@ class PIDSendingOperator(SignalSendingOperator):
     # overridden
     def init_line_edit(self):
         pass # You dont need these methods for the logic of this class
+
+    # overridden
+    def get_signal_length(self):
+        return self.model.WholePeriod
