@@ -20,9 +20,10 @@ class ScheduleSendingOperator(SignalSendingOperator):
 
         self.current_point = None
         self.model = model
-        self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
+        #self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
 
         self.CurrentFreq = None
+        self.SetFreq = None
         self.tasks_queue = Queue()
 
         self.SendRetry = SendRetry
@@ -31,6 +32,9 @@ class ScheduleSendingOperator(SignalSendingOperator):
         self.DecelerationTime = 20  # За 20 сек от F_min до F_max
 
         self.RetryAccuracy = 0.5  # Если изменение следующей опрошенной частоты
+
+        self._set_frequency = False
+        self._requested_frequency = False
         # менее чем на self.RetryAccuracy, то повторяем опрос
 
         # Model (модель) нужна, для того чтобы перед отправкой пересчитать необходимые времёна
@@ -55,15 +59,18 @@ class ScheduleSendingOperator(SignalSendingOperator):
 
                 if pt.to_send:
                     self.SetFrequency(int(pt.y * 100))
+                    self.SetFreq = pt.y
                     self.SignalVisualizer.UpdateSetFrequency(pt.x, pt.y)
+                    self.setup_set_flag()
                 else:
                     # Значит опрашиваем
                     t_before_request = time.time()
                     self.CurrentFreq = self.DeltaCPClient.ReadRegister(DeltaCPRegisters.CurrentFrequencyRegister, self.DebugMode)
                     self.SendingLogger.log_request_dt(time.time() - t_before_request)
+                    self.setup_request_flag()
                     if self.CurrentFreq is not None:
                         self.CurrentFreq /= 100
-                        # loggers['Debug'].debug(f'Requested Freq = {self.CurrentFreq} Hz')
+
                         if self.SendRetry:
                             # На случай, если команда задания частоты не прошла,
                             # необходимо повторять отправку до тех пор, пока
@@ -77,14 +84,19 @@ class ScheduleSendingOperator(SignalSendingOperator):
                     self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
 
 
-    def RetrySending(self, point):
-        if self._sent_upper and abs(self.CurrentFreq - self.model.LowLevelFrequency) <= self.RetryAccuracy:
-            self.SetFrequency(self.UpperFreq)
-            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
+    def setup_set_flag(self):
+        self._set_frequency = True
+        self._requested_frequency = False  # Взаимоисключающие
 
-        if self._sent_lower and abs(self.CurrentFreq - self.model.HighLevelFrequency) <= self.RetryAccuracy:
-            self.SetFrequency(self.LowerFreq)
-            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.LowLevelFrequency)
+    def setup_request_flag(self):
+        self._set_frequency = False
+        self._requested_frequency = True  # Взаимоисключающие
+
+    def RetrySending(self, point):
+        set_freq = self.SetFreq
+        if self._requested_frequency and abs(self.CurrentFreq - set_freq) <= self.RetryAccuracy:
+            self.SetFrequency(set_freq)  # перезадаём последнюю заданную частоту
+            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
 
     # Переопределённый метод, т.к. немного отличается (Надо задать t_разгона, t_замедления перед отправкой)
     def StartSendingSignal(self):
@@ -142,9 +154,11 @@ class ScheduleSendingOperator(SignalSendingOperator):
 
         # На первом прогоне надо предварительно выставить начальную частоту
         if self.IsFirstCycle == True:
-            preset_value = self.model.LowLevelFrequency
+            preset_value = self.model.frequencies[0]
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value)
+            self.setup_set_flag()  # Задали самую первую частоту -> выставили флаги
+            self.CurrentFreq = preset_value
             self.start_sending_time = time.time()
 
 

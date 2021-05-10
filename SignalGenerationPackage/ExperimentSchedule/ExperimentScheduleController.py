@@ -55,5 +55,5 @@ class ExperimentScheduleController(SignalController):
     def append_sending_operator(self):
         self.callback_operators.append(
             ScheduleSendingOperator(self.main_window, self.plot_widget, model=self.model,
-                                    DebugMode=DebugConfigs.PIDOperatorDebug, SendRetry=True)
+                                    DebugMode=DebugConfigs.PIDOperatorDebug, SendRetry=DebugConfigs.DoRetry)
         )
