@@ -30,7 +30,7 @@ class SignalSendingOperator(CallBackOperator):
         self.Timer = SignalTimer(interval=1.0, function=self.TestTimer)
         self.DeltaCPClient = DeltaCPClient()
         self.SendingLogger = SendingLogger()
-
+        self.SetFreqs = []
         self.FunctionWasCalled = False
         self.SendingThreadWasLaunched = False
         self.SignalVisualizerConstructed = False
@@ -155,7 +155,7 @@ class SignalSendingOperator(CallBackOperator):
             if self.tasks_queue is not None:
                 with self.tasks_queue.mutex:
                     self.tasks_queue.queue.clear()
-
+            self.SetFreqs.clear()
             self.DeltaCPClient.SetFrequency(0)
             self.DeltaCPClient.SendStop()
 

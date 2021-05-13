@@ -26,7 +26,6 @@ class PIDSendingOperator(SignalSendingOperator):
 
         self.current_point = None
         self.model = model
-        # self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
 
         self.UpperFreq = None
         self.LowerFreq = None

@@ -20,11 +20,8 @@ class ScheduleSendingOperator(SignalSendingOperator):
 
         self.current_point = None
         self.model = model
-        #self.FreqSendingTime = 0.0  # Поправка 1 сек на отправку частоты
-
         self.CurrentFreq = None  # Текущая опрошенная частота
-        self.SetFreq = None  # Частота, заданная в текущем шаге
-        self.PrevSetFreq = None  # Частота, заданная на предыдущем шаге
+
         self.tasks_queue = Queue()
 
         self.SendRetry = SendRetry
@@ -60,7 +57,7 @@ class ScheduleSendingOperator(SignalSendingOperator):
 
                 if pt.to_send:
                     self.SetFrequency(int(pt.y * 100))
-                    self.SetFreq = pt.y
+                    self.SetFreqs.append(pt.y)
                     self.SignalVisualizer.UpdateSetFrequency(pt.x, pt.y)
                     self.setup_set_flag()
                 else:
@@ -83,7 +80,7 @@ class ScheduleSendingOperator(SignalSendingOperator):
                                            t_expect=pt.x,
                                            t_real=datetime.datetime.now().time())
                     self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
-                self.PrevSetFreq = pt.y
+
 
     def setup_set_flag(self):
         self._set_frequency = True
@@ -93,11 +90,16 @@ class ScheduleSendingOperator(SignalSendingOperator):
         self._set_frequency = False
         self._requested_frequency = True  # Взаимоисключающие
 
+    def AfterPreset(self):
+        return len(self.SetFreqs) > 1
+
     def RetrySending(self, point):
-        set_freq = self.SetFreq
-        if self._requested_frequency and abs(self.CurrentFreq - self.PrevSetFreq) <= self.RetryAccuracy:
-            self.SetFrequency(set_freq)  # перезадаём последнюю заданную частоту
-            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
+        if self.AfterPreset():  # Если уже миновали этап PresetFrequency (Т.е. задали хотя бы одну новую частоту после пресета)
+            set_freq = self.SetFreqs[-1]  # Последняя заданная частот
+            prev_set_freq = self.SetFreqs[-2]
+            if self._requested_frequency and abs(self.CurrentFreq - prev_set_freq) <= self.RetryAccuracy:
+                self.SetFrequency(set_freq)  # перезадаём последнюю заданную частоту
+                self.SignalVisualizer.UpdateSetFrequency(point.x, set_freq)
 
     def get_time_from_gui(self, line_edit):
         text = line_edit.text()
@@ -163,7 +165,7 @@ class ScheduleSendingOperator(SignalSendingOperator):
             self.IsFirstCycle = False
             self.PresetFrequency(preset_value, points[0].x)
             self.setup_set_flag()  # Задали самую первую частоту -> выставили флаги
-            self.PrevSetFreq = preset_value
+            self.SetFreqs.append(preset_value)
             self.start_sending_time = time.time()
             self.PointsIterator = 1
         else:
