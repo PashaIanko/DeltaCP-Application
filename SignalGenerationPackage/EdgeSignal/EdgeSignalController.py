@@ -41,7 +41,7 @@ class EdgeSignalController(SignalController):
         self.param_names = [
             'Start Time', 'Acceleration Time', 'Plateau Time',
             'Deceleration Time', 'Low Level Frequency', 'High Level Frequency',
-            'End Time', 'Request Frequency'  # TODO: в таком же месте для UserSignal убрать Vertical Offset
+            'End Time', 'Request Frequency'
         ]
 
     # overridden
@@ -58,37 +58,11 @@ class EdgeSignalController(SignalController):
             SliderTextPair(ui.RequestFrequencyhorizontalSlider, ui.RequestFrequencylineEdit, EdgeSignalRanges.request_freq_range.calc_constant)
         ]
 
-    # # overridden
-    # def init_line_edits(self):
-    #     ui = self.main_window.user_interface
-    #     self.line_edits = [
-    #         ui.StartTimelineEdit,
-    #         ui.AccelerationTimelineEdit,
-    #         ui.PlateauTimelineEdit,
-    #         ui.DecelerationTimelineEdit,
-    #         ui.LowLevelFrequencylineEdit,
-    #         ui.HighLevelFrequencylineEdit,
-    #         ui.EndTimelineEdit,
-    #         ui.RequestFrequencylineEdit
-    #     ]
-    #
-    # # overridden
-    # def init_sliders(self):
-    #     ui = self.main_window.user_interface
-    #     self.sliders = [
-    #         ui.StartTimehorizontalSlider,
-    #         ui.AccelerationTimehorizontalSlider,
-    #         ui.PlateauTimehorizontalSlider,
-    #         ui.DecelerationTimehorizontalSlider,
-    #         ui.LowLevelFrequencyhorizontalSlider,
-    #         ui.HighLevelFrequencyhorizontalSlider,
-    #         ui.EndTimehorizontalSlider,
-    #         ui.RequestFrequencyhorizontalSlider,
-    #     ]
-
+    # overridden
     def init_plot_widget(self):
         self.plot_widget = self.main_window.user_interface.plot_widget
 
+    # overridden
     def init_callback_operators(self):
         self.callback_operators = \
             [
@@ -100,12 +74,13 @@ class EdgeSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator  (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.high_freq_range),
                 LowLevelFrequencyCallBackOperator   (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.low_freq_range),
                 RequestFrequencyCallBackOperator    (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.request_freq_range),
-                AutoFillCallBackOperator            (self.main_window.user_interface, self.param_names, self.slider_text_pairs, model=None)
+                AutoFillCallBackOperator            (self.main_window.user_interface, self.param_names, self.slider_text_pairs, model=None,
+                                                     configs_path=".\\SignalGenerationConfigs\\EdgeSignalConfigs\\SignalConfigs.xlsx")
             ]
 
     # overridden
     def append_sending_operator(self):
         self.callback_operators.append(PIDSendingOperator(self.main_window, self.plot_widget, model=self.model,
-                                                          DebugMode=DebugConfigs.PIDOperatorDebug, SendRetry=True))
+                                                          DebugMode=DebugConfigs.PIDOperatorDebug, SendRetry=DebugConfigs.DoRetry))
         # Подключится к виджетам окна с генерацией сигнала.
         # Чтобы отправить сигнал можно было прямо из окна генерирования сигнала (удобство польз-ля)
