@@ -246,3 +246,29 @@ class EdgeSignal(Signal):
     @property
     def DecelerationCoeff(self):
         return self.SignalData.DecelerationCoeff
+
+    @property
+    def RecalcFlowrate(self):
+        return self.SignalData.RecalcFlowrate
+
+    @RecalcFlowrate.setter
+    def RecalcFlowrate(self, val):
+        self.SignalData.RecalcFlowrate = val
+        self.RecalcData()
+        self.NotifyObservers()
+
+    @property
+    def k_flowrate_coefficient(self):
+        return self.SignalData.k_flowrate_coefficient
+
+    @k_flowrate_coefficient.setter
+    def k_flowrate_coefficient(self, val):
+        self.SignalData.k_flowrate_coefficient = val
+
+    @property
+    def b_flowrate_coefficient(self):
+        return self.SignalData.b_flowrate_coefficient
+
+    @b_flowrate_coefficient.setter
+    def b_flowrate_coefficient(self, val):
+        self.SignalData.b_flowrate_coefficient = val

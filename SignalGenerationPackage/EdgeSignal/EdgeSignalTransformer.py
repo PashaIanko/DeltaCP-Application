@@ -34,9 +34,10 @@ class EdgeSignalTransformer (SignalTransformer):
             del y_optimized[-1]
 
         point_arr = self.SignalData.transformed_point_array
-        for i in range (len(y_optimized)):
-            if y_optimized[i] is None:
-                p = Point(x=self.SignalData.point_array[i].x, y=y_optimized[i], to_send=False)
-            else:
-                p = Point(x=self.SignalData.point_array[i].x, y=y_optimized[i], to_send=True)
-            point_arr.append(p)
+        if len(self.SignalData.point_array) >= len(y_optimized):
+            for i in range (len(y_optimized)):
+                if y_optimized[i] is None:
+                    p = Point(x=self.SignalData.point_array[i].x, y=y_optimized[i], to_send=False)
+                else:
+                    p = Point(x=self.SignalData.point_array[i].x, y=y_optimized[i], to_send=True)
+                point_arr.append(p)

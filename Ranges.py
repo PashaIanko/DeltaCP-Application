@@ -23,3 +23,4 @@ class EdgeSignalRanges:
     high_freq_range = ValueRange(min=0, max=50, decimals=2)
     low_freq_range = ValueRange(min=0, max=49, decimals=2)
     request_freq_range = ValueRange(min=0.3, max=1.0, decimals=2)
+    flowrate_recalc_range = ValueRange(min=0.0, max=1000.0, decimals=2)

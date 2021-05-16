@@ -13,6 +13,7 @@ from SignalGenerationPackage.EdgeSignal.CallBacks.EndTimeCallBackOperator import
 from SignalGenerationPackage.EdgeSignal.CallBacks.StartTimeCallBackOperator import StartTimeCallBackOperator
 from SignalGenerationPackage.EdgeSignal.CallBacks.AutoFillCallBackOperator import AutoFillCallBackOperator
 from SignalGenerationPackage.EdgeSignal.CallBacks.RequestFrequencyCallBackOperator import RequestFrequencyCallBackOperator
+from SignalGenerationPackage.EdgeSignal.CallBacks.FlowrateRecalcCallBackOperator import FlowrateRecalcCallBackOperator
 
 from Ranges import EdgeSignalRanges
 from SignalGenerationPackage.SliderTextPair import SliderTextPair
@@ -74,6 +75,7 @@ class EdgeSignalController(SignalController):
                 HighLevelFrequencyCallBackOperator  (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.high_freq_range),
                 LowLevelFrequencyCallBackOperator   (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.low_freq_range),
                 RequestFrequencyCallBackOperator    (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.request_freq_range),
+                FlowrateRecalcCallBackOperator      (self.main_window.user_interface, self.model, value_range=EdgeSignalRanges.flowrate_recalc_range),
                 AutoFillCallBackOperator            (self.main_window.user_interface, self.param_names, self.slider_text_pairs, model=None,
                                                      configs_path=".\\SignalGenerationConfigs\\EdgeSignalConfigs\\SignalConfigs.xlsx")
             ]
