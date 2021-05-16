@@ -30,6 +30,12 @@ class ExperimentScheduleModel(Signal):
         pass
 
     # overridden
+    def Recalc_X_Y(self):
+        for p in SignalData.point_array:
+            SignalData.x.append(p.x)
+            SignalData.y.append(p.y)
+
+    # overridden
     def UpdateSignalData(self):
         self.whole_length = sum(self.seconds)
         point_array = self.get_point_array()

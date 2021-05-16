@@ -27,6 +27,21 @@ class EdgeSignal(Signal):
         pass
 
     # overridden
+    def Recalc_X_Y(self):
+        for p in SignalData.point_array:
+            SignalData.x.append(p.x)
+            if self.RecalcFlowrate:
+                SignalData.y.append(self.RecalcToFlowrate(p.y))
+            else:
+                SignalData.y.append(self.RecalcToFrequency(p.y))
+
+    def RecalcToFlowrate(self, val):
+        return val * self.k_flowrate_coefficient + self.b_flowrate_coefficient
+
+    def RecalcToFrequency(self, val):
+        return (val - self.b_flowrate_coefficient) / self.k_flowrate_coefficient
+
+    # overridden
     def UpdateSignalData(self):
         WholePeriod = self.SignalData.StartTime + self.SignalData.AccelerationTime + self.SignalData.PlateauTime + \
                       self.SignalData.DecelerationTime + self.SignalData.EndTime
