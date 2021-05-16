@@ -264,6 +264,8 @@ class EdgeSignal(Signal):
     @k_flowrate_coefficient.setter
     def k_flowrate_coefficient(self, val):
         self.SignalData.k_flowrate_coefficient = val
+        self.RecalcData()
+        self.NotifyObservers()
 
     @property
     def b_flowrate_coefficient(self):
@@ -272,3 +274,5 @@ class EdgeSignal(Signal):
     @b_flowrate_coefficient.setter
     def b_flowrate_coefficient(self, val):
         self.SignalData.b_flowrate_coefficient = val
+        self.RecalcData()
+        self.NotifyObservers()

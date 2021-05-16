@@ -45,7 +45,7 @@ class FlowrateRecalcCallBackOperator(CallBackOperator):
             self.model.b_flowrate_coefficient = 0.0
 
     @staticmethod
-    def line_edit_to_value(line_edit):
+    def line_edit_to_value(line_edit):  # TODO: Есть дублирование кода в таком же методе. Выделить его
         text = line_edit.text()
         if len(text) == 0:
             return 0
