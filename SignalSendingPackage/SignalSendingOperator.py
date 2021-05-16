@@ -327,6 +327,7 @@ class SignalSendingOperator(CallBackOperator):
         self.DeltaCPClient.SetFrequency(value_to_send)
         if not self.DebugMode:
             self.RequestFreqUntilEqual(value)
+
         self.SignalVisualizer.UpdateSetFrequency(x_coord, value)
 
 

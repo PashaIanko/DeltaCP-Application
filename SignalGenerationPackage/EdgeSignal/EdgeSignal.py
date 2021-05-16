@@ -35,7 +35,7 @@ class EdgeSignal(Signal):
             else:
                 SignalData.y.append(self.RecalcToFrequency(p.y))
 
-    def RecalcToFlowrate(self, val):
+    def RecalcToFlowrate(self, val):  # TODO: Дублируемый код с PIDSendingOperator
         return val * self.k_flowrate_coefficient + self.b_flowrate_coefficient
 
     def RecalcToFrequency(self, val):
