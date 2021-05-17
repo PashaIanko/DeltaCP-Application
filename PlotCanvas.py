@@ -50,3 +50,6 @@ class PlotCanvas(FigureCanvas):
 
     def setFrameShadow(self, raised):
         pass  # Этот метод вызывается в автоматически сгенерированном коде от Qt Designer, но нам он не нужен
+
+    def setTitle(self, title):
+        self.axes.set_title(title, fontsize=19)
