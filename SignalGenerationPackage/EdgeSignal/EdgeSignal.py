@@ -27,6 +27,21 @@ class EdgeSignal(Signal):
         pass
 
     # overridden
+    def Recalc_X_Y(self):
+        for p in SignalData.point_array:
+            SignalData.x.append(p.x)
+            if self.RecalcFlowrate:
+                SignalData.y.append(self.RecalcToFlowrate(p.y))
+            else:
+                SignalData.y.append(self.RecalcToFrequency(p.y))
+
+    def RecalcToFlowrate(self, val):  # TODO: Дублируемый код с PIDSendingOperator
+        return val * self.k_flowrate_coefficient + self.b_flowrate_coefficient
+
+    def RecalcToFrequency(self, val):
+        return (val - self.b_flowrate_coefficient) / self.k_flowrate_coefficient
+
+    # overridden
     def UpdateSignalData(self):
         WholePeriod = self.SignalData.StartTime + self.SignalData.AccelerationTime + self.SignalData.PlateauTime + \
                       self.SignalData.DecelerationTime + self.SignalData.EndTime
@@ -246,3 +261,33 @@ class EdgeSignal(Signal):
     @property
     def DecelerationCoeff(self):
         return self.SignalData.DecelerationCoeff
+
+    @property
+    def RecalcFlowrate(self):
+        return self.SignalData.RecalcFlowrate
+
+    @RecalcFlowrate.setter
+    def RecalcFlowrate(self, val):
+        self.SignalData.RecalcFlowrate = val
+        self.RecalcData()
+        self.NotifyObservers()
+
+    @property
+    def k_flowrate_coefficient(self):
+        return self.SignalData.k_flowrate_coefficient
+
+    @k_flowrate_coefficient.setter
+    def k_flowrate_coefficient(self, val):
+        self.SignalData.k_flowrate_coefficient = val
+        self.RecalcData()
+        self.NotifyObservers()
+
+    @property
+    def b_flowrate_coefficient(self):
+        return self.SignalData.b_flowrate_coefficient
+
+    @b_flowrate_coefficient.setter
+    def b_flowrate_coefficient(self, val):
+        self.SignalData.b_flowrate_coefficient = val
+        self.RecalcData()
+        self.NotifyObservers()

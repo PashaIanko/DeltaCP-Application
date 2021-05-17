@@ -60,10 +60,9 @@ class Signal(metaclass=ABCMeta):
         SignalData.dx = self.UpdateDeltaTimes()
         self.Recalc_X_Y()
 
+    @abstractmethod
     def Recalc_X_Y(self):
-        for p in SignalData.point_array:
-            SignalData.x.append(p.x)
-            SignalData.y.append(p.y)
+        pass
 
     def ClearSignalData(self):
         SignalData.x.clear()

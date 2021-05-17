@@ -54,6 +54,9 @@ class PIDSendingOperator(SignalSendingOperator):
         self.SendingLogger.log_send_dt(time.time() - t_before_write)
 
     def SendRequestMonitor(self):
+        DoFlowrateRecalc = self.model.RecalcFlowrate
+        k_flowrate_coefficient = self.model.k_flowrate_coefficient
+        b_flowrate_coefficient = self.model.b_flowrate_coefficient
         while True:
             if self.SendingStopped or self.wait_to_finish:
                 return
@@ -70,7 +73,11 @@ class PIDSendingOperator(SignalSendingOperator):
                         self.SetFrequency(self.LowerFreq)
                         self._sent_lower = True # Взаимоисключающие
                         self._sent_upper = False # Взаимоисключающие
-                    self.SignalVisualizer.UpdateSetFrequency(pt.x, pt.y)
+                    if DoFlowrateRecalc:
+                        plot_val = self.RecalcToFlowrate(pt.y, k_flowrate_coefficient, b_flowrate_coefficient)
+                    else:
+                        plot_val = pt.y
+                    self.SignalVisualizer.UpdateSetFrequency(pt.x, plot_val)
                 else:
                     # Значит опрашиваем
                     t_before_request = time.time()
@@ -89,17 +96,35 @@ class PIDSendingOperator(SignalSendingOperator):
                     self.SendingLogger.log(f_expect=pt.y, f_real=self.CurrentFreq,
                                            t_expect=pt.x,
                                            t_real=datetime.datetime.now().time())
-                    self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
+                    if DoFlowrateRecalc:
+                        self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.RecalcToFlowrate(self.CurrentFreq,
+                                                                                                 k_flowrate_coefficient,
+                                                                                                 b_flowrate_coefficient))
+                    else:
+                        self.SignalVisualizer.UpdateCurrentFrequency(pt.x, self.CurrentFreq)
 
+    @staticmethod
+    def RecalcToFlowrate(val, k, b):
+        return k * val + b
 
     def RetrySending(self, point):
         if self._sent_upper and abs(self.CurrentFreq - self.model.LowLevelFrequency) <= self.RetryAccuracy:
             self.SetFrequency(self.UpperFreq)
-            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
+            if self.model.RecalcFlowrate:
+                self.SignalVisualizer.UpdateSetFrequency(point.x, self.RecalcToFlowrate(self.model.HighLevelFrequency,
+                                                                                        self.model.k_flowrate_coefficient,
+                                                                                        self.model.b_flowrate_coefficient))
+            else:
+                self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.HighLevelFrequency)
 
         if self._sent_lower and abs(self.CurrentFreq - self.model.HighLevelFrequency) <= self.RetryAccuracy:
             self.SetFrequency(self.LowerFreq)
-            self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.LowLevelFrequency)
+            if self.model.RecalcFlowrate:
+                self.SignalVisualizer.UpdateSetFrequency(point.x, self.RecalcToFlowrate(self.model.LowLevelFrequency,
+                                                                                        self.model.k_flowrate_coefficient,
+                                                                                        self.model.b_flowrate_coefficient))
+            else:
+                self.SignalVisualizer.UpdateSetFrequency(point.x, self.model.LowLevelFrequency)
 
     # Переопределённый метод, т.к. немного отличается (Надо задать t_разгона, t_замедления перед отправкой)
     def StartSendingSignal(self):
@@ -272,3 +297,17 @@ class PIDSendingOperator(SignalSendingOperator):
     # overridden
     def get_signal_length(self):
         return self.model.WholePeriod
+
+    def PresetFrequency(self, value, x_coord):
+        # Перед запуском, если частота ненулевая - убедиться, предварительно задать требуемую начальную частоту
+        # Привести к инту, иначе pymodbus выдаёт ошибку
+        value_to_send = int(value * 100)
+        self.DeltaCPClient.SetFrequency(value_to_send)
+        if not self.DebugMode:
+            self.RequestFreqUntilEqual(value)
+
+        if self.model.RecalcFlowrate:
+            self.SignalVisualizer.UpdateSetFrequency(x_coord, self.RecalcToFlowrate(value, self.model.k_flowrate_coefficient,
+                                                                                    self.model.b_flowrate_coefficient))
+        else:
+            self.SignalVisualizer.UpdateSetFrequency(x_coord, value)

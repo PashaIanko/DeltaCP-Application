@@ -30,3 +30,9 @@ class EdgeSignalData(SignalData):
         # Ускорение / Замедление (Пересчитывается при редактировании сигнала)
         self.AccelerationCoeff = 0
         self.DecelerationCoeff = 0
+
+        # Пересчитывать на расход в визуализации или нет
+        # Коэффициенты линейного пересчёта
+        self.RecalcFlowrate = False
+        self.k_flowrate_coefficient = 1.0  # kx + b
+        self.b_flowrate_coefficient = 0.0  # kx + b
