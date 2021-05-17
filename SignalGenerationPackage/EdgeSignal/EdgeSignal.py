@@ -27,6 +27,14 @@ class EdgeSignal(Signal):
         pass
 
     # overridden
+    def NotifyObservers(self):
+        for observer in self.Observers:
+            if self.RecalcFlowrate:
+                observer.UpdateModel(title='Flowrate')
+            else:
+                observer.UpdateModel(title='Frequency')
+
+    # overridden
     def Recalc_X_Y(self):
         for p in SignalData.point_array:
             SignalData.x.append(p.x)

@@ -17,6 +17,7 @@ class FlowrateRecalcCallBackOperator(CallBackOperator):
 
         self.offset_line_edit.setValidator(ValueValidator)
         self.proportion_line_edit.setValidator(ValueValidator)
+        self.window.plot_widget.setTitle('Frequency')
 
     # overridden
     def init_line_edit(self):
@@ -39,10 +40,12 @@ class FlowrateRecalcCallBackOperator(CallBackOperator):
             self.model.RecalcFlowrate = True
             self.model.k_flowrate_coefficient = self.line_edit_to_value(self.proportion_line_edit)
             self.model.b_flowrate_coefficient = self.line_edit_to_value(self.offset_line_edit)
+            self.window.plot_widget.setTitle('Flowrate')
         else:
             self.model.RecalcFlowrate = False
             self.model.k_flowrate_coefficient = 1.0
             self.model.b_flowrate_coefficient = 0.0
+            self.window.plot_widget.setTitle('Frequency')
 
     @staticmethod
     def line_edit_to_value(line_edit):  # TODO: Есть дублирование кода в таком же методе. Выделить его

@@ -9,10 +9,11 @@ class SignalObserver(metaclass=ABCMeta):
         self.model.AddObserver(self)
         self.plot_canvas = plot_canvas
 
-    def UpdateModel(self):
+    def UpdateModel(self, title=''):
         self.plot_canvas.plot(
             self.model.x,
             self.model.y,
             color='blue',
             marker='.'
         )
+        self.plot_canvas.setTitle(title)
