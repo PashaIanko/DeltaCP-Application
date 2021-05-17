@@ -105,6 +105,8 @@ class PIDSendingOperator(SignalSendingOperator):
 
     @staticmethod
     def RecalcToFlowrate(val, k, b):
+        if val is None:
+            return None
         return k * val + b
 
     def RetrySending(self, point):
